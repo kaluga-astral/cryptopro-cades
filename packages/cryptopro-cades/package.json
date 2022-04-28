@@ -1,0 +1,21 @@
+{
+  "name": "@astral/cryptopro-cades",
+  "browser": "./src/index.ts",
+  "scripts": {
+    "dev": "tsc --watch",
+    "prebuild": "npx rimraf ./lib",
+    "build": "commander build",
+    "publish": "npm publish ./lib",
+    "test": "jest",
+    "lint:types": "tsc --noEmit",
+    "lint": "eslint ./src --fix --quiet"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "exports": {
+    ".": {
+      "import": "./esm/index.js",
+      "require": "./cjs/index.js"
+    }
+  }
+}

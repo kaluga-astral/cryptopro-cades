@@ -1,0 +1,12 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "extends": ["@astral-frontend/eslint-config-ts-ui"],
+  "env": {
+    "node": true
+  },
+  "parserOptions": {
+    "project": ["tsconfig.json"]
+  },
+  "ignorePatterns": ["lib", "build", "node_modules"]
+}
