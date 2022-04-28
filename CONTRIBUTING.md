@@ -5,7 +5,7 @@
 Для коммитов и pull requests включен commitlint. Ниже описан формат.
 
 ```
-${ENUM}(${PACKAGE_NAME},${COMPONENT_NAME | FUNCTION_NAME}): ${Что было сделано?}
+${ENUM}(${PACKAGE_NAME}): ${Что было сделано?}
 ```
 
 ENUM:
@@ -18,22 +18,20 @@ ENUM:
 - chore
 
 PACKAGE_NAME:
-- ui
-- icons
-- fonts
+- cryptopro-cades
 
 ## Примеры
 
 ### Valid
 ```
-wip(ui,Button): Начата работа на добавлением пропса color
+wip(cryptopro-cades): Начата работа на добавлением пропса color
 ```
 
 ```
-feat(ui,Button): Добавлен пропс color
+feat(cryptopro-cades): Добавлен пропс color
 ```
 
 ### Invalid
 ```
-feat(ui, Button): Добавил пропс color
+feat(cryptopro-cades): Добавил пропс color
 ```
