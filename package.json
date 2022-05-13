@@ -33,6 +33,5 @@
     "tests": "npm run test --workspaces --if-present"
   },
   "dependencies": {
-    "asn1js": "^3.0.2"
   }
 }
