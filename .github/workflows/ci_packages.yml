@@ -36,7 +36,7 @@ jobs:
       - name: Run tsc
         run: npm run lint:types
 
-  tests:
+  test:
     name: Running tests
     runs-on: ubuntu-latest
     steps:
@@ -55,4 +55,4 @@ jobs:
       - name: Run jest
         env:
           CI: true
-          run: npm run tests
+        run: npm run tests
