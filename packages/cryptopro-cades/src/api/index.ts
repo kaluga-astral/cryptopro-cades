@@ -1,0 +1,12 @@
+export { sign } from './sign';
+export { encrypt } from './encrypt';
+export { decrypt } from './decrypt';
+export { getCertInfo } from './getCertInfo';
+export { createObject } from './createObject';
+export { openStore } from './openStore';
+export { getCertificates } from './getCertificates';
+export { getSystemInfo } from './getSystemInfo';
+export { isValidSystemSetup } from './isValidSystemSetup';
+export { validateCertificate } from './validateCertificate';
+export { findCertificateByThumbprint } from './findCertificateByThumbprint';
+export { findCertificateBySkid } from './findCertificateBySkid';

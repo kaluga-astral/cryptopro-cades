@@ -10,8 +10,14 @@
     "lint:types": "tsc --noEmit",
     "lint": "eslint ./src --fix --quiet"
   },
-  "dependencies": {},
-  "devDependencies": {},
+  "dependencies": {
+    "buffer": "^6.0.3",
+    "pkijs": "^2.3.1",
+    "asn1js": "^3.0.2"
+  },
+  "devDependencies": {
+    "@types/node": "^17.0.33"
+  },
   "exports": {
     ".": {
       "import": "./esm/index.js",
