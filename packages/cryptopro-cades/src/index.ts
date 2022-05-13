@@ -1,1 +1,3 @@
-export class CryproproCades {}
+export class CryproproCades {
+  a: number = 2;
+}
