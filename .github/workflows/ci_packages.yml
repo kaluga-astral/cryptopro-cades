@@ -36,13 +36,13 @@ jobs:
       - name: Run tsc
         run: npm run lint:types
 
-  tests:
+  test:
     name: Running tests
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js 16.x
-      - uses: actions/setup-node@v2
+        uses: actions/setup-node@v2
         with:
           node-version: 16.x
           cache: 'npm'
@@ -55,4 +55,4 @@ jobs:
       - name: Run jest
         env:
           CI: true
-          run: npm run tests
+        run: npm run tests
