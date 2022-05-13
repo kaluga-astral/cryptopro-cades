@@ -1,5 +1,4 @@
 import { CAPICOM_CERTIFICATE_FIND_TYPE } from '../../constants';
-
 import { ICertificate } from './ICertificate';
 
 /**

@@ -10,7 +10,6 @@ import {
   subjectKeyIdExtensionOid,
 } from '../constants/oids-dictionary';
 import { CryptoError } from '../errors';
-
 import { bufferToHex } from './bufferToHex';
 
 /**

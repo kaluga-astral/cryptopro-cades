@@ -2,10 +2,9 @@ import { canAsync } from '../api/internal/canAsync';
 import { CryptoError } from '../errors';
 
 /**
- * обертка для вывода из асинхронки.
+ * Обёртка для вызова асинхронной функции в синхронном контексте.
  * @param {Promise<*>} fn - функция или иное свойство от Promise.
  * @returns {*|Promise<*>} .
- * @private
  */
 export function deasync(fn: Promise<any>): any {
   let result = fn;

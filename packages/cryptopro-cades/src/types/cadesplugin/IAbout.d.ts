@@ -1,5 +1,4 @@
 import { CADESCOM_MEDIA_TYPE } from '../../constants';
-
 import { IVersion } from './IVersion';
 
 /**
@@ -8,10 +7,29 @@ import { IVersion } from './IVersion';
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/about
  */
 export interface IAbout {
+  /**
+   * Возвращает объект IVersion c версией плагина.
+   */
   PluginVersion: WithPromise<IVersion>;
+
+  /**
+   * Возвращает строковое представление версии.
+   */
   Version: WithPromise<string>;
+
+  /**
+   * Возвращает старший компонент версии.
+   */
   MajorVersion: WithPromise<number>;
+
+  /**
+   * Возвращает младший компонент версии.
+   */
   MinorVersion: WithPromise<number>;
+
+  /**
+   * Возвращает номер сборки.
+   */
   BuildVersion: WithPromise<number>;
 
   /**

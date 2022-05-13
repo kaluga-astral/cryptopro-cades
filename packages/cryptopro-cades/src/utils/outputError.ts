@@ -1,5 +1,5 @@
 /**
- * Залогировать ошибку.
+ * Логировать ошибку.
  * @param args параметры.
  */
 export const outputError = (...args: (string | any)[]): void => {

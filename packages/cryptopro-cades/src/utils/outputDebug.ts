@@ -1,7 +1,7 @@
 import PluginConfig from '../PluginConfig';
 
 /**
- * вывод информации в какой-то поток
+ * Логировать информацию (если включен Debug)
  * @param args
  */
 export const outputDebug = (...args: (string | any)[]): void => {

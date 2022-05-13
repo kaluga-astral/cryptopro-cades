@@ -1,4 +1,5 @@
 import { ICertificate } from './ICertificate';
+
 /**
  * Описывает коллекцию сертификатов для шифрования.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/recipients
