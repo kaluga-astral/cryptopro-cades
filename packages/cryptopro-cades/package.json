@@ -1,6 +1,7 @@
 {
   "name": "@astral/cryptopro-cades",
   "browser": "./src/index.ts",
+  "main": "./src/index.ts",
   "scripts": {
     "dev": "tsc --watch",
     "prebuild": "npx rimraf ./lib",

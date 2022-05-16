@@ -67,4 +67,5 @@ const logErrorWhenInDebug = (error: CryptoError): void => {
 
 pluginConfig.addErrorListener(logErrorWhenInDebug);
 
+export { pluginConfig };
 export default pluginConfig;

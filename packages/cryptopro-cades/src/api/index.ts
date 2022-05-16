@@ -5,6 +5,7 @@ export { getCertInfo } from './getCertInfo';
 export { createObject } from './createObject';
 export { openStore } from './openStore';
 export { getCertificates } from './getCertificates';
+export { getCryptoProviders } from './getCryptoProviders';
 export { getSystemInfo } from './getSystemInfo';
 export { isValidSystemSetup } from './isValidSystemSetup';
 export { validateCertificate } from './validateCertificate';
