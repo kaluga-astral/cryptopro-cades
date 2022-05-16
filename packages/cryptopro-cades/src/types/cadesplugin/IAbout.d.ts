@@ -1,4 +1,5 @@
 import { CADESCOM_MEDIA_TYPE } from '../../constants';
+
 import { IVersion } from './IVersion';
 
 /**
