@@ -1,35 +1,24 @@
-import { useEffect, useState } from 'react';
 import { Buffer } from 'buffer';
+
+import { useEffect, useState } from 'react';
 import './App.css';
 import {
-  pluginConfig,
-  getSystemInfo,
-  getCertificates,
-  getCryptoProviders,
   Certificate,
   STORE_TYPE,
-  outputError,
-  sign,
   decrypt,
   encrypt,
   findCertificateBySkid,
+  getCertificates,
+  getCryptoProviders,
+  getSystemInfo,
+  outputError,
+  pluginConfig,
+  sign,
 } from '@astral/cryptopro-cades';
-
-import { SystemInfo, ICryptoProvider } from '@astral/cryptopro-cades';
+import { ICryptoProvider, SystemInfo } from '@astral/cryptopro-cades';
 
 import { CertificateInfo } from './components/CertificateInfo';
 import { CryptoProviderInfo } from './components/CryptoProviderInfo';
-declare const window: any;
-
-const App = () => {
-  return (
-    <div className="App">
-      <CryptoApp />
-    </div>
-  );
-};
-
-export default App;
 
 const CryptoApp = () => {
   pluginConfig.CheckSystemSetup = true;
@@ -92,6 +81,23 @@ const CryptoApp = () => {
   };
 
   /**
+   * Скачать файл.
+   * @param blob Блоб
+   * @param name Наименование файла.
+   */
+  const dowloadFile = (blob: Blob, name: string): void => {
+    const url = window.URL.createObjectURL(blob);
+    const a = window.document.createElement('a');
+    a.style.display = 'hidden';
+    window.document.body.appendChild(a);
+    a.href = url;
+    a.download = name;
+    a.click();
+    window.URL.revokeObjectURL(url);
+    a.remove();
+  };
+
+  /**
    * Подписать файл.
    */
   const signString = async (): Promise<void> => {
@@ -146,23 +152,6 @@ const CryptoApp = () => {
     } catch (error) {
       window.alert(error.toString());
     }
-  };
-
-  /**
-   * Скачать файл.
-   * @param blob Блоб
-   * @param name Наименование файла.
-   */
-  const dowloadFile = (blob: Blob, name: string): void => {
-    const url = window.URL.createObjectURL(blob);
-    const a = window.document.createElement('a');
-    a.style.display = 'hidden';
-    window.document.body.appendChild(a);
-    a.href = url;
-    a.download = name;
-    a.click();
-    window.URL.revokeObjectURL(url);
-    a.remove();
   };
 
   /**
@@ -251,3 +240,13 @@ const CryptoApp = () => {
     </>
   );
 };
+
+const App = () => {
+  return (
+    <div className="App">
+      <CryptoApp />
+    </div>
+  );
+};
+
+export default App;

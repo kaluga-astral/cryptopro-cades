@@ -4,33 +4,34 @@
   "private": true,
   "dependencies": {
     "@astral/cryptopro-cades": "*",
-    "@testing-library/jest-dom": "^5.16.4",
-    "@testing-library/react": "^13.2.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.1",
     "@types/node": "^16.11.35",
     "@types/react": "^18.0.9",
     "@types/react-dom": "^18.0.4",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.6.4"
+    "typescript": "^4.6.4",
+    "@webpackon/core": "^1.1.2",
+    "@webpackon/use-babel": "^1.0.2",
+    "@webpackon/use-ts": "^1.0.0",
+    "@webpackon/use-react-refresh": "^1.0.0",
+    "@webpackon/use-html": "^1.0.0",
+    "@webpackon/use-fonts": "^1.1.1",
+    "@webpackon/use-url-images": "^1.1.1",
+    "@webpackon/use-dev-server": "^1.1.0",
+    "@webpackon/use-transpile-modules": "^1.0.0",
+    "webpack": "^5.58.2",
+    "webpack-dev-server": "^4.3.1",
+    "webpack-cli": "^4.9.1",
+    "@babel/preset-typescript": "^7.16.0",
+    "@babel/core": "^7.15.8",
+    "@babel/plugin-transform-async-to-generator": "7.12.1",
+    "@babel/plugin-transform-runtime": "7.12.1",
+    "@babel/preset-env": "7.12.11",
+    "@babel/preset-react": "7.12.10",
+    "@webpackon/use-css": "^1.0.0"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "eject": "react-scripts eject"
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "build:prod": "webpack --mode=production --config webpack.config.js",
+    "dev": "webpack serve --mode=development"
   }
 }
