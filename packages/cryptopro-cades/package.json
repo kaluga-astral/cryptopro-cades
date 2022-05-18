@@ -6,6 +6,7 @@
     "dev": "tsc --watch",
     "prebuild": "npx rimraf ./lib",
     "build": "commander build",
+    "postbuild": "copyfiles -u 1 src/types/*.ts lib && copyfiles -u 1 src/vendor/*.js lib",
     "publish": "npm publish ./lib",
     "test": "jest",
     "lint:types": "tsc --noEmit",
@@ -17,7 +18,8 @@
     "asn1js": "^3.0.2"
   },
   "devDependencies": {
-    "@types/node": "^17.0.33"
+    "@types/node": "^17.0.33",
+    "copyfiles": "^2.4.1"
   },
   "exports": {
     ".": {

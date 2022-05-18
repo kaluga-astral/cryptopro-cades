@@ -1,4 +1,4 @@
-declare global {
+export declare global {
   interface Window {
     cadesplugin: any;
     cadesplugin_load_timeout: any;
