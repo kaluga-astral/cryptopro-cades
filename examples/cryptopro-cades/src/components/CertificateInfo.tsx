@@ -1,4 +1,4 @@
-import { Certificate } from '@astral/cryptopro-cades';
+import { Certificate, deasync } from '@astral/cryptopro-cades';
 
 type CertificateInfoProps = {
   certificate: Certificate;
