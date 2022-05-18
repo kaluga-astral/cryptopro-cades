@@ -70,7 +70,12 @@ export function encrypt(
     try {
       // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
       // поэтому расшифровываем предварительно конвертированный в Base64
-      return await envelopedData.Encrypt();
+
+      const encryptResult = envelopedData.Encrypt();
+
+      return encryptResult instanceof Promise
+        ? await encryptResult
+        : encryptResult;
     } catch (error) {
       throw CryptoError.createCadesError(
         error,

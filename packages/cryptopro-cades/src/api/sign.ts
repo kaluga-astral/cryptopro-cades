@@ -98,11 +98,13 @@ export function sign(
     }
 
     try {
-      return await signedData.SignCades(
+      const signResult = await signedData.SignCades(
         signer,
         CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
         detach
       );
+
+      return signResult instanceof Promise ? await signResult : signResult;
     } catch (error) {
       throw CryptoError.createCadesError(
         error,

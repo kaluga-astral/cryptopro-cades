@@ -47,7 +47,10 @@ export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {
       // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
       // поэтому расшифровываем предварительно конвертированный в Base64
       await envelopedData.Decrypt(base64String);
-      return await envelopedData.Content;
+
+      return envelopedData.Content instanceof Promise
+        ? await envelopedData.Content
+        : envelopedData.Content;
     } catch (err) {
       throw CryptoError.createCadesError(err, 'Ошибка при расшифровке данных.');
     }
