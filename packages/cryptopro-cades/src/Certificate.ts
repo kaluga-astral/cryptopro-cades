@@ -55,17 +55,22 @@ export class Certificate {
    * Данные о владельце сертификата.
    */
   subject = {
-    SN: null,
-    G: null,
-    O: null,
-    OU: null,
-    CN: null,
-    E: null,
-    SNILS: null,
+    SN: null, // SN=МИРОНЧУК
+    G: null, // G=ВИКТОР АРКАДИЕВИЧ
+    T: null, // T=ДИРЕКТОР
+    CN: null, // CN="ЧУ ДПО УЧЕБНЫЙ ЦЕНТР ""ФОРМУЛА"""
+    O: null, // O="ЧУ ДПО УЧЕБНЫЙ ЦЕНТР ""ФОРМУЛА"""
+    STREET: null, // STREET="УЛИЦА ЛЕНИНА, 77, -, -"
+    L: null, // L=КАЛУГА
+    S: null, // S=40 Калужская область
+    C: null, // C=RU
+    SNILS: null, // SNILS=00638140318
+    OGRN: null, // OGRN=1044004603070
     OGRNIP: null,
-    OGRN: null,
-    INN: null,
-    INNLE: null,
+    INN: null, // INN=402701356218
+    INNLE: null, // INNLE=4028031214
+    OU: null,
+    E: null,
   };
 
   /**
@@ -193,15 +198,12 @@ export class Certificate {
       }
     }
 
-    if (certificate.subjectName) {
-      Object.keys(certificate.subject).forEach(
-        (key) =>
-          (certificate.subject[key] = certificate.extractFromTitle(
-            certificate.subjectName!,
-            [key]
-          ))
+    Object.keys(certificate.subject).forEach((key) => {
+      certificate.subject[key] = certificate.extractFromTitle(
+        certificate.subjectName!,
+        [key]
       );
-    }
+    });
     parseCertificate(certificate);
 
     return certificate;
