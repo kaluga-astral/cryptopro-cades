@@ -16,7 +16,7 @@ export declare type IRawSignature = {
   SignHash(
     hashedData: CPHashedData,
     certificate: ICertificate
-  ): WithPromise<string>;
+  ): WithOptionalPromise<string>;
 
   /**
    * Проверяет значение электронной подписи на основе переданного хэш-значения.
@@ -28,5 +28,5 @@ export declare type IRawSignature = {
     hashedData: CPHashedData,
     certificate: ICertificate,
     rawSignature: string
-  ): WithPromise<void>;
+  ): WithOptionalPromise<void>;
 };

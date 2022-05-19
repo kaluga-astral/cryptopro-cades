@@ -17,10 +17,11 @@ export function afterPluginLoaded(
   cb: Function
 ): (...args: any) => Promise<any> {
   return async (...args) => {
+    const isAlreadyLoaded = isPluginReady;
     if (!isPluginReady) {
       try {
         // eslint-disable-next-line import/extensions
-        require('./vendor/cadesplugin_api.js');
+        require('./../../vendor/cadesplugin_api.js');
       } catch (err) {
         throw CryptoError.create(
           'CBP-2',
@@ -56,7 +57,8 @@ export function afterPluginLoaded(
       window.cadesplugin.set_log_level(window.cadesplugin.LOG_LEVEL_DEBUG);
     }
 
-    if (PluginConfig.CheckSystemSetup) {
+    // для исключения зацикливания, проверку валидности системы делаем единожды.
+    if (PluginConfig.CheckSystemSetup && !isAlreadyLoaded) {
       await isValidSystemSetup();
     }
 

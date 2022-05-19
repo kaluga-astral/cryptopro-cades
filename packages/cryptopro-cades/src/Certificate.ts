@@ -115,6 +115,11 @@ export class Certificate {
   isGost: boolean = false;
 
   /**
+   * OID алгоритма ключа.
+   */
+  algorithm: string | null = null;
+
+  /**
    * Приватный конструктор.
    * @param cfg сертификат из @see IStore.
    */

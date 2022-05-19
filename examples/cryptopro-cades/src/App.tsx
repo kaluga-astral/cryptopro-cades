@@ -1,7 +1,6 @@
 import { Buffer } from 'buffer';
 
 import { useEffect, useState } from 'react';
-import './App.css';
 import {
   Certificate,
   STORE_TYPE,
@@ -14,8 +13,11 @@ import {
   outputError,
   pluginConfig,
   sign,
+  signXml,
+  CADESCOM_XML_SIGNATURE_TYPE,
 } from '@astral/cryptopro-cades';
-import { ICryptoProvider, SystemInfo } from '@astral/cryptopro-cades';
+
+import { ICryptoProvider, SystemInfo } from '@astral/cryptopro-cades/src/types';
 
 import { CertificateInfo } from './components/CertificateInfo';
 import { CryptoProviderInfo } from './components/CryptoProviderInfo';
@@ -98,9 +100,9 @@ const CryptoApp = () => {
   };
 
   /**
-   * Подписать файл.
+   * Подписать файл в формате CMS.
    */
-  const signString = async (): Promise<void> => {
+  const signFile = async (): Promise<void> => {
     if (!selectedCertificate) {
       window.alert('Сертификат не выбран');
       return;
@@ -119,6 +121,38 @@ const CryptoApp = () => {
       dowloadFile(
         await convertBase64toBlob(sig),
         selectedFileForSign.name + '.sig'
+      );
+    } catch (error) {
+      outputError(error);
+      window.alert(error?.toString());
+    }
+  };
+
+  /**
+   * Подписать файл в формате XmlDSig.
+   */
+  const signXmlFile = async (
+    xmlSignatureType: CADESCOM_XML_SIGNATURE_TYPE
+  ): Promise<void> => {
+    if (!selectedCertificate) {
+      window.alert('Сертификат не выбран');
+      return;
+    }
+    if (!selectedFileForSign) {
+      window.alert('Файл для подписи не выбран');
+      return;
+    }
+
+    try {
+      const sig = await signXml(
+        selectedCertificate,
+        await selectedFileForSign.arrayBuffer(), // либо Base64 строку
+        xmlSignatureType
+      );
+
+      dowloadFile(
+        await convertBase64toBlob(sig),
+        selectedFileForSign.name.replace('.xml', '') + '.sig.xml'
       );
     } catch (error) {
       outputError(error);
@@ -228,9 +262,37 @@ const CryptoApp = () => {
           type="file"
           onChange={(e) => setSelectedFileForSign(e.target.files![0])}
         />
+        <br />
+        <br />
         {selectedCertificate && selectedFileForSign ? (
-          <button onClick={(_) => signString()}>Подписать</button>
+          <button onClick={(_) => signFile()}>Подписать CMS</button>
         ) : null}
+        <br />
+        {selectedCertificate && selectedFileForSign ? (
+          <button
+            onClick={(_) =>
+              signXmlFile(
+                CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED
+              )
+            }
+          >
+            Подписать XmlDSig (enveloped)
+          </button>
+        ) : null}
+        <br />
+        {selectedCertificate && selectedFileForSign ? (
+          <button
+            onClick={(_) =>
+              signXmlFile(
+                CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE
+              )
+            }
+          >
+            Подписать XmlDSig (template)
+          </button>
+        ) : null}
+        <br />
+        <br />
         {selectedCertificate ? (
           <button onClick={(_) => checkEncryptDecrypt()}>
             Проверить шифрование/расшифровку
@@ -241,12 +303,10 @@ const CryptoApp = () => {
   );
 };
 
-const App = () => {
-  return (
-    <div className="App">
-      <CryptoApp />
-    </div>
-  );
-};
+const App = () => (
+  <div className="App">
+    <CryptoApp />
+  </div>
+);
 
 export default App;

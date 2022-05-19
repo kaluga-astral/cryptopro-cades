@@ -9,14 +9,14 @@ export interface IRecipients {
    * Добавить сертификат в список получателей зашифрованного сообщения.
    * @param certificate Сертификат получателя.
    */
-  Add(certificate: ICertificate): WithPromise<void>;
+  Add(certificate: ICertificate): WithOptionalPromise<void>;
   /**
    * Очистить список сертификатов.
    */
-  Clear(): WithPromise<void>;
+  Clear(): WithOptionalPromise<void>;
   /**
    * Удалить сертификат из списка получателей по индексу.
    * @param index Индекс.
    */
-  Remove(index: number): WithPromise<void>;
+  Remove(index: number): WithOptionalPromise<void>;
 }

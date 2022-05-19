@@ -799,7 +799,13 @@ export const enum CRYPTO_OBJECTS {
   signer = 'CAdESCOM.CPSigner',
 
   /**
-   * Объект предоставляющий информацию о версии библиотеки и криптопровадера.
+   * Объект задающий способ подписания Xml файла.
+   * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/signedxml
+   */
+  signedXml = 'CAdESCOM.SignedXML',
+
+  /**
+   * Объект предоставляет свойства и методы для работы с подписанным документом XML.
    * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/about
    */
   about = 'CAdESCOM.About',

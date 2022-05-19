@@ -8,12 +8,12 @@ export declare type CPSigner = {
   /**
    * Сертификат подписанта.
    */
-  Certificate: WithPromise<ICertificate>;
+  Certificate: WithOptionalPromise<ICertificate>;
 
   /**
    * Адрес службы штампов времени.
    */
-  TSAAddress: WithPromise<string>;
+  TSAAddress: WithOptionalPromise<string>;
 
   /**
    * Проводить проверку цепочки сертификатов перед созданием подписи,

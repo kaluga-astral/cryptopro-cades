@@ -1,5 +1,4 @@
-import { CAPICOM_CERT_INFO_TYPE } from '../../constants';
-import { CAPICOM_ENCODING_TYPE } from '../../constants';
+import { CAPICOM_CERT_INFO_TYPE, CAPICOM_ENCODING_TYPE } from '../../constants';
 
 /**
  * Описывает сертификат открытого ключа.
@@ -10,63 +9,63 @@ export interface ICertificate {
   /**
    * Издатель сертификата.
    */
-  readonly IssuerName: WithPromise<string>;
+  readonly IssuerName: WithOptionalPromise<string>;
 
   /**
    * Имя субъекта.
    */
-  readonly SubjectName: WithPromise<string>;
+  readonly SubjectName: WithOptionalPromise<string>;
 
   /**
    * Версия сертификата.
    */
-  readonly Version: WithPromise<string>;
+  readonly Version: WithOptionalPromise<string>;
 
   /**
    * Серийный номер.
    */
-  readonly SerialNumber: WithPromise<string>;
+  readonly SerialNumber: WithOptionalPromise<string>;
 
   /**
    * Отпечаток.
    */
-  readonly Thumbprint: WithPromise<string>;
+  readonly Thumbprint: WithOptionalPromise<string>;
 
   /**
    * Дата, с которой сертификат действителен.
    */
-  readonly ValidFromDate: WithPromise<Date>;
+  readonly ValidFromDate: WithOptionalPromise<Date>;
 
   /**
    * Дата, до которой сертификат действителен.
    */
-  readonly ValidToDate: WithPromise<Date>;
+  readonly ValidToDate: WithOptionalPromise<Date>;
 
   /**
    * Закрытый ключ.
    */
-  readonly PrivateKey: WithPromise<any>;
+  readonly PrivateKey: WithOptionalPromise<any>;
 
   /**
    * Возвращает информацию из сертификата.
    * @param InfoType Enumeration type defines what information is to be queried from a certificate.
-   * @returns {WithPromise<string>} Запрошенная информация в виде строки.
+   * @returns {WithOptionalPromise<string>} Запрошенная информация в виде строки.
    */
-  GetInfo(InfoType: CAPICOM_CERT_INFO_TYPE): WithPromise<any>;
+  GetInfo(InfoType: CAPICOM_CERT_INFO_TYPE): WithOptionalPromise<any>;
 
   /**
    * Экспортирует открытую часть сертификата в виде Base64 строки.
    * @remarks возвращает без BEGIN и END CERTIFICATE. А перенос строки каждые 64 символа и зависит от ОС: \r\n или \n
    */
-  Export(EncodingType: CAPICOM_ENCODING_TYPE): WithPromise<any>;
+  Export(EncodingType: CAPICOM_ENCODING_TYPE): WithOptionalPromise<any>;
 
   /**
    * Имеется ли закрытый ключ для сертификата.
    */
-  HasPrivateKey(): WithPromise<any>;
+  HasPrivateKey(): WithOptionalPromise<any>;
 
   /**
    * Является ли сертификат валидным.
    */
-  IsValid(): WithPromise<any>;
+  IsValid(): WithOptionalPromise<any>;
 }

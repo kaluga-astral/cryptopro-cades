@@ -12,7 +12,7 @@ export declare type CPEnvelopedData = {
    * Выполняет операцию расшифрования.
    * @param envelopedMessage зашифрованное сообщение в Base64.
    */
-  Decrypt(envelopedMessage: string): WithPromise<void>;
+  Decrypt(envelopedMessage: string): WithOptionalPromise<void>;
 
   /**
    * Выполняет операцию шифрования.
@@ -20,20 +20,20 @@ export declare type CPEnvelopedData = {
    */
   Encrypt(
     encodingType: CAPICOM_ENCODING_TYPE = CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
-  ): WithPromise<string>;
+  ): WithOptionalPromise<string>;
 
   /**
    * Данные которые надо установить (для шифрования) или результат после расшифровки.
    */
-  Content: WithPromise<string>;
+  Content: WithOptionalPromise<string>;
 
   /**
    * Алгоритм шифрования.
    */
-  Algorithm: WithPromise<number>;
+  Algorithm: WithOptionalPromise<number>;
 
   /**
    * Коллекция сертификатов (получателей), для которых выполняется шифрование.
    */
-  Recipients: WithPromise<IRecipients>;
+  Recipients: WithOptionalPromise<IRecipients>;
 };

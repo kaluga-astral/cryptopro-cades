@@ -97,17 +97,16 @@ async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
  *
  * @param {STORE_TYPE} storeType из какого хранилища требуется получить сертификаты (из токена, реестра, все...).
  * @param {resetCache} resetCache перезапросить данные, игнорируя закэшированные данные.
- * @returns {Promise<Certificate[]>} .
+ * @returns {Promise<Certificate[]>} .сертификаты.
  */
 export function getCertificates(
-  storeType?: STORE_TYPE,
+  storeType: STORE_TYPE = STORE_TYPE.ALL,
   resetCache: boolean = false
 ): Promise<Certificate[]> {
+  if (certificatesCache[storeType] && !resetCache) {
+    return Promise.resolve(certificatesCache[storeType]);
+  }
   return afterPluginLoaded(async () => {
-    if (!storeType) {
-      storeType = STORE_TYPE.ALL;
-    }
-
     if (certificatesCache[storeType] && !resetCache) {
       return certificatesCache[storeType];
     }

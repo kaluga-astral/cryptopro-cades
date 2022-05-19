@@ -1,4 +1,4 @@
-import { ICryptoProvider } from '@astral/cryptopro-cades';
+import { ICryptoProvider } from '@astral/cryptopro-cades/src/types';
 
 type CryptoProviderProps = {
   cryptoProvider: ICryptoProvider;

@@ -6,20 +6,20 @@ export interface IVersion {
   /**
    * Возвращает старший компонент версии.
    */
-  MajorVersion: WithPromise<number>;
+  MajorVersion: WithOptionalPromise<number>;
 
   /**
    * Возвращает младший компонент версии.
    */
-  MinorVersion: WithPromise<number>;
+  MinorVersion: WithOptionalPromise<number>;
 
   /**
    * Возвращает номер сборки.
    */
-  BuildVersion: WithPromise<number>;
+  BuildVersion: WithOptionalPromise<number>;
 
   /**
    * Возвращает строковое представление версии.
    */
-  toString(): WithPromise<string>;
+  toString(): WithOptionalPromise<string>;
 }
