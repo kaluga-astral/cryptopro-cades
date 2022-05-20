@@ -11,27 +11,27 @@ export interface IAbout {
   /**
    * Возвращает объект IVersion c версией плагина.
    */
-  PluginVersion: WithPromise<IVersion>;
+  PluginVersion: WithOptionalPromise<IVersion>;
 
   /**
    * Возвращает строковое представление версии.
    */
-  Version: WithPromise<string>;
+  Version: WithOptionalPromise<string>;
 
   /**
    * Возвращает старший компонент версии.
    */
-  MajorVersion: WithPromise<number>;
+  MajorVersion: WithOptionalPromise<number>;
 
   /**
    * Возвращает младший компонент версии.
    */
-  MinorVersion: WithPromise<number>;
+  MinorVersion: WithOptionalPromise<number>;
 
   /**
    * Возвращает номер сборки.
    */
-  BuildVersion: WithPromise<number>;
+  BuildVersion: WithOptionalPromise<number>;
 
   /**
    * Устанавливает разрешенные виды медиа (PP_MEDIA_TYPE).
@@ -41,7 +41,7 @@ export interface IAbout {
    *       Может принимать значение
    *       @see http://cpdn.cryptopro.ru/content/cades/plugin-methods.html Список методов и свойств обьекта cadesplugin
    */
-  MediaFilter(MediaType: CADESCOM_MEDIA_TYPE): WithPromise<any>;
+  MediaFilter(MediaType: CADESCOM_MEDIA_TYPE): WithOptionalPromise<any>;
 
   /**
    * Устанавливает разрешенные виды носителей и разрешенные операции для
@@ -62,7 +62,7 @@ export interface IAbout {
     EnabledTypes: number,
     EnabledOperations: number,
     strFilterRegexp: string
-  ): WithPromise<void>;
+  ): WithOptionalPromise<void>;
 
   /**
    * Возвращает объект IVersion c версией криптопровайдера (CSP) производства компании Крипто-Про.
@@ -70,10 +70,10 @@ export interface IAbout {
   CSPVersion(
     providerName?: string,
     providerType?: number
-  ): WithPromise<IVersion>;
+  ): WithOptionalPromise<IVersion>;
 
   /**
    * Возвращает наименование криптопровайдера (CSP).
    */
-  CSPName(): WithPromise<string>;
+  CSPName(): WithOptionalPromise<string>;
 }

@@ -1,4 +1,5 @@
 export { sign } from './sign';
+export { signXml } from './signXml';
 export { encrypt } from './encrypt';
 export { decrypt } from './decrypt';
 export { getCertInfo } from './getCertInfo';

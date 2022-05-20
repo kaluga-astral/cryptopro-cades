@@ -754,3 +754,5 @@
     window.cadesplugin = cadesplugin;
     check_plugin_working();
 }());
+
+export default window.cadesplugin;

@@ -19,11 +19,14 @@ let cryptoProvidersCache: ICryptoProvider[] | null;
 export function getCryptoProviders(
   resetCache: boolean = false
 ): Promise<ICryptoProvider[]> {
+  if (cryptoProvidersCache && !resetCache) {
+    return Promise.resolve(cryptoProvidersCache);
+  }
+
   return afterPluginLoaded(async () => {
     if (cryptoProvidersCache && !resetCache) {
-      return cryptoProvidersCache;
+      return Promise.resolve(cryptoProvidersCache);
     }
-
     const availableCryptoProviders: ICryptoProvider[] = [];
 
     for (const { ProviderType, ProviderName } of CRYPTO_PROVIDERS) {

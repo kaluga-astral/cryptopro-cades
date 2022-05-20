@@ -24,11 +24,14 @@ let systemInfoCache: SystemInfo | null = null;
  * @returns информацию о CSP и плагине.
  */
 export const getSystemInfo = (): Promise<SystemInfo> => {
+  if (systemInfoCache) {
+    return Promise.resolve(systemInfoCache);
+  }
+
   return afterPluginLoaded(async () => {
     if (systemInfoCache) {
-      return systemInfoCache;
+      return Promise.resolve(systemInfoCache);
     }
-
     const sysInfo: SystemInfo = {
       cadesVersion: '',
       cspVersion: null,

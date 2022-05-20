@@ -6,7 +6,7 @@ import { fromBER } from 'asn1js';
 
 import { Certificate } from '../Certificate';
 import {
-  gostKeyAlgorithms,
+  GOST_KEY_ALGORITHM_OIDS,
   subjectKeyIdExtensionOid,
 } from '../constants/oids-dictionary';
 import { CryptoError } from '../errors';
@@ -30,7 +30,8 @@ export function parseCertificate(certificate: Certificate) {
 
   const publishKeyAlgorithm =
     parsedCert.subjectPublicKeyInfo.algorithm.algorithmId;
-  certificate.isGost = gostKeyAlgorithms.includes(publishKeyAlgorithm);
+  certificate.algorithm = publishKeyAlgorithm;
+  certificate.isGost = GOST_KEY_ALGORITHM_OIDS.includes(publishKeyAlgorithm);
 
   const subjectKeyIdentifierExtension = parsedCert.extensions.find(
     ({ extnID }: { extnID: string }): boolean =>

@@ -17,9 +17,9 @@ import { setCryptoProperty } from './internal/setCryptoProperty';
 import { validateCertificate } from './validateCertificate';
 
 /**
- * Подписывает входные данные указанным сертификатом.
+ * Подписать входные данные указанным сертификатом в формате CMS.
  * @param {ICertificate | Certificate} certificate -сертификат пользователя.
- * @param {*} data -входные данные для подписи в формате Base64 или ArrayBuffer.
+ * @param {ArrayBuffer | string} data -входные данные для подписи в формате Base64 или ArrayBuffer.
  * @param {boolean} [detach=true] присоединять подпись к данным или отдельно?
  * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
@@ -28,9 +28,9 @@ import { validateCertificate } from './validateCertificate';
 export function sign(
   certificate: ICertificate | Certificate,
   data: ArrayBuffer | string,
-  detach = true,
-  includeCertChain = true,
-  doNotValidate = false
+  detach: boolean = true,
+  includeCertChain: boolean = true,
+  doNotValidate: boolean = false
 ): Promise<string> {
   return afterPluginLoaded(async () => {
     if (!data) {
@@ -98,7 +98,7 @@ export function sign(
     }
 
     try {
-      const signResult = await signedData.SignCades(
+      const signResult = signedData.SignCades(
         signer,
         CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
         detach

@@ -10,5 +10,3 @@ export declare global {
 }
 
 declare const window: Window;
-
-declare type WithPromise<T> = Promise<T> | T;

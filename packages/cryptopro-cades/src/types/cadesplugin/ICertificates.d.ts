@@ -20,16 +20,16 @@ export interface ICertificates {
     findType: CAPICOM_CERTIFICATE_FIND_TYPE,
     searchCriteria?: any,
     findValidOnly?: boolean
-  ): WithPromise<ICertificates>;
+  ): WithOptionalPromise<ICertificates>;
 
   /**
    * Retrieves the number of Certificate objects in the collection.
    */
-  Count: WithPromise<number>;
+  Count: WithOptionalPromise<number>;
 
   /**
    * Retrieves a Certificate object that represents the indexed certificate of the collection. This is the default property.
    * @param index
    */
-  Item(index: number): WithPromise<ICertificate>;
+  Item(index: number): WithOptionalPromise<ICertificate>;
 }

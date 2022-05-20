@@ -11,12 +11,12 @@ export declare type CadesSignedData = {
   /**
    * Способ кодирования данных для подписи.
    */
-  ContentEncoding: WithPromise<CADESCOM_ENCODING_TYPE>;
+  ContentEncoding: WithOptionalPromise<CADESCOM_ENCODING_TYPE>;
 
   /**
    * Данные для подписи.
    */
-  Content: WithPromise<string>;
+  Content: WithOptionalPromise<string>;
 
   /**
    * Создает усовершенствованную подпись.
@@ -30,7 +30,7 @@ export declare type CadesSignedData = {
     signer: CPSigner,
     cadesType: CADESCOM_CADES_TYPE,
     bDetached?: boolean
-  ): WithPromise<string>;
+  ): WithOptionalPromise<string>;
 
   /**
    * Создает усовершенствованную подпись.
@@ -45,7 +45,7 @@ export declare type CadesSignedData = {
     hashData: CPHashedData,
     signer: CPSigner,
     cadesType: CADESCOM_CADES_TYPE
-  ): WithPromise<string>;
+  ): WithOptionalPromise<string>;
 
   // тут есть еще методы CoSign, Sign, Verify, CoSignCades, VerifyHash и т.п.
 };

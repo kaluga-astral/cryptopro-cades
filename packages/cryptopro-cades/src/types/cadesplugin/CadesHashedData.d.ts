@@ -6,27 +6,27 @@ export declare type CPHashedData = {
   /**
    * Возвращает или задает алгоритм хэширования.
    */
-  Algorithm: WithPromise<number>;
+  Algorithm: WithOptionalPromise<number>;
 
   /**
    * Возвращает результат операции хэширования.
    */
-  Value: WithPromise<string>;
+  Value: WithOptionalPromise<string>;
 
   /**
    * Способ кодирования данных для хэширования.
    */
-  DataEncoding: WithPromise<number>;
+  DataEncoding: WithOptionalPromise<number>;
 
   /**
    * Позволяет проинициализировать объект готовым хэш-значением.
    * @param hash
    */
-  SetHashValue(hash: string): WithPromise<void>;
+  SetHashValue(hash: string): WithOptionalPromise<void>;
 
   /**
    * Вычисляет хэш для заданной строки.
    * @param data строка для вычисления хэша.
    */
-  Hash(data: string): WithPromise<void>;
+  Hash(data: string): WithOptionalPromise<void>;
 };
