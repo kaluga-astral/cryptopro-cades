@@ -15,10 +15,10 @@ export const CertificateInfo = ({
         <b>
           =========================
           <a
-            download={`${certificate.name}.cer`}
+            download={`${certificate.subject.commonName}.cer`}
             href={`data:application/x-x509-ca-cert;base64,${certificate.certificateBase64Data}`}
           >
-            {certificate.name}
+            {certificate.subject.commonName}
           </a>
           =========================
         </b>

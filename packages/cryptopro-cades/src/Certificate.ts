@@ -1,4 +1,4 @@
-import { CAPICOM_CERT_INFO_TYPE, CAPICOM_ENCODING_TYPE } from './constants';
+import { CAPICOM_ENCODING_TYPE } from './constants';
 import { CryptoError } from './errors';
 import { ICertificate } from './types/cadesplugin/ICertificate';
 import { parseCertificate } from './utils/certificateParser';
@@ -10,16 +10,56 @@ import { parseCertificate } from './utils/certificateParser';
  */
 export class Certificate {
   /**
-   *
-   * @property {string|null}
+   * Данные о владельце сертификата.
+   * @remarks названия полей должны совпадать с @attributeOids в oids-dictionary.ts
    */
-  name: string | null = null;
+  subject: {
+    commonName: string | null;
+    surname: string | null;
+    name: string | null;
+    country: string | null;
+    locality: string | null;
+    street: string | null;
+    organization: string | null;
+    department: string | null;
+    post: string | null;
+    ogrnip: string | null;
+    ogrn: string | null;
+    snils: string | null;
+    innLe: string | null;
+    inn: string | null;
+    email: string | null;
+  } = {
+    commonName: null,
+    surname: null,
+    name: null,
+    country: null,
+    locality: null,
+    street: null,
+    organization: null,
+    department: null,
+    post: null,
+    ogrnip: null,
+    ogrn: null,
+    snils: null,
+    innLe: null,
+    inn: null,
+    email: null,
+  };
 
   /**
-   * Наименование издателя сертификата.
-   * @property {string|null}
+   * Данные об издателе сертификата.
+   * @remarks названия полей должны совпадать с @attributeOids в oids-dictionary.ts
    */
-  issuerName: string | null = null;
+  issuer: {
+    commonName: string | null;
+    inn: string | null;
+    innLe: string | null;
+  } = {
+    commonName: null,
+    inn: null,
+    innLe: null,
+  };
 
   /**
    *  Отпечаток сертификата (хэш SHA-1).
@@ -50,28 +90,6 @@ export class Certificate {
    * @property {string|null}
    */
   subjectKeyId: string | null = null;
-
-  /**
-   * Данные о владельце сертификата.
-   */
-  subject = {
-    SN: null, // SN=МИРОНЧУК
-    G: null, // G=ВИКТОР АРКАДИЕВИЧ
-    T: null, // T=ДИРЕКТОР
-    CN: null, // CN="ЧУ ДПО УЧЕБНЫЙ ЦЕНТР ""ФОРМУЛА"""
-    O: null, // O="ЧУ ДПО УЧЕБНЫЙ ЦЕНТР ""ФОРМУЛА"""
-    STREET: null, // STREET="УЛИЦА ЛЕНИНА, 77, -, -"
-    L: null, // L=КАЛУГА
-    S: null, // S=40 Калужская область
-    C: null, // C=RU
-    SNILS: null, // SNILS=00638140318
-    OGRN: null, // OGRN=1044004603070
-    OGRNIP: null,
-    INN: null, // INN=402701356218
-    INNLE: null, // INNLE=4028031214
-    OU: null,
-    E: null,
-  };
 
   /**
    * Base64 строка открытой части сертификата.
@@ -137,12 +155,6 @@ export class Certificate {
     const certificate = new Certificate(cert);
 
     if (cert.SubjectName instanceof Promise) {
-      certificate.name = await cert.GetInfo(
-        CAPICOM_CERT_INFO_TYPE.CAPICOM_CERT_INFO_SUBJECT_SIMPLE_NAME
-      );
-      certificate.issuerName = await cert.GetInfo(
-        CAPICOM_CERT_INFO_TYPE.CAPICOM_CERT_INFO_ISSUER_SIMPLE_NAME
-      );
       certificate.subjectName = await cert.SubjectName;
       certificate.thumbprint = await cert.Thumbprint;
       certificate.notAfter = await cert.ValidToDate;
@@ -164,12 +176,6 @@ export class Certificate {
         certificate.hasPrivateKey = false;
       }
     } else {
-      certificate.name = cert.GetInfo(
-        CAPICOM_CERT_INFO_TYPE.CAPICOM_CERT_INFO_SUBJECT_SIMPLE_NAME
-      );
-      certificate.issuerName = cert.GetInfo(
-        CAPICOM_CERT_INFO_TYPE.CAPICOM_CERT_INFO_ISSUER_SIMPLE_NAME
-      );
       certificate.subjectName = cert.SubjectName;
       certificate.thumbprint = cert.Thumbprint as string;
       certificate.notAfter = cert.ValidToDate as Date;
@@ -193,37 +199,8 @@ export class Certificate {
       }
     }
 
-    Object.keys(certificate.subject).forEach((key) => {
-      certificate.subject[key] = certificate.extractFromTitle(
-        certificate.subjectName!,
-        [key]
-      );
-    });
     parseCertificate(certificate);
 
     return certificate;
-  }
-
-  /**
-   * Получение строки для тайтла сертификата и сабтайтла
-   *
-   * @example
-   *
-   * const subjectName = "CN=_тест_ВипНет_в_КриптоПро1, O=_тест_ВипНет_в_КриптоПро1, L=г Калуга" --> "
-   * extractFromTitle(subjectName, [ "CN" ]) // "_тест_ВипНет_в_КриптоПро1"
-   *
-   * @param {string} name имя владеьльца или УЦ (@see #subjectName|@see #issuerName).
-   * @param {string[]} partsOfName ключи для извлечения из названия.
-   * @returns {string} .данные указанного свойства.
-   */
-  extractFromTitle(name: string, partsOfName: string[]): string {
-    const certificateTitles: string[] = [];
-
-    partsOfName.forEach((item) => {
-      const regExp = new RegExp(`${item}=(.*?),`);
-      certificateTitles.push(name.match(regExp)?.[1] ?? '');
-    });
-
-    return certificateTitles.join(' ');
   }
 }
