@@ -156,11 +156,10 @@ export class Certificate {
         certificate.providerName = await oPrivateKey.ProviderName;
         certificate.providerType = await oPrivateKey.ProviderType;
       } catch (error) {
-        console.warn(
-          CryptoError.createCadesError(
-            error,
-            `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
-          )
+        // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
+        CryptoError.createCadesError(
+          error,
+          `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
         );
         certificate.hasPrivateKey = false;
       }
@@ -185,11 +184,10 @@ export class Certificate {
         certificate.providerName = oPrivateKey.ProviderName;
         certificate.providerType = oPrivateKey.ProviderType;
       } catch (error) {
-        console.warn(
-          CryptoError.createCadesError(
-            error,
-            `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
-          )
+        // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
+        CryptoError.createCadesError(
+          error,
+          `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
         );
         certificate.hasPrivateKey = false;
       }
