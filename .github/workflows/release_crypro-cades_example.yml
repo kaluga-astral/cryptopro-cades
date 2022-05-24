@@ -21,7 +21,7 @@ jobs:
         run: npm i
 
       - name: Build cryptopro-cades-example
-        run: npm run build:prod --workspace=@astral/ui
+        run: npm run build:prod --workspace=cryptopro-cades-example
   release:
     needs: build
     runs-on: ubuntu-latest
