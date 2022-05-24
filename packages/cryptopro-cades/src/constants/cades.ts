@@ -821,4 +821,10 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cpenvelopeddata
    */
   envelopedData = 'CAdESCOM.CPEnvelopedData',
+
+  /**
+   * Объект сертификат.
+   * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cpcertificate
+   */
+  certificate = 'CAdESCOM.Certificate',
 }

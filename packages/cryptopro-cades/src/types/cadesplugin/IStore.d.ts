@@ -1,4 +1,8 @@
-import { CAPICOM_STORE_OPEN_MODE, STORE_LOCATION } from './../../constants';
+import {
+  CAPICOM_MY_STORE,
+  CAPICOM_STORE_OPEN_MODE,
+  STORE_LOCATION,
+} from './../../constants';
 import { ICertificates } from './ICertificates';
 
 /**

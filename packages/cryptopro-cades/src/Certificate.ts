@@ -86,12 +86,6 @@ export class Certificate {
   certificateBin: ICertificate | null = null;
 
   /**
-   * Путь к контейнеру закрытого ключа.
-   * @property {string|null}
-   */
-  containerName: string | null = null;
-
-  /**
    * Имя криптопровайдера.
    * @property {string|null}
    */
@@ -159,7 +153,6 @@ export class Certificate {
       try {
         certificate.hasPrivateKey = await cert.HasPrivateKey();
         const oPrivateKey = await cert.PrivateKey;
-        certificate.containerName = await oPrivateKey.UniqueContainerName;
         certificate.providerName = await oPrivateKey.ProviderName;
         certificate.providerType = await oPrivateKey.ProviderType;
       } catch (error) {
@@ -189,7 +182,6 @@ export class Certificate {
       try {
         certificate.hasPrivateKey = cert.HasPrivateKey();
         const oPrivateKey = cert.PrivateKey;
-        certificate.containerName = oPrivateKey.UniqueContainerName;
         certificate.providerName = oPrivateKey.ProviderName;
         certificate.providerType = oPrivateKey.ProviderType;
       } catch (error) {

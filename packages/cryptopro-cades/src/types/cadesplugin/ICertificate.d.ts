@@ -60,6 +60,11 @@ export interface ICertificate {
   Export(EncodingType: CAPICOM_ENCODING_TYPE): WithOptionalPromise<any>;
 
   /**
+   * Импотирует открытую часть сертификата в виде Base64 строки.
+   */
+  Import(base64Certificate: string): WithOptionalPromise<void>;
+
+  /**
    * Имеется ли закрытый ключ для сертификата.
    */
   HasPrivateKey(): WithOptionalPromise<any>;

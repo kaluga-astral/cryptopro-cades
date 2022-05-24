@@ -65,6 +65,10 @@ export class CryptoError extends Error implements ICryptoError {
     this.InnerError = err;
     this.message = err?.message;
     this.stack = err?.stack;
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, CryptoError);
+    }
   }
 
   /**
