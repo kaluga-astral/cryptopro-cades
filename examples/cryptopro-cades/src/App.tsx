@@ -349,7 +349,10 @@ const CryptoApp = () => {
         {certificates?.map((certInfo, index) => {
           return (
             <p key={index}>
-              <CertificateInfo certificate={certInfo} />
+              <CertificateInfo
+                certificate={certInfo}
+                onSelect={(skid) => trySelectCertificate(skid)}
+              />
             </p>
           );
         }) ?? 'Ничего нет :('}
