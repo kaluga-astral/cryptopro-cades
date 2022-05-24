@@ -15,9 +15,15 @@ import {
   sign,
   signXml,
   CADESCOM_XML_SIGNATURE_TYPE,
-} from '@astral/cryptopro-cades';
+  createObject,
+  CRYPTO_OBJECTS,
+} from '@astral/cryptopro-cades/src';
 
-import { ICryptoProvider, SystemInfo } from '@astral/cryptopro-cades/src/types';
+import {
+  ICertificate,
+  ICryptoProvider,
+  SystemInfo,
+} from '@astral/cryptopro-cades/src/types';
 
 import { CertificateInfo } from './components/CertificateInfo';
 import { CryptoProviderInfo } from './components/CryptoProviderInfo';
@@ -32,7 +38,11 @@ const CryptoApp = () => {
   const [showCertificates, setShowCertificates] = useState<boolean>();
   const [showCryptoProviders, setShowCryptoProviders] = useState<boolean>();
   const [selectedCertificate, setSelectedCertificate] = useState<Certificate>();
-  const [selectedFileForSign, setSelectedFileForSign] = useState<File>();
+  const [selectedFile, setSelectedFile] = useState<File>();
+  const [selectedEncryptCert, setSelectedEncryptCert] =
+    useState<ICertificate>();
+  const [selectedEncryptCertBase64, setSelectedEncryptCertBase64] =
+    useState<string>();
 
   useEffect(() => {
     async function fetchSystemInfo() {
@@ -107,7 +117,7 @@ const CryptoApp = () => {
       window.alert('Сертификат не выбран');
       return;
     }
-    if (!selectedFileForSign) {
+    if (!selectedFile) {
       window.alert('Файл для подписи не выбран');
       return;
     }
@@ -115,13 +125,10 @@ const CryptoApp = () => {
     try {
       const sig = await sign(
         selectedCertificate,
-        await selectedFileForSign.arrayBuffer() // либо Base64 строку
+        await selectedFile.arrayBuffer() // либо Base64 строку
       );
 
-      dowloadFile(
-        await convertBase64toBlob(sig),
-        selectedFileForSign.name + '.sig'
-      );
+      dowloadFile(await convertBase64toBlob(sig), selectedFile.name + '.sig');
     } catch (error) {
       outputError(error);
       window.alert(error?.toString());
@@ -138,7 +145,7 @@ const CryptoApp = () => {
       window.alert('Сертификат не выбран');
       return;
     }
-    if (!selectedFileForSign) {
+    if (!selectedFile) {
       window.alert('Файл для подписи не выбран');
       return;
     }
@@ -146,13 +153,66 @@ const CryptoApp = () => {
     try {
       const sig = await signXml(
         selectedCertificate,
-        await selectedFileForSign.arrayBuffer(), // либо Base64 строку
+        await selectedFile.arrayBuffer(), // либо Base64 строку
         xmlSignatureType
       );
 
       dowloadFile(
         await convertBase64toBlob(sig),
-        selectedFileForSign.name.replace('.xml', '') + '.sig.xml'
+        selectedFile.name.replace('.xml', '') + '.sig.xml'
+      );
+    } catch (error) {
+      outputError(error);
+      window.alert(error?.toString());
+    }
+  };
+
+  /**
+   * Зашифровать файл в формате CMS.
+   */
+  const encryptFileCms = async (): Promise<void> => {
+    if (!selectedEncryptCert) {
+      window.alert('Сертификат получателя не выбран');
+      return;
+    }
+    if (!selectedFile) {
+      window.alert('Файл для шифрования не выбран');
+      return;
+    }
+
+    try {
+      const encryptedData = await encrypt(
+        await selectedFile.arrayBuffer(), // либо Base64 строку
+        [selectedEncryptCert]
+      );
+
+      dowloadFile(
+        await convertBase64toBlob(encryptedData),
+        selectedFile.name + '.enc'
+      );
+    } catch (error) {
+      outputError(error);
+      window.alert(error?.toString());
+    }
+  };
+
+  /**
+   * Зашифровать файл в формате CMS.
+   */
+  const decryptFileCms = async (): Promise<void> => {
+    if (!selectedFile) {
+      window.alert('Файл для расшифровки не выбран');
+      return;
+    }
+
+    try {
+      const decryptedData = await decrypt(
+        await selectedFile.arrayBuffer() // либо Base64 строку
+      );
+
+      dowloadFile(
+        await convertBase64toBlob(decryptedData),
+        selectedFile.name + '.decrypted'
       );
     } catch (error) {
       outputError(error);
@@ -184,6 +244,7 @@ const CryptoApp = () => {
         isOk ? 'Шифрование-расшифровка прошла успешно' : 'Данные не совпали'
       );
     } catch (error) {
+      outputError(error);
       window.alert(error.toString());
     }
   };
@@ -201,6 +262,65 @@ const CryptoApp = () => {
     window
       .fetch(`data:${type};base64,${base64}`)
       .then((res: Response) => res.blob());
+
+  /**
+   * Выполняет импорт сертификата.
+   * @param data
+   */
+  const importCertificate = async (
+    data: string | ArrayBuffer
+  ): Promise<void> => {
+    if (!data) {
+      setSelectedEncryptCertBase64(undefined);
+      setSelectedEncryptCert(undefined);
+      return;
+    }
+
+    const arrayBufferToString = (buffer) => {
+      return new TextDecoder().decode(buffer);
+    };
+
+    const parseFromArrayBuffer = async (buffer: ArrayBuffer) => {
+      const certificate: ICertificate = await createObject(
+        CRYPTO_OBJECTS.certificate
+      );
+      const base64 = Buffer.from(buffer).toString('base64');
+      await certificate.Import(base64);
+      setSelectedEncryptCertBase64(base64);
+      setSelectedEncryptCert(certificate);
+      return certificate;
+    };
+
+    const parseFromBase64String = async (base64: string) => {
+      const certificate: ICertificate = await createObject(
+        CRYPTO_OBJECTS.certificate
+      );
+      await certificate.Import(base64);
+      setSelectedEncryptCertBase64(base64);
+      setSelectedEncryptCert(certificate);
+      return certificate;
+    };
+    try {
+      if (data instanceof ArrayBuffer) {
+        try {
+          await parseFromArrayBuffer(data);
+        } catch (error) {
+          outputError(error);
+          await parseFromBase64String(arrayBufferToString(data));
+        }
+      } else {
+        try {
+          await parseFromArrayBuffer(Buffer.from(data));
+        } catch (error) {
+          outputError(error);
+          await parseFromBase64String(data);
+        }
+      }
+    } catch (error) {
+      outputError(error);
+      window.alert(error.toString());
+    }
+  };
 
   return (
     <>
@@ -239,12 +359,14 @@ const CryptoApp = () => {
       <br />
       <div>
         <b>
-          ======================================= Операции с сертификатами
-          =======================================
+          ========================= Операции с сертификатами
+          =========================
         </b>
         <br />
         <br />
+        skid:
         <input
+          style={{ width: 350 }}
           placeholder="Введите skid серта"
           onChange={(e) => trySelectCertificate(e.target.value)}
           value={selectedCertificate?.subjectKeyId!}
@@ -255,48 +377,86 @@ const CryptoApp = () => {
             <CertificateInfo certificate={selectedCertificate} />
           </>
         ) : null}
+        {selectedCertificate ? (
+          <>
+            <br />
+            <br />
+            <button onClick={(_) => checkEncryptDecrypt()}>
+              Проверить шифрование/расшифровку
+            </button>
+            <br />
+          </>
+        ) : null}
         <br />
         <br />
-        Подпись
+        Выберите файл для криптооперации:
         <input
           type="file"
-          onChange={(e) => setSelectedFileForSign(e.target.files![0])}
+          onChange={(e) => setSelectedFile(e.target.files![0])}
         />
         <br />
-        <br />
-        {selectedCertificate && selectedFileForSign ? (
-          <button onClick={(_) => signFile()}>Подписать CMS</button>
+        {selectedCertificate && selectedFile ? (
+          <>
+            <br />
+            <button onClick={(_) => signFile()}>Подписать CMS</button>
+          </>
+        ) : null}
+        {selectedCertificate && selectedFile ? (
+          <>
+            <br />
+            <button
+              onClick={(_) =>
+                signXmlFile(
+                  CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED
+                )
+              }
+            >
+              Подписать XmlDSig (enveloped)
+            </button>
+          </>
+        ) : null}
+        {selectedCertificate && selectedFile ? (
+          <>
+            <br />
+            <button
+              onClick={(_) =>
+                signXmlFile(
+                  CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE
+                )
+              }
+            >
+              Подписать XmlDSig (template)
+            </button>
+          </>
         ) : null}
         <br />
-        {selectedCertificate && selectedFileForSign ? (
-          <button
-            onClick={(_) =>
-              signXmlFile(
-                CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED
-              )
-            }
-          >
-            Подписать XmlDSig (enveloped)
-          </button>
-        ) : null}
-        <br />
-        {selectedCertificate && selectedFileForSign ? (
-          <button
-            onClick={(_) =>
-              signXmlFile(
-                CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_TEMPLATE
-              )
-            }
-          >
-            Подписать XmlDSig (template)
-          </button>
+        {selectedFile ? (
+          <>
+            <button onClick={(_) => decryptFileCms()}>Расшифровать CMS</button>
+            <br />
+          </>
         ) : null}
         <br />
         <br />
-        {selectedCertificate ? (
-          <button onClick={(_) => checkEncryptDecrypt()}>
-            Проверить шифрование/расшифровку
-          </button>
+        Укажите Base64 сертификата на которого зашифровать
+        <br /> или выберите серт из файла:
+        <input
+          type="file"
+          onChange={async (e) =>
+            await importCertificate(await e.target.files![0].arrayBuffer())
+          }
+        />
+        <br />
+        <textarea
+          style={{ width: 500, height: 200 }}
+          value={selectedEncryptCertBase64}
+          onChange={async (e) => await importCertificate(e.target.value)}
+        />
+        {selectedEncryptCert && selectedFile ? (
+          <>
+            <br />
+            <button onClick={(_) => encryptFileCms()}>Зашифровать CMS</button>
+          </>
         ) : null}
       </div>
     </>
