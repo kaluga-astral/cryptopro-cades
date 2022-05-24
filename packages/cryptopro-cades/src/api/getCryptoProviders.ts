@@ -1,8 +1,8 @@
-import { CryptoError } from '../errors';
 import { CRYPTO_OBJECTS, CRYPTO_PROVIDERS } from '../constants';
 import { IAbout } from '../types';
 import { ICryptoProvider } from '../types/ICryptoProvider';
 import { IVersion } from '../types/cadesplugin/IVersion';
+import { outputDebug } from '../utils';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
@@ -28,30 +28,36 @@ export function getCryptoProviders(
       return Promise.resolve(cryptoProvidersCache);
     }
     const availableCryptoProviders: ICryptoProvider[] = [];
-
-    for (const { ProviderType, ProviderName } of CRYPTO_PROVIDERS) {
-      try {
-        const cadesAbout: IAbout = await createObject(CRYPTO_OBJECTS.about);
-        const cspVersion: IVersion = await cadesAbout.CSPVersion(
-          ProviderName,
-          ProviderType
-        );
-        availableCryptoProviders.push({
-          ProviderName: ProviderName,
-          ProviderType: ProviderType,
-          BuildVersion: await cspVersion.BuildVersion,
-          MajorVersion: await cspVersion.MajorVersion,
-          MinorVersion: await cspVersion.MinorVersion,
-        });
-      } catch (error) {
-        // ошибка не критичная, достаточно просто создать (и залогировать)
-        CryptoError.createCadesError(
-          error,
-          `Ошибка получения информации о криптопровайдере с типом ${ProviderType}`
-        );
+    const logData = [];
+    try {
+      for (const { ProviderType, ProviderName } of CRYPTO_PROVIDERS) {
+        try {
+          const cadesAbout: IAbout = await createObject(CRYPTO_OBJECTS.about);
+          const cspVersion: IVersion = await cadesAbout.CSPVersion(
+            ProviderName,
+            ProviderType
+          );
+          availableCryptoProviders.push({
+            ProviderName: ProviderName,
+            ProviderType: ProviderType,
+            BuildVersion: await cspVersion.BuildVersion,
+            MajorVersion: await cspVersion.MajorVersion,
+            MinorVersion: await cspVersion.MinorVersion,
+          });
+        } catch (error) {
+          logData.push({
+            errorMessage: `Ошибка получения информации о криптопровайдере ${ProviderName} с типом ${ProviderType}.`,
+            error,
+          });
+        }
       }
+      return (cryptoProvidersCache = availableCryptoProviders);
+    } catch (error) {
+      logData.push({ error });
+      throw error;
+    } finally {
+      logData.push({ availableCryptoProviders });
+      outputDebug('getCryptoProviders >>', logData);
     }
-
-    return (cryptoProvidersCache = availableCryptoProviders);
   })();
 }

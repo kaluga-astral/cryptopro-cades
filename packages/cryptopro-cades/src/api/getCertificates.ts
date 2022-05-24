@@ -22,6 +22,7 @@ const certificatesCache = {};
 /**
  * Возвращает список сертификатов из указанного хранилища.
  * @param {IStore} store Хранилище
+ * @param {string} storeName Наименование хранилища.
  * @returns {Promise<Certificate[]>} .Список сертификатов.
  */
 async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
@@ -56,12 +57,12 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
     }
   }
 
-  outputDebug('getCertificatesFromStore >>', result);
   return result;
 }
 
 /**
  * Получить сертификаты из USB токенов.
+ * @param {STORE_TYPE} storeType Тип хранилища ключей.
  * @returns {Promise<Certificate[]>} .Список сертификатов из USB токенов.
  */
 async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
@@ -76,6 +77,7 @@ async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из реестра.
+ * @param {STORE_TYPE} storeType Тип хранилища ключей.
  * @returns {Promise<Certificate[]>} .Список сертификатов из реестра.
  */
 async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
@@ -110,41 +112,54 @@ export function getCertificates(
     if (certificatesCache[storeType] && !resetCache) {
       return certificatesCache[storeType];
     }
+    const logData = [];
     let result: Certificate[] = [];
-    switch (storeType) {
-      case STORE_TYPE.USB_TOKEN:
-        result = await ReadCertificatesFromUsbToken();
-        break;
 
-      case STORE_TYPE.REGISTRY:
-        result = await ReadCertificatesFromRegistry();
-        break;
+    try {
+      switch (storeType) {
+        case STORE_TYPE.USB_TOKEN:
+          result = await ReadCertificatesFromUsbToken();
+          logData.push({ storeType, result });
+          break;
 
-      case STORE_TYPE.ALL:
-        result = await ReadCertificatesFromRegistry();
-        const usbTokenCertificates = await ReadCertificatesFromUsbToken();
-        result = result.concat(usbTokenCertificates);
-        result = result.filter(
-          (cert, index) =>
-            result.findIndex(
-              (_cert) => _cert.thumbprint === cert.thumbprint
-            ) === index
-        );
-        break;
+        case STORE_TYPE.REGISTRY:
+          result = await ReadCertificatesFromRegistry();
+          logData.push({ storeType, result });
+          break;
 
-      default:
-        let store: IStore | null = null;
-        try {
-          store = await openStore();
+        case STORE_TYPE.ALL:
+          result = await ReadCertificatesFromRegistry();
+          logData.push({ storeType: 'registry', result });
+          const usbTokenCertificates = await ReadCertificatesFromUsbToken();
+          logData.push({ storeType: 'usb', result });
+          result = result.concat(usbTokenCertificates);
+          result = result.filter(
+            (cert, index) =>
+              result.findIndex(
+                (_cert) => _cert.thumbprint === cert.thumbprint
+              ) === index
+          );
+          break;
 
-          result = await getCertificatesFromStore(store);
-        } finally {
-          await store?.Close();
-        }
-        break;
+        default:
+          let store: IStore | null = null;
+          try {
+            store = await openStore();
+
+            result = await getCertificatesFromStore(store);
+            logData.push({ storeType: 'default', result });
+          } finally {
+            await store?.Close();
+          }
+          break;
+      }
+    } catch (error) {
+      logData.push({ error });
+      throw error;
+    } finally {
+      logData.push({ result });
+      outputDebug(`getCertificates(${storeType}) >>`, logData);
     }
-
-    outputDebug(`GET_CERTIFICATES(${storeType}) >>`, result);
 
     return (certificatesCache[storeType] = result);
   })();
