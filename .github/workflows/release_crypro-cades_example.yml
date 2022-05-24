@@ -3,6 +3,10 @@ name: 'Release example cryptopro-cades'
 on:
   push:
     branches: [main]
+    paths:
+      - 'examples/cryptopro-cades/**'
+      - 'packages/cryptopro-cades/**'
+      - '.github/workflows/release_crypro-cades_example.yml'
 
 jobs:
   build:
