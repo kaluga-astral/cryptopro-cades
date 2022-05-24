@@ -17,7 +17,9 @@ export enum GOST_KEY_ALGORITHM_TYPES {
 /**
  * OID ГОСТовских алгоритмов.
  */
-export const GOST_KEY_ALGORITHM_OIDS = Object.values(GOST_KEY_ALGORITHM_TYPES);
+export const GOST_KEY_ALGORITHM_OIDS: string[] = Object.values(
+  GOST_KEY_ALGORITHM_TYPES
+);
 
 /**
  * OID SubjectKeyId расширения в сертификате.
