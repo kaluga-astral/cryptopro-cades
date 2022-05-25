@@ -42,7 +42,7 @@ function parseValue(target: any, attributeName: string): string {
  */
 function normalizeInn(inn: string | null): string | null {
   return inn && inn.length == 12 && inn.startsWith('00')
-    ? inn.substring(2, 10)
+    ? inn.substring(2, 12)
     : inn;
 }
 
