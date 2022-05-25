@@ -15,5 +15,5 @@ export function bufferToHex(buffer: ArrayBuffer): string | null {
     const str = int8Buffer[i].toString(16).toUpperCase();
     result += (str.length === 1 ? '0' : '') + str;
   }
-  return result;
+  return result.trim();
 }
