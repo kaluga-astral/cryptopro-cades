@@ -5,11 +5,9 @@ import {
   STORE_TYPE,
 } from '../constants';
 import { Certificate } from '../Certificate';
-import { IStore } from '../types/cadesplugin/IStore';
+import { ICertificate, ICertificates, IStore } from '../types';
 import { outputDebug } from '../utils/outputDebug';
 import { CryptoError } from '../errors';
-import { ICertificates } from '../types/cadesplugin/ICertificates';
-import { ICertificate } from '../types/cadesplugin/ICertificate';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { openStore } from './openStore';

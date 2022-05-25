@@ -6,8 +6,7 @@ import {
   VIP_NET_CRYPTO_PROVIDER_TYPES,
 } from '../constants';
 import { outputDebug } from '../utils/outputDebug';
-import { IAbout } from '../types';
-import { SystemInfo } from '../types/SystemInfo';
+import { IAbout, ISystemInfo } from '../types';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
@@ -16,14 +15,14 @@ import { getCryptoProviders } from './getCryptoProviders';
 /**
  * Кэш информации о системе.
  */
-let systemInfoCache: SystemInfo | null = null;
+let systemInfoCache: ISystemInfo | null = null;
 
 /**
  * Предоставляет информацию о системе.
  *
  * @returns информацию о CSP и плагине.
  */
-export const getSystemInfo = (): Promise<SystemInfo> => {
+export const getSystemInfo = (): Promise<ISystemInfo> => {
   if (systemInfoCache) {
     return Promise.resolve(systemInfoCache);
   }
@@ -32,7 +31,7 @@ export const getSystemInfo = (): Promise<SystemInfo> => {
     if (systemInfoCache) {
       return Promise.resolve(systemInfoCache);
     }
-    const sysInfo: SystemInfo = {
+    const sysInfo: ISystemInfo = {
       cadesVersion: '',
       cspVersion: null,
       cryptoProInstalled: false,

@@ -1,3 +1,5 @@
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
 /**
  * Описывает версию.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_interface/iversion

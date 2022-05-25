@@ -2,7 +2,7 @@ import { Buffer } from 'buffer';
 
 import { CryptoError } from '../errors';
 import { CADESCOM_BASE64_TO_BINARY, CRYPTO_OBJECTS } from '../constants';
-import { CPEnvelopedData } from '../types/cadesplugin/CPEnvelopedData';
+import { CPEnvelopedData } from '../types';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';

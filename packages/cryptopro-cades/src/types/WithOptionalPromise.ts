@@ -4,4 +4,4 @@
  * у клиента может не быть возможности выполнять асинхронно, в таких случаях будет выполняться синхронно.
  * Но для этого требуется проверять, вернул ли метод или свойство Promise, если да то сделать await.
  */
-declare type WithOptionalPromise<T> = Promise<T> | T;
+export type WithOptionalPromise<T> = Promise<T> | T;

@@ -7,9 +7,8 @@ import {
   GOST_KEY_ALGORITHM_TYPES,
   XML_SIGNATURE_GOST_ALGORITHM_TYPE,
 } from '../constants';
-import { CPSigner, ICertificate } from '../types';
+import { CPSigner, ICertificate, ISignedXml } from '../types';
 import { Certificate } from '../Certificate';
-import { ISignedXml } from '../types/cadesplugin/ISignedXml';
 import { outputDebug } from '../utils';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';

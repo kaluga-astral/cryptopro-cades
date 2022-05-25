@@ -1,7 +1,5 @@
 import { CRYPTO_OBJECTS, CRYPTO_PROVIDERS } from '../constants';
-import { IAbout } from '../types';
-import { ICryptoProvider } from '../types/ICryptoProvider';
-import { IVersion } from '../types/cadesplugin/IVersion';
+import { IAbout, ICryptoProvider, IVersion } from '../types';
 import { outputDebug } from '../utils';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';

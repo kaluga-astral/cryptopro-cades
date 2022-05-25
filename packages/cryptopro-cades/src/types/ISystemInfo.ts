@@ -1,7 +1,7 @@
 /**
  * Информация о CSP и плагине.
  */
-export class SystemInfo {
+export interface ISystemInfo {
   /**
    * Версия КриптоПро ЭЦП Browser plug-in.
    */
@@ -26,12 +26,4 @@ export class SystemInfo {
    * Наименование криптопровайдера.
    */
   cryptoProviderName: string | null;
-
-  /**
-   * Отдает строковое представление объекта.
-   * @returns строковое представление объекта.
-   */
-  toString(): string {
-    return `CADES: ${this.cadesVersion}, CSP: ${this.cryptoProviderName} ${this.cspVersion}. CryptoPro Installed: ${this.cryptoProInstalled}, VipNet Installed: ${this.vipNetInstalled}.`;
-  }
 }

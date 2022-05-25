@@ -1,5 +1,5 @@
 import { CryptoError } from '../errors';
-import { SystemInfo } from '../types/SystemInfo';
+import { ISystemInfo } from '../types';
 import { outputDebug } from '../utils';
 
 import { getSystemInfo } from './getSystemInfo';
@@ -12,7 +12,7 @@ import { isSupportedCSPVersion } from './internal/isSupportedCSPVersion';
  * @returns {boolean} флаг корректности настроек.
  */
 export const isValidSystemSetup = async (): Promise<boolean> => {
-  let systemInfo: SystemInfo | null = null;
+  let systemInfo: ISystemInfo | null = null;
   let isValid = false;
   const logData = [];
   try {

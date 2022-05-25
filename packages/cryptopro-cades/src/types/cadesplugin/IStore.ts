@@ -1,8 +1,6 @@
-import {
-  CAPICOM_MY_STORE,
-  CAPICOM_STORE_OPEN_MODE,
-  STORE_LOCATION,
-} from './../../constants';
+import { CAPICOM_STORE_OPEN_MODE, STORE_LOCATION } from '../../constants';
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
 import { ICertificates } from './ICertificates';
 
 /**
@@ -17,9 +15,9 @@ export interface IStore {
    * @param openMode режим открытия хранилища.
    */
   Open(
-    storeLocation: STORE_LOCATION = STORE_LOCATION.CADESCOM_CURRENT_USER_STORE,
-    storeName?: string = CAPICOM_MY_STORE,
-    openMode: CAPICOM_STORE_OPEN_MODE = CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+    storeLocation: STORE_LOCATION,
+    storeName: string,
+    openMode: CAPICOM_STORE_OPEN_MODE
   ): WithOptionalPromise<void>;
 
   /**

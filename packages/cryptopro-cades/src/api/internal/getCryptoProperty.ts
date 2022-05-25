@@ -1,5 +1,5 @@
 import { deasync } from '../../utils/deasync';
-import { ICertificate } from '../../types/cadesplugin/ICertificate';
+import { ICertificate } from '../../types';
 
 import { canAsync } from './canAsync';
 

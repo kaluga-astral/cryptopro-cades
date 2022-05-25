@@ -1,5 +1,5 @@
 import { getLastError } from '../api/getLastError';
-import { IAnyError, ICryptoError, IErrorObject } from '../types/ICryptoError';
+import { IAnyError, ICryptoError, IErrorObject } from '../types';
 
 import { CRYPTO_PRO_ERRORS, PLUGIN_ERRORS } from './errorCodes';
 import PluginConfig from './../PluginConfig';

@@ -1,6 +1,6 @@
 import { CAPICOM_ENCODING_TYPE } from './constants';
 import { CryptoError } from './errors';
-import { ICertificate } from './types/cadesplugin/ICertificate';
+import { ICertificate } from './types';
 import { parseCertificate } from './utils/certificateParser';
 
 /**

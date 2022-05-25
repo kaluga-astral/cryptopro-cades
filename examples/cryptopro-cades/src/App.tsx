@@ -17,13 +17,10 @@ import {
   CADESCOM_XML_SIGNATURE_TYPE,
   createObject,
   CRYPTO_OBJECTS,
-} from '@astral/cryptopro-cades/src';
-
-import {
   ICertificate,
   ICryptoProvider,
-  SystemInfo,
-} from '@astral/cryptopro-cades/src/types';
+  ISystemInfo,
+} from '@astral/cryptopro-cades';
 
 import { CertificateInfo } from './components/CertificateInfo';
 import { CryptoProviderInfo } from './components/CryptoProviderInfo';
@@ -33,7 +30,7 @@ const CryptoApp = () => {
   pluginConfig.Debug = true;
 
   const [certificates, setCertificates] = useState<Certificate[]>([]);
-  const [versionInfo, setVersionInfo] = useState<SystemInfo>();
+  const [versionInfo, setVersionInfo] = useState<ISystemInfo>();
   const [cryptoProviders, setCryptoProviders] = useState<ICryptoProvider[]>([]);
   const [showCertificates, setShowCertificates] = useState<boolean>();
   const [showCryptoProviders, setShowCryptoProviders] = useState<boolean>();
@@ -318,7 +315,7 @@ const CryptoApp = () => {
       }
     } catch (error) {
       outputError(error);
-      window.alert(error.toString());
+      window.alert(error.message);
     }
   };
 

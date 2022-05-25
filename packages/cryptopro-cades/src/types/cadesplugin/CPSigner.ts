@@ -1,10 +1,12 @@
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
 import { ICertificate } from './ICertificate';
 
 /**
  * Объект, задающий параметры создания и содержащий информацию об усовершенствованной подписи.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cpsigner
  */
-export declare type CPSigner = {
+export type CPSigner = {
   /**
    * Сертификат подписанта.
    */

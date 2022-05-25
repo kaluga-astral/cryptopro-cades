@@ -2,7 +2,7 @@ import {
   CRYPTO_PRO_CRYPTO_PROVIDER_TYPES,
   VIP_NET_CRYPTO_PROVIDER_TYPES,
 } from '../../constants';
-import { SystemInfo } from '../../types/SystemInfo';
+import { ISystemInfo } from '../../types';
 import { getCryptoProviders } from '../getCryptoProviders';
 
 const oldestSupportedCryptoProCSPVersion = 4.0;
@@ -14,7 +14,7 @@ const oldestSupportedVipnetCSPVersion = 4.4;
  * @returns {boolean} true, если поддерживается.
  */
 export const isSupportedCSPVersion = async (
-  systemInfo: SystemInfo
+  systemInfo: ISystemInfo
 ): Promise<boolean> => {
   if (!systemInfo.cspVersion) {
     return false;

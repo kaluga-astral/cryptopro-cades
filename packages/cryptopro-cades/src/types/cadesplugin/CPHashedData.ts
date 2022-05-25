@@ -1,8 +1,10 @@
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
 /**
  * Хэш-значение данных.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cphasheddata
  */
-export declare type CPHashedData = {
+export type CPHashedData = {
   /**
    * Возвращает или задает алгоритм хэширования.
    */

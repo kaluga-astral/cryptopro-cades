@@ -1,9 +1,12 @@
 import { Buffer } from 'buffer';
 
 import { CryptoError } from '../errors';
-import { CADESCOM_BASE64_TO_BINARY, CRYPTO_OBJECTS } from '../constants';
-import { CPEnvelopedData } from '../types/cadesplugin/CPEnvelopedData';
-import { ICertificate, IRecipients } from '../types';
+import {
+  CADESCOM_BASE64_TO_BINARY,
+  CAPICOM_ENCODING_TYPE,
+  CRYPTO_OBJECTS,
+} from '../constants';
+import { CPEnvelopedData, ICertificate, IRecipients } from '../types';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';
@@ -79,7 +82,9 @@ export function encrypt(
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому расшифровываем предварительно конвертированный в Base64
 
-        const encryptResult = envelopedData.Encrypt();
+        const encryptResult = envelopedData.Encrypt(
+          CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
+        );
 
         const encryptedData =
           encryptResult instanceof Promise
