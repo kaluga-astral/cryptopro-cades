@@ -1,4 +1,5 @@
 import { CAPICOM_CERT_INFO_TYPE, CAPICOM_ENCODING_TYPE } from '../../constants';
+import { WithOptionalPromise } from '../WithOptionalPromise';
 
 /**
  * Описывает сертификат открытого ключа.
@@ -58,6 +59,11 @@ export interface ICertificate {
    * @remarks возвращает без BEGIN и END CERTIFICATE. А перенос строки каждые 64 символа и зависит от ОС: \r\n или \n
    */
   Export(EncodingType: CAPICOM_ENCODING_TYPE): WithOptionalPromise<any>;
+
+  /**
+   * Импотирует открытую часть сертификата в виде Base64 строки.
+   */
+  Import(base64Certificate: string): WithOptionalPromise<void>;
 
   /**
    * Имеется ли закрытый ключ для сертификата.

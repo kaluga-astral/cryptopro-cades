@@ -51,7 +51,7 @@ const pluginConfig = new PluginConfig();
 const logErrorWhenInDebug = (error: CryptoError): void => {
   if (pluginConfig.Debug && error) {
     const errors = [];
-    let err: any = null;
+    let err: any = error;
     while (err != null) {
       errors.push(err);
       if (err instanceof CryptoError) {
@@ -61,7 +61,9 @@ const logErrorWhenInDebug = (error: CryptoError): void => {
       }
     }
 
-    outputError(errors);
+    if (errors?.length) {
+      outputError(errors);
+    }
   }
 };
 

@@ -1,11 +1,13 @@
-import { CPHashedData } from './CadesHashedData';
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
+import { CPHashedData } from './CPHashedData';
 import { ICertificate } from './ICertificate';
 
 /**
  * Значение электронной подписи.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/rawsignature
  */
-export declare type IRawSignature = {
+export interface IRawSignature {
   /**
    * Вычисляет значение электронной подписи.
    * @param hashedData Объект CPHashedData, соответствующий хэш-значению, для которого следует вычислить значение электронной подписи.
@@ -29,4 +31,4 @@ export declare type IRawSignature = {
     certificate: ICertificate,
     rawSignature: string
   ): WithOptionalPromise<void>;
-};
+}

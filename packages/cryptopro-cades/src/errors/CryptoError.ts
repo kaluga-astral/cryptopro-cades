@@ -1,5 +1,5 @@
 import { getLastError } from '../api/getLastError';
-import { IAnyError, ICryptoError, IErrorObject } from '../types/ICryptoError';
+import { IAnyError, ICryptoError, IErrorObject } from '../types';
 
 import { CRYPTO_PRO_ERRORS, PLUGIN_ERRORS } from './errorCodes';
 import PluginConfig from './../PluginConfig';
@@ -65,6 +65,10 @@ export class CryptoError extends Error implements ICryptoError {
     this.InnerError = err;
     this.message = err?.message;
     this.stack = err?.stack;
+
+    if (Error.captureStackTrace) {
+      Error.captureStackTrace(this, CryptoError);
+    }
   }
 
   /**

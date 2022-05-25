@@ -1,4 +1,5 @@
 import { CAPICOM_CERTIFICATE_FIND_TYPE } from '../../constants';
+import { WithOptionalPromise } from '../WithOptionalPromise';
 
 import { ICertificate } from './ICertificate';
 
@@ -7,8 +8,6 @@ import { ICertificate } from './ICertificate';
  * @see https://docs.microsoft.com/en-us/windows/win32/seccrypto/certificates
  */
 export interface ICertificates {
-  objid: number;
-
   /**
    * Returns a Certificates object that contains all certificates that match the specified search criteria.
    * @see https://docs.microsoft.com/en-us/windows/win32/seccrypto/certificates-find

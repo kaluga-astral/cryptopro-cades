@@ -1,4 +1,5 @@
 import { CAPICOM_ENCODING_TYPE } from '../../constants';
+import { WithOptionalPromise } from '../WithOptionalPromise';
 
 import { IRecipients } from './IRecipients';
 
@@ -7,7 +8,7 @@ import { IRecipients } from './IRecipients';
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cpenvelopeddata
  * Создается через CAdESCOM.CPEnvelopedData
  */
-export declare type CPEnvelopedData = {
+export type CPEnvelopedData = {
   /**
    * Выполняет операцию расшифрования.
    * @param envelopedMessage зашифрованное сообщение в Base64.
@@ -18,9 +19,7 @@ export declare type CPEnvelopedData = {
    * Выполняет операцию шифрования.
    * @param encodingType Тип кодировки. Поддерживается только CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
    */
-  Encrypt(
-    encodingType: CAPICOM_ENCODING_TYPE = CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
-  ): WithOptionalPromise<string>;
+  Encrypt(encodingType: CAPICOM_ENCODING_TYPE): WithOptionalPromise<string>;
 
   /**
    * Данные которые надо установить (для шифрования) или результат после расшифровки.

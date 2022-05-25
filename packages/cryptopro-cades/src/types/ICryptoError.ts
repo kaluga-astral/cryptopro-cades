@@ -1,7 +1,7 @@
 /**
  * Общий интерфейс ошибки.
  */
-type IErrorObject = ICryptoError | Error | IAnyError;
+export type IErrorObject = ICryptoError | Error | IAnyError;
 
 /**
  * Неопределенный тип ошибки.
@@ -16,7 +16,7 @@ export declare interface IAnyError {
  * @see CryptoError
  * @implements CryptoError
  */
-export declare interface ICryptoError extends Error {
+export interface ICryptoError extends Error {
   /**
    * Текст сообщения об ошибке, предназначенный для отображению пользователю.
    */
@@ -37,9 +37,4 @@ export declare interface ICryptoError extends Error {
    * Код ошибки.
    */
   code: string;
-
-  /**
-   * Стектрейс.
-   */
-  stack?: String;
 }

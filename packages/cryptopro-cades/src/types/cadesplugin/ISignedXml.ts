@@ -1,10 +1,12 @@
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
 import { CPSigner } from './CPSigner';
 
 /**
  * Предоставляет свойства и методы для работы с подписанным документом XML.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_interface/isignedxml
  */
-export declare interface ISignedXml {
+export interface ISignedXml {
   /**
    * Создает подпись в формате XmlDSig.
    * @param signer Объект CPSigner, который будет использован для создания подписи.

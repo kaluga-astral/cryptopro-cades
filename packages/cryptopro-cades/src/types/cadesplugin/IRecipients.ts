@@ -1,3 +1,5 @@
+import { WithOptionalPromise } from '../WithOptionalPromise';
+
 import { ICertificate } from './ICertificate';
 
 /**

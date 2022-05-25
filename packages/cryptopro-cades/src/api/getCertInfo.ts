@@ -1,4 +1,4 @@
-import { ICertificate } from '../types/cadesplugin/ICertificate';
+import { ICertificate } from '../types';
 import { CAPICOM_CERT_INFO_TYPE } from '../constants';
 
 import { canAsync } from './internal/canAsync';

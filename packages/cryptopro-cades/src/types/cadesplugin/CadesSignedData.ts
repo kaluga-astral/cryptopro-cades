@@ -1,13 +1,14 @@
 import { CADESCOM_CADES_TYPE, CADESCOM_ENCODING_TYPE } from '../../constants';
+import { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { CPHashedData } from './CadesHashedData';
+import { CPHashedData } from './CPHashedData';
 import { CPSigner } from './CPSigner';
 
 /**
  * Усовершенствованная подпись.
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cadessigneddata
  */
-export declare type CadesSignedData = {
+export type CadesSignedData = {
   /**
    * Способ кодирования данных для подписи.
    */

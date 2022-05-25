@@ -1,5 +1,5 @@
 import { CryptoError } from '../errors';
-import { IStore } from '../types/cadesplugin/IStore';
+import { IStore } from '../types';
 import {
   CAPICOM_MY_STORE,
   CAPICOM_STORE_OPEN_MODE,
