@@ -1,7 +1,7 @@
 import { Buffer } from 'buffer';
 
-import RelativeDistinguishedNames from 'pkijs/src/RelativeDistinguishedNames';
-import x509Certificate from 'pkijs/src/Certificate';
+// @ts-ignore // TOOD: разобраться почему не находит модуль.
+import { Certificate as x509Certificate } from 'pkijs';
 import { fromBER } from 'asn1js';
 
 import { Certificate } from '../Certificate';
@@ -20,17 +20,15 @@ import { bufferToHex } from './bufferToHex';
  * @param attributeName Наименование извлекаемого атрибута.
  * @returns Извлеченные данные.
  */
-function parseValue(
-  target: RelativeDistinguishedNames,
-  attributeName: string
-): string {
+function parseValue(target: any, attributeName: string): string {
   if (!target) {
     const errorMessage = `Не задан объект для извлечения атрибута ${attributeName}`;
     throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
   }
 
   return target?.typesAndValues?.find(
-    (t) => t.type == attributeOids[attributeName]
+    ({ type }: { type: string }): boolean =>
+      type == attributeOids[attributeName]
   )?.value?.valueBlock?.value;
 }
 
@@ -61,17 +59,16 @@ export function parseCertificate(certificate: Certificate) {
     new Uint8Array(Buffer.from(certificate.certificateBase64Data, 'base64'))
       .buffer
   );
-  const parsedCert = new x509Certificate({
-    schema: asn1.result,
-  });
+  const parsedCert = new x509Certificate({ schema: asn1.result });
 
   const publishKeyAlgorithm =
     parsedCert.subjectPublicKeyInfo.algorithm.algorithmId;
   certificate.algorithm = publishKeyAlgorithm;
   certificate.isGost = GOST_KEY_ALGORITHM_OIDS.includes(publishKeyAlgorithm);
 
-  const subjectKeyIdentifierExtension = parsedCert.extensions?.find(
-    (e) => e.extnID === subjectKeyIdExtensionOid
+  const subjectKeyIdentifierExtension = parsedCert.extensions.find(
+    ({ extnID }: { extnID: string }): boolean =>
+      extnID === subjectKeyIdExtensionOid
   );
   certificate.subjectKeyId = bufferToHex(
     subjectKeyIdentifierExtension?.parsedValue?.valueBlock?.valueHex
