@@ -9,7 +9,7 @@ on:
       - '.github/workflows/release_crypro-cades_example.yml'
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -22,10 +22,7 @@ jobs:
 
       - name: Build cryptopro-cades-example
         run: npm run build:prod --workspace=cryptopro-cades-example
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
+
       - name: Deploy on gh-pages
         uses: peaceiris/actions-gh-pages@v3
         with:
