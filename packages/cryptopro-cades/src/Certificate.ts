@@ -18,6 +18,7 @@ export class Certificate {
     surname: string | null;
     name: string | null;
     country: string | null;
+    region: string | null;
     locality: string | null;
     street: string | null;
     organization: string | null;
@@ -34,6 +35,7 @@ export class Certificate {
     surname: null,
     name: null,
     country: null,
+    region: null,
     locality: null,
     street: null,
     organization: null,
