@@ -19,6 +19,7 @@ import { validateCertificate } from './validateCertificate';
 /**
  * Получить алгоритм вычисления подписи для Xml.
  * @param {Certificate} certificate сертификат.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {string} алгоритм вычисления подписи.
  */
 export const getXmlSignAlgorithmType = (certificate: Certificate): string => {
@@ -41,6 +42,7 @@ export const getXmlSignAlgorithmType = (certificate: Certificate): string => {
 /**
  * Получить алгоритм вычисления хэша.
  * @param {Certificate} certificate сертификат.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {string} алгоритм вычисления хэша.
  */
 export const getXmlHashAlgorithmType = (certificate: Certificate): string => {
@@ -66,6 +68,7 @@ export const getXmlHashAlgorithmType = (certificate: Certificate): string => {
  * @param {ArrayBuffer | string} data -входные данные для подписи в формате Base64 или ArrayBuffer.
  * @param {CADESCOM_XML_SIGNATURE_TYPE} xmlSignatureType - тип xml подписи.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификата.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<string>} файл подписи в кодировке Base64.
  */
 export const signXml = (

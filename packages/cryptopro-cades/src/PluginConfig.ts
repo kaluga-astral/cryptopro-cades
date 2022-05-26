@@ -1,5 +1,7 @@
 import { CryptoError } from './errors';
-import { outputError } from './utils/outputError';
+import { outputError } from './utils';
+import { CRYPTO_PROVIDERS } from './constants';
+import { ICryptoProvider } from './types';
 
 /**
  * Настройки плагина.
@@ -9,6 +11,14 @@ class PluginConfig {
    * Список подписчиков возникающих ошибок в системе.
    */
   private errorListeners: ((error: CryptoError) => void)[] = [];
+
+  /**
+   * Функция для проверки (переопределения проверки) версии криптопровайдера.
+   * Если вернуть null, считаем что версия прошла проверку.
+   */
+  checkCspVersionFunc:
+    | ((cryptoProvider: ICryptoProvider) => string | null)
+    | null = null;
 
   /**
    * Выводить дебаг-информацию.
@@ -26,11 +36,17 @@ class PluginConfig {
   CheckSystemSetup: boolean = true;
 
   /**
+   * Список криптопровайдеров для проверки и работы.
+   */
+  CheckCryptoProviders: ICryptoProvider[] = CRYPTO_PROVIDERS;
+
+  /**
    * Зарегистрировать подписчика ошибок.
    * @param cb Функция обратного вызова.
+   * @remarks Подписчики ошибок будут вызваны в обратном порядке.
    */
   public addErrorListener(cb: (error: CryptoError) => void) {
-    this.errorListeners.push(cb);
+    this.errorListeners.unshift(cb);
   }
 
   /**
@@ -62,7 +78,7 @@ const logErrorWhenInDebug = (error: CryptoError): void => {
     }
 
     if (errors?.length) {
-      outputError(errors);
+      outputError('Ошибка >>', errors);
     }
   }
 };

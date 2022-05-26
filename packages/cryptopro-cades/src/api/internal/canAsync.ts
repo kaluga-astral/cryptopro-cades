@@ -1,6 +1,6 @@
 /**
  * Проверка доступности асинхронной функциональности.
- * @returns {boolean} .
+ * @returns {boolean} true, если нужно выполнять асинхронно.
  */
 export function canAsync(): boolean {
   // !!window.Promise || !!Iterator

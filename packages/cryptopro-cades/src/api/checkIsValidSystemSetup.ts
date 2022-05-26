@@ -3,17 +3,15 @@ import { ISystemInfo } from '../types';
 import { outputDebug } from '../utils';
 
 import { getSystemInfo } from './getSystemInfo';
+import { checkIsSupportedCSPVersion } from './internal/checkIsSupportedCSPVersion';
 import { isSupportedCadesVersion } from './internal/isSupportedCadesVersion';
-import { isSupportedCSPVersion } from './internal/isSupportedCSPVersion';
 
 /**
  * Проверяет корректность настроек ЭП на машине.
- *
- * @returns {boolean} флаг корректности настроек.
+ * @throws {CryptoError} в случае обнаружения ошибок, если не установлен криптопровайдер или версия не поддерживается.
  */
-export const isValidSystemSetup = async (): Promise<boolean> => {
+export const checkIsValidSystemSetup = async (): Promise<void> => {
   let systemInfo: ISystemInfo | null = null;
-  let isValid = false;
   const logData = [];
   try {
     try {
@@ -41,16 +39,14 @@ export const isValidSystemSetup = async (): Promise<boolean> => {
       );
     }
 
-    if (systemInfo.cspVersion && !isSupportedCSPVersion(systemInfo)) {
-      throw CryptoError.create('CBP-4', 'Не поддерживаемая версия CSP', null);
-    }
-    isValid = true;
+    await checkIsSupportedCSPVersion();
   } catch (error) {
     logData.push({ error });
+    throw error;
   } finally {
-    logData.push({ isValid });
-    outputDebug('isValidSystemSetup >>', logData);
+    outputDebug(
+      'checkIsValidSystemSetup >>',
+      logData.length === 0 ? 'ok' : logData
+    );
   }
-
-  return isValid;
 };

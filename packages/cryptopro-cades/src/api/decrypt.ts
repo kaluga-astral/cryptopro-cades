@@ -12,6 +12,7 @@ import { setCryptoProperty } from './internal/setCryptoProperty';
 /**
  * Расшифровать данные.
  * @param {string} encryptedData -входные данные для расшифровки в формате Base64 или ArrayBuffer.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<string>} .Расшифрованная строка в кодировке Base64.
  */
 export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {

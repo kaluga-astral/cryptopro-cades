@@ -1,4 +1,4 @@
-import { isValidSystemSetup } from '../isValidSystemSetup';
+import { checkIsValidSystemSetup } from '../checkIsValidSystemSetup';
 
 import { CryptoError } from './../../errors';
 import PluginConfig from './../../PluginConfig';
@@ -59,7 +59,7 @@ export function afterPluginLoaded(
 
     // для исключения зацикливания, проверку валидности системы делаем единожды.
     if (PluginConfig.CheckSystemSetup && !isAlreadyLoaded) {
-      await isValidSystemSetup();
+      await checkIsValidSystemSetup();
     }
 
     const callbackResult = cb.apply(null, args);

@@ -144,6 +144,7 @@ export class Certificate {
   /**
    * Распарсить сертификат из исходного объекта.
    * @param {ICertificate} cert исходный сертификат.
+   * @throws {CryptoError} в случае ошибки.
    * @returns {Promise<Certificate>} распрасенный сертификат.
    */
   public static async CreateFrom(cert: ICertificate): Promise<Certificate> {

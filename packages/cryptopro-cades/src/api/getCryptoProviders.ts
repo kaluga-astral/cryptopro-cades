@@ -1,6 +1,7 @@
-import { CRYPTO_OBJECTS, CRYPTO_PROVIDERS } from '../constants';
+import { CRYPTO_OBJECTS } from '../constants';
 import { IAbout, ICryptoProvider, IVersion } from '../types';
 import { outputDebug } from '../utils';
+import pluginConfig from '../PluginConfig';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
@@ -12,7 +13,8 @@ let cryptoProvidersCache: ICryptoProvider[] | null;
 
 /**
  * Получить список криптопровайдеров.
- * @returns {Promise<ICryptoProvider[]>} информация о типе, наименовании и версии криптопровайдеров
+ * @throws {CryptoError} в случае ошибки.
+ * @returns {Promise<ICryptoProvider[]>} Bнформация о типе, наименовании и версии криптопровайдеров.
  */
 export function getCryptoProviders(
   resetCache: boolean = false
@@ -28,7 +30,10 @@ export function getCryptoProviders(
     const availableCryptoProviders: ICryptoProvider[] = [];
     const logData = [];
     try {
-      for (const { ProviderType, ProviderName } of CRYPTO_PROVIDERS) {
+      for (const {
+        ProviderType,
+        ProviderName,
+      } of pluginConfig.CheckCryptoProviders) {
         try {
           const cadesAbout: IAbout = await createObject(CRYPTO_OBJECTS.about);
           const cspVersion: IVersion = await cadesAbout.CSPVersion(

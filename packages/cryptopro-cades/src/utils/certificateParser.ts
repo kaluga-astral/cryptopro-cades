@@ -18,6 +18,7 @@ import { bufferToHex } from './bufferToHex';
  * Получить данные из сертификата.
  * @param target Объект данных (issuer или subject).
  * @param attributeName Наименование извлекаемого атрибута.
+ * @throws {CryptoError} в случае ошибки.
  * @returns Извлеченные данные.
  */
 function parseValue(target: any, attributeName: string): string {
@@ -49,42 +50,52 @@ function normalizeInn(inn: string | null): string | null {
 /**
  * Парсит данные сертификата.
  * @param certificate Сертификат.
+ * @throws {CryptoError} в случае ошибки.
  */
 export function parseCertificate(certificate: Certificate) {
   if (!certificate.certificateBase64Data) {
     const errorMessage = 'Не загружена открытая часть сертификата.';
     throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
   }
-  const asn1 = fromBER(
-    new Uint8Array(Buffer.from(certificate.certificateBase64Data, 'base64'))
-      .buffer
-  );
-  const parsedCert = new x509Certificate({ schema: asn1.result });
 
-  const publishKeyAlgorithm =
-    parsedCert.subjectPublicKeyInfo.algorithm.algorithmId;
-  certificate.algorithm = publishKeyAlgorithm;
-  certificate.isGost = GOST_KEY_ALGORITHM_OIDS.includes(publishKeyAlgorithm);
+  try {
+    const asn1 = fromBER(
+      new Uint8Array(Buffer.from(certificate.certificateBase64Data, 'base64'))
+        .buffer
+    );
+    const parsedCert = new x509Certificate({ schema: asn1.result });
 
-  const subjectKeyIdentifierExtension = parsedCert.extensions.find(
-    ({ extnID }: { extnID: string }): boolean =>
-      extnID === subjectKeyIdExtensionOid
-  );
-  certificate.subjectKeyId = bufferToHex(
-    subjectKeyIdentifierExtension?.parsedValue?.valueBlock?.valueHex
-  );
+    const publishKeyAlgorithm =
+      parsedCert.subjectPublicKeyInfo.algorithm.algorithmId;
+    certificate.algorithm = publishKeyAlgorithm;
+    certificate.isGost = GOST_KEY_ALGORITHM_OIDS.includes(publishKeyAlgorithm);
 
-  Object.keys(certificate.issuer).forEach((key) => {
-    certificate.issuer[key] = parseValue(parsedCert.issuer, key);
-  });
+    const subjectKeyIdentifierExtension = parsedCert.extensions.find(
+      ({ extnID }: { extnID: string }): boolean =>
+        extnID === subjectKeyIdExtensionOid
+    );
+    certificate.subjectKeyId = bufferToHex(
+      subjectKeyIdentifierExtension?.parsedValue?.valueBlock?.valueHex
+    );
 
-  Object.keys(certificate.subject).forEach((key) => {
-    certificate.subject[key] = parseValue(parsedCert.subject, key);
-  });
+    Object.keys(certificate.issuer).forEach((key) => {
+      certificate.issuer[key] = parseValue(parsedCert.issuer, key);
+    });
 
-  certificate.issuer.inn = normalizeInn(certificate.issuer.inn);
-  certificate.subject.innLe = normalizeInn(certificate.subject.innLe);
-  certificate.subject.inn = normalizeInn(certificate.subject.inn);
+    Object.keys(certificate.subject).forEach((key) => {
+      certificate.subject[key] = parseValue(parsedCert.subject, key);
+    });
 
-  // TODO: здесь можно допарсить данные из открытой части сертификата
+    certificate.issuer.inn = normalizeInn(certificate.issuer.inn);
+    certificate.subject.innLe = normalizeInn(certificate.subject.innLe);
+    certificate.subject.inn = normalizeInn(certificate.subject.inn);
+
+    // TODO: здесь можно допарсить данные из открытой части сертификата
+  } catch (error) {
+    throw CryptoError.create(
+      'CBP-10',
+      'Не удалось распарсить данные сертификата.',
+      error
+    );
+  }
 }

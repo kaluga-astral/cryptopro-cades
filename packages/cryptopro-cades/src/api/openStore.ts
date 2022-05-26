@@ -16,6 +16,7 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
  * @param {STORE_LOCATION} storeLocation - расположение хранилища.
  * @param {string} storeName - (!)будет проигнорирован если storeLocation = CAPICOM_SMART_CARD_USER_STORE.
  * @param {CAPICOM_STORE_OPEN_MODE} openMode - режим открытия хранилища.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<IStore>} .
  */
 export function openStore(
