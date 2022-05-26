@@ -129,16 +129,17 @@ export function getCertificates(
           break;
 
         case STORE_TYPE.ALL:
-          result = await ReadCertificatesFromRegistry();
-          logData.push({ storeType: 'registry', result });
           const usbTokenCertificates = await ReadCertificatesFromUsbToken();
-          logData.push({ storeType: 'usb', result });
-          result = result.concat(usbTokenCertificates);
+          logData.push({ storeType: 'usb', usbTokenCertificates });
+          const certificatesFromRegistry = await ReadCertificatesFromRegistry();
+          logData.push({ storeType: 'registry', certificatesFromRegistry });
+
+          result = usbTokenCertificates.concat(certificatesFromRegistry);
+
           result = result.filter(
             (cert, index) =>
-              result.findIndex(
-                (_cert) => _cert.thumbprint === cert.thumbprint
-              ) === index
+              result.findIndex((c) => c.thumbprint === cert.thumbprint) ===
+              index
           );
           break;
 
