@@ -1,7 +1,9 @@
+import { ICryptoProvider } from '../types';
+
 /**
  * Справочник типок криптопровайдеров, с которыми работает плагин (для проверки поддержки).
  */
-export const CRYPTO_PROVIDERS = [
+export const CRYPTO_PROVIDERS: ICryptoProvider[] = [
   {
     ProviderType: 75,
     ProviderName: 'Crypto-Pro GOST R 34.10-2001 Cryptographic Service Provider',
@@ -27,7 +29,10 @@ export const CRYPTO_PROVIDERS = [
     ProviderType: 78,
     ProviderName: 'Infotecs GOST 2012/1024 Cryptographic Service Provider',
   },
-];
+].map((c) => ({
+  ProviderName: c.ProviderName,
+  ProviderType: c.ProviderType,
+}));
 
 /**
  * Криптопровайдер по-умолчанию.

@@ -9,6 +9,7 @@ import { ICertificate } from '../types';
  *
  * @param {ICertificate|Certificate} certificate - собственно сертификат.
  * @param {Function} customValidationFunc - иные условия валидации сертификата.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<string|null>} .null, если сертификат валиден.
  */
 export async function validateCertificate(

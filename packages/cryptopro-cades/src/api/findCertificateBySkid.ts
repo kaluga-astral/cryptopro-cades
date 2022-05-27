@@ -6,6 +6,7 @@ import { getCertificates } from './../api';
 /**
  * Поиск в хранилищах сертификата.
  * @param {string} subjectKeyId -идентификатор ключа субъекта.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {@Promise<Certificate | undefined>} сертификат.
  */
 export async function findCertificateBySkid(

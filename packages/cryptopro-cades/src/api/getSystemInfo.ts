@@ -5,7 +5,7 @@ import {
   DEFAULT_CRYPTO_PROVIDER,
   VIP_NET_CRYPTO_PROVIDER_TYPES,
 } from '../constants';
-import { outputDebug } from '../utils/outputDebug';
+import { outputDebug } from '../utils';
 import { IAbout, ISystemInfo } from '../types';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';

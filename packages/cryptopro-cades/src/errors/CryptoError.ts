@@ -83,7 +83,7 @@ export class CryptoError extends Error implements ICryptoError {
    * Создает ошибку на основе ошибки от CryptoPro Browser Plugin.
    * @param err Объект ошибки.
    * @param title Описание ошибки (не показывается пользователю)
-   * @returns {@CryptoError} Объект ошибки криптографического модуля.
+   * @returns {CryptoError} Объект ошибки криптографического модуля.
    */
   public static createCadesError(
     err: IErrorObject,
@@ -119,7 +119,7 @@ export class CryptoError extends Error implements ICryptoError {
    * @param title Описание ошибки (не показывается пользователю).
    * @param err Объект ошибки.
    * @param overrideMessage Текст ошибки который будет указан вместо стандартного из справочника.
-   * @returns {@CryptoError} Объект ошибки криптографического модуля.
+   * @returns {CryptoError} Объект ошибки криптографического модуля.
    */
   public static create(
     errorCode: keyof typeof PLUGIN_ERRORS,

@@ -15,15 +15,15 @@ export interface ICryptoProvider {
   /**
    * Мажорная версия криптопровайдера.
    */
-  readonly MajorVersion: number;
+  readonly MajorVersion?: number;
 
   /**
    * Минорная версия криптопровайдера.
    */
-  readonly MinorVersion: number;
+  readonly MinorVersion?: number;
 
   /**
    * Версия сборки.
    */
-  readonly BuildVersion: number;
+  readonly BuildVersion?: number;
 }

@@ -8,7 +8,7 @@ export { openStore } from './openStore';
 export { getCertificates } from './getCertificates';
 export { getCryptoProviders } from './getCryptoProviders';
 export { getSystemInfo } from './getSystemInfo';
-export { isValidSystemSetup } from './isValidSystemSetup';
+export { checkIsValidSystemSetup } from './checkIsValidSystemSetup';
 export { validateCertificate } from './validateCertificate';
 export { findCertificateByThumbprint } from './findCertificateByThumbprint';
 export { findCertificateBySkid } from './findCertificateBySkid';

@@ -20,6 +20,7 @@ import {
   ICertificate,
   ICryptoProvider,
   ISystemInfo,
+  checkIsValidSystemSetup,
 } from '@astral/cryptopro-cades';
 
 import { CertificateInfo } from './components/CertificateInfo';
@@ -319,10 +320,24 @@ const CryptoApp = () => {
     }
   };
 
+  /**
+   * Проверить систему.
+   */
+  async function checkSystem() {
+    try {
+      await checkIsValidSystemSetup();
+      window.alert('checkSystem: ok');
+    } catch (error) {
+      outputError(error);
+      window.alert(error.toString());
+    }
+  }
+
   return (
     <>
       <p>Версия плагина {versionInfo?.cadesVersion}</p>
       <p>Версия криптопровайдера {versionInfo?.cspVersion}</p>
+      <button onClick={() => checkSystem()}>Проверить систему</button>
       <button onClick={() => setShowCryptoProviders(!showCryptoProviders)}>
         {!showCryptoProviders
           ? 'Показать криптопровайдеры'

@@ -6,7 +6,7 @@ import {
 } from '../constants';
 import { Certificate } from '../Certificate';
 import { ICertificate, ICertificates, IStore } from '../types';
-import { outputDebug } from '../utils/outputDebug';
+import { outputDebug } from '../utils';
 import { CryptoError } from '../errors';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
@@ -20,7 +20,7 @@ const certificatesCache = {};
 /**
  * Возвращает список сертификатов из указанного хранилища.
  * @param {IStore} store Хранилище
- * @param {string} storeName Наименование хранилища.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов.
  */
 async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
@@ -61,6 +61,7 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
 /**
  * Получить сертификаты из USB токенов.
  * @param {STORE_TYPE} storeType Тип хранилища ключей.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из USB токенов.
  */
 async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
@@ -76,6 +77,7 @@ async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
 /**
  * Получить сертификаты из реестра.
  * @param {STORE_TYPE} storeType Тип хранилища ключей.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из реестра.
  */
 async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
@@ -97,6 +99,7 @@ async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
  *
  * @param {STORE_TYPE} storeType из какого хранилища требуется получить сертификаты (из токена, реестра, все...).
  * @param {resetCache} resetCache перезапросить данные, игнорируя закэшированные данные.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .сертификаты.
  */
 export function getCertificates(
@@ -126,16 +129,17 @@ export function getCertificates(
           break;
 
         case STORE_TYPE.ALL:
-          result = await ReadCertificatesFromRegistry();
-          logData.push({ storeType: 'registry', result });
           const usbTokenCertificates = await ReadCertificatesFromUsbToken();
-          logData.push({ storeType: 'usb', result });
-          result = result.concat(usbTokenCertificates);
+          logData.push({ storeType: 'usb', usbTokenCertificates });
+          const certificatesFromRegistry = await ReadCertificatesFromRegistry();
+          logData.push({ storeType: 'registry', certificatesFromRegistry });
+
+          result = usbTokenCertificates.concat(certificatesFromRegistry);
+
           result = result.filter(
             (cert, index) =>
-              result.findIndex(
-                (_cert) => _cert.thumbprint === cert.thumbprint
-              ) === index
+              result.findIndex((c) => c.thumbprint === cert.thumbprint) ===
+              index
           );
           break;
 

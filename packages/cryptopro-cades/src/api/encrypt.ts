@@ -17,6 +17,7 @@ import { setCryptoProperty } from './internal/setCryptoProperty';
  * Зашировать данные на указанные сертификаты.
  * @param {string} data -входные данные для расшифровки в формате Base64 или ArrayBuffer.
  * @param {ICertificate[]} recipientCertificates -список сертификатов получателей шифрованного сообщения.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<string>} .Зашифрованная строка в кодировке Base64.
  */
 export function encrypt(

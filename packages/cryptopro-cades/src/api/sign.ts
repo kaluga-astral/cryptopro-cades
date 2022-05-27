@@ -23,6 +23,7 @@ import { validateCertificate } from './validateCertificate';
  * @param {boolean} [detach=true] присоединять подпись к данным или отдельно?
  * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<string>} файл подписи в кодировке Base64.
  */
 export function sign(

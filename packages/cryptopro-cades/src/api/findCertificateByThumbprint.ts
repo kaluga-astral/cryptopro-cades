@@ -7,6 +7,7 @@ import { openStore } from './openStore';
 /**
  * Поиск в хранилищах сертификата.
  * @param {string} thumbprint -отпечаток искомого сертификата.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate | undefined>} сертификат.
  */
 export async function findCertificateByThumbprint(

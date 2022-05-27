@@ -5,14 +5,14 @@ import { canAsync } from './internal/canAsync';
 
 /**
  * Получение информации из Сертификата.
- *
- *  @example
+ * @see https://docs.microsoft.com/en-us/windows/win32/seccrypto/certificate-getinfo
+ * @example
  *  const simpleName = await getCertInfo(cert, CAPICOM_CERT_INFO_TYPE.CAPICOM_CERT_INFO_SUBJECT_SIMPLE_NAME);
  *
  * @param {ICertificate} cert - объект сертификата.
  * @param {number|string} what - параметр, по которому находим и отдаем значение.
+ * @throws {CryptoError} в случае ошибки.
  * @returns {string} запрошенная информация из сертификата.
- * @see https://docs.microsoft.com/en-us/windows/win32/seccrypto/certificate-getinfo
  */
 export async function getCertInfo(
   cert: ICertificate,
