@@ -5,6 +5,7 @@ import pluginConfig from '../PluginConfig';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Кэш из запрошенных сертификатов.
@@ -36,16 +37,15 @@ export function getCryptoProviders(
       } of pluginConfig.CheckCryptoProviders) {
         try {
           const cadesAbout: IAbout = await createObject(CRYPTO_OBJECTS.about);
-          const cspVersion: IVersion = await cadesAbout.CSPVersion(
-            ProviderName,
-            ProviderType
+          const cspVersion: IVersion = await unwrap(
+            cadesAbout.CSPVersion(ProviderName, ProviderType)
           );
           availableCryptoProviders.push({
             ProviderName: ProviderName,
             ProviderType: ProviderType,
-            BuildVersion: await cspVersion.BuildVersion,
-            MajorVersion: await cspVersion.MajorVersion,
-            MinorVersion: await cspVersion.MinorVersion,
+            BuildVersion: await unwrap(cspVersion.BuildVersion),
+            MajorVersion: await unwrap(cspVersion.MajorVersion),
+            MinorVersion: await unwrap(cspVersion.MinorVersion),
           });
         } catch (error) {
           logData.push({

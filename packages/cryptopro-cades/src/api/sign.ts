@@ -15,6 +15,7 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
 import { setCryptoProperty } from './internal/setCryptoProperty';
 import { validateCertificate } from './validateCertificate';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Подписать входные данные указанным сертификатом в формате CMS.
@@ -112,18 +113,17 @@ export function sign(
       }
 
       try {
-        const signResult = signedData.SignCades(
-          signer,
-          CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
-          detach
+        const signResult = await unwrap(
+          signedData.SignCades(
+            signer,
+            CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
+            detach
+          )
         );
 
-        const sig =
-          signResult instanceof Promise ? await signResult : signResult;
+        logData.push({ signResult });
 
-        logData.push({ sig });
-
-        return sig;
+        return signResult;
       } catch (error) {
         throw CryptoError.createCadesError(
           error,

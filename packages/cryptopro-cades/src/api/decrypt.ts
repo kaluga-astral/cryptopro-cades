@@ -8,6 +8,7 @@ import { outputDebug } from '../utils';
 import { createObject } from './createObject';
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { setCryptoProperty } from './internal/setCryptoProperty';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Расшифровать данные.
@@ -54,15 +55,9 @@ export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {
       try {
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому расшифровываем предварительно конвертированный в Base64
-        const decryptResult = envelopedData.Decrypt(base64String);
-        if (decryptResult instanceof Promise) {
-          await decryptResult;
-        }
+        await unwrap(envelopedData.Decrypt(base64String));
 
-        const decryptedData =
-          envelopedData.Content instanceof Promise
-            ? await envelopedData.Content
-            : envelopedData.Content;
+        const decryptedData = await unwrap(envelopedData.Content);
 
         logData.push({ decryptedData });
 

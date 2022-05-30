@@ -9,6 +9,7 @@ import {
 
 import { createObject } from './createObject';
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Открывает хранилище с сертификатами.
@@ -28,14 +29,11 @@ export function openStore(
     let store: IStore = await createObject(CRYPTO_OBJECTS.store);
 
     try {
-      const res = store.Open(storeLocation, storeName, openMode);
-
-      if (res instanceof Promise) {
-        await res;
-      }
+      await unwrap(store.Open(storeLocation, storeName, openMode));
 
       return store;
     } catch (err) {
+      await unwrap(store?.Close());
       throw CryptoError.createCadesError(
         err,
         'Ошибка открытия хранилища сертификатов.'

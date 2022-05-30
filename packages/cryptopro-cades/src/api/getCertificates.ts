@@ -11,6 +11,7 @@ import { CryptoError } from '../errors';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { openStore } from './openStore';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Кэш из запрошенных сертификатов.
@@ -32,15 +33,8 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
   let certificates: ICertificates;
   let certificatesCount = 0;
   try {
-    const certificatesObj = store.Certificates;
-
-    certificates =
-      certificatesObj instanceof Promise
-        ? await certificatesObj
-        : certificatesObj;
-
-    const count = certificates.Count;
-    certificatesCount = count instanceof Promise ? await count : count;
+    certificates = await unwrap(store.Certificates);
+    certificatesCount = await unwrap(certificates.Count);
   } catch (err) {
     throw CryptoError.createCadesError(
       err,
@@ -51,8 +45,8 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
   // проверяем пригодность и превращаем сертификаты в наш внутренний тип
   while (certificatesCount) {
     try {
-      const certBin: ICertificate = await certificates.Item(
-        certificatesCount--
+      const certBin: ICertificate = await unwrap(
+        certificates.Item(certificatesCount--)
       );
       const cert: Certificate = await Certificate.CreateFrom(certBin);
 

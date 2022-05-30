@@ -11,6 +11,7 @@ import { IAbout, ISystemInfo } from '../types';
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
 import { getCryptoProviders } from './getCryptoProviders';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Кэш информации о системе.
@@ -68,13 +69,13 @@ export const getSystemInfo = (): Promise<ISystemInfo> => {
       }
 
       try {
-        const pluginVersion = await cadesAbout.PluginVersion;
+        const pluginVersion = await unwrap(cadesAbout.PluginVersion);
 
         if (pluginVersion) {
-          sysInfo.cadesVersion = await pluginVersion.toString();
+          sysInfo.cadesVersion = await unwrap(pluginVersion.toString());
         }
         if (!sysInfo.cadesVersion) {
-          sysInfo.cadesVersion = await cadesAbout.Version;
+          sysInfo.cadesVersion = await unwrap(cadesAbout.Version);
         }
       } catch (error) {
         throw CryptoError.createCadesError(

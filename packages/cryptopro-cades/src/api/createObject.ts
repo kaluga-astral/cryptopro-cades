@@ -2,6 +2,7 @@ import { CryptoError } from '../errors';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { canAsync } from './internal/canAsync';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Создание криптографического объекта.
@@ -24,7 +25,7 @@ export function createObject(objectIdentifier: string): Promise<any | never> {
         ? window.cadesplugin.CreateObjectAsync(objectIdentifier)
         : window.cadesplugin.CreateObject(objectIdentifier);
 
-      return object instanceof Promise ? await object : object;
+      return await unwrap(object);
     } catch (error) {
       throw CryptoError.createCadesError(
         error,

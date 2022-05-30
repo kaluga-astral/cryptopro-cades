@@ -12,6 +12,7 @@ import { outputDebug } from '../utils';
 import { createObject } from './createObject';
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { setCryptoProperty } from './internal/setCryptoProperty';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Зашировать данные на указанные сертификаты.
@@ -67,10 +68,10 @@ export function encrypt(
       }
 
       try {
-        const recipients: IRecipients = await envelopedData.Recipients;
+        const recipients: IRecipients = await unwrap(envelopedData.Recipients);
 
         for (const recipientCertificate of recipientCertificates) {
-          await recipients.Add(recipientCertificate);
+          await unwrap(recipients.Add(recipientCertificate));
         }
       } catch (error) {
         throw CryptoError.createCadesError(
@@ -83,18 +84,13 @@ export function encrypt(
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому расшифровываем предварительно конвертированный в Base64
 
-        const encryptResult = envelopedData.Encrypt(
-          CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
+        const encryptResult = await unwrap(
+          envelopedData.Encrypt(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64)
         );
 
-        const encryptedData =
-          encryptResult instanceof Promise
-            ? await encryptResult
-            : encryptResult;
+        logData.push({ encryptResult });
 
-        logData.push({ encryptedData });
-
-        return encryptedData;
+        return encryptResult;
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
