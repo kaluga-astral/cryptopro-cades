@@ -1,6 +1,5 @@
 import { Buffer } from 'buffer';
 
-// @ts-ignore // TOOD: разобраться почему не находит модуль.
 import { Certificate as x509Certificate } from 'pkijs';
 import { fromBER } from 'asn1js';
 
@@ -63,6 +62,7 @@ export function parseCertificate(certificate: Certificate) {
       new Uint8Array(Buffer.from(certificate.certificateBase64Data, 'base64'))
         .buffer
     );
+
     const parsedCert = new x509Certificate({ schema: asn1.result });
 
     const publishKeyAlgorithm =
@@ -70,7 +70,7 @@ export function parseCertificate(certificate: Certificate) {
     certificate.algorithm = publishKeyAlgorithm;
     certificate.isGost = GOST_KEY_ALGORITHM_OIDS.includes(publishKeyAlgorithm);
 
-    const subjectKeyIdentifierExtension = parsedCert.extensions.find(
+    const subjectKeyIdentifierExtension = parsedCert.extensions?.find(
       ({ extnID }: { extnID: string }): boolean =>
         extnID === subjectKeyIdExtensionOid
     );
