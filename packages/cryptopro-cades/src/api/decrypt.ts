@@ -39,7 +39,7 @@ export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {
       try {
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
-        setCryptoProperty(
+        await setCryptoProperty(
           envelopedData,
           'ContentEncoding',
           CADESCOM_BASE64_TO_BINARY

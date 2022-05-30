@@ -87,23 +87,23 @@ export function sign(
 
       // заполнение параметров для подписи
       try {
-        setCryptoProperty(signer, 'Certificate', cert);
+        await setCryptoProperty(signer, 'Certificate', cert);
         if (includeCertChain) {
-          setCryptoProperty(
+          await setCryptoProperty(
             signer,
             'Options',
             CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
           );
         }
 
-        setCryptoProperty(
+        await setCryptoProperty(
           signedData,
           'ContentEncoding',
           CADESCOM_BASE64_TO_BINARY
         );
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
-        setCryptoProperty(signedData, 'Content', base64String);
+        await setCryptoProperty(signedData, 'Content', base64String);
       } catch (error) {
         throw CryptoError.createCadesError(
           error,

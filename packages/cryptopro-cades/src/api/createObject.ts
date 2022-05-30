@@ -1,5 +1,4 @@
 import { CryptoError } from '../errors';
-import { deasync } from '../utils';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { canAsync } from './internal/canAsync';
@@ -12,7 +11,7 @@ import { canAsync } from './internal/canAsync';
  * @returns {Promise<object|null|undefined>} Созданный объект.
  */
 export function createObject(objectIdentifier: string): Promise<any | never> {
-  return afterPluginLoaded(() => {
+  return afterPluginLoaded(async () => {
     if (!objectIdentifier) {
       throw CryptoError.create(
         'CBP-7',
@@ -25,7 +24,7 @@ export function createObject(objectIdentifier: string): Promise<any | never> {
         ? window.cadesplugin.CreateObjectAsync(objectIdentifier)
         : window.cadesplugin.CreateObject(objectIdentifier);
 
-      return deasync(object);
+      return object instanceof Promise ? await object : object;
     } catch (error) {
       throw CryptoError.createCadesError(
         error,

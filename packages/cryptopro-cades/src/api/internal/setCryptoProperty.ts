@@ -1,5 +1,4 @@
 import { CryptoError } from '../../errors';
-import { deasync } from '../../utils/deasync';
 
 import { canAsync } from './canAsync';
 
@@ -18,14 +17,18 @@ interface ICryptoObject {
  * @param {*} value - значение для свойства.
  * @returns {void} .
  */
-export function setCryptoProperty(
+export async function setCryptoProperty(
   obj: ICryptoObject,
   key: string,
   value: any
-): void {
+): Promise<void> {
   try {
     if (canAsync()) {
-      deasync(obj[`propset_${key}`](value));
+      const res = obj[`propset_${key}`](value);
+
+      if (res instanceof Promise) {
+        await res;
+      }
     } else {
       // eslint-disable-next-line no-param-reassign
       obj[key] = value;

@@ -25,19 +25,21 @@ export function openStore(
   openMode: CAPICOM_STORE_OPEN_MODE = CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_EXISTING_ONLY
 ): Promise<IStore> {
   return afterPluginLoaded(async () => {
-    const store: IStore = await createObject(CRYPTO_OBJECTS.store);
+    let store: IStore = await createObject(CRYPTO_OBJECTS.store);
 
     try {
       const res = store.Open(storeLocation, storeName, openMode);
 
-      await res;
+      if (res instanceof Promise) {
+        await res;
+      }
+
+      return store;
     } catch (err) {
       throw CryptoError.createCadesError(
         err,
         'Ошибка открытия хранилища сертификатов.'
       );
     }
-
-    return store;
   })();
 }

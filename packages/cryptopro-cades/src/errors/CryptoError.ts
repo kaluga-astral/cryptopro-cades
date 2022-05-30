@@ -1,7 +1,11 @@
 import { getLastError } from '../api/getLastError';
 import { IAnyError, ICryptoError, IErrorObject } from '../types';
 
-import { CRYPTO_PRO_ERRORS, PLUGIN_ERRORS } from './errorCodes';
+import {
+  CRYPTO_PRO_ERRORS,
+  ERRORS_WITHOUT_CODE,
+  PLUGIN_ERRORS,
+} from './errorCodes';
 import PluginConfig from './../PluginConfig';
 
 /**
@@ -61,14 +65,10 @@ export class CryptoError extends Error implements ICryptoError {
    * @param err Объект ошибки.
    */
   private constructor(err: IErrorObject | null) {
-    super();
+    super(err?.message);
     this.InnerError = err;
     this.message = err?.message;
-    this.stack = err?.stack;
-
-    if (Error.captureStackTrace) {
-      Error.captureStackTrace(this, CryptoError);
-    }
+    Object.setPrototypeOf(this, CryptoError.prototype);
   }
 
   /**
@@ -92,12 +92,19 @@ export class CryptoError extends Error implements ICryptoError {
     const cryptoError = new CryptoError(err);
 
     err = err as IAnyError;
-    cryptoError.code = err.code || CryptoError._extractCode(err);
+    const errCode = ERRORS_WITHOUT_CODE[err.message];
+
+    if (errCode) {
+      err.code = errCode;
+    }
+
+    cryptoError.code = err.code ?? CryptoError._extractCode(err);
     if (typeof cryptoError.code === 'string' && cryptoError.code.length > 16) {
       cryptoError.code = '';
     }
+
     let extractedMsg = '';
-    if (!err.message) {
+    if (err.message) {
       extractedMsg = cryptoError._extractMessage(err);
     }
     cryptoError.title = title ?? err.message ?? extractedMsg;
@@ -105,8 +112,9 @@ export class CryptoError extends Error implements ICryptoError {
     cryptoError.type += ' < @astral/cades-plugin';
     cryptoError.message =
       CRYPTO_PRO_ERRORS.find((res) => res.code == cryptoError.code)?.message ??
-      err.message ??
-      extractedMsg;
+      PLUGIN_ERRORS[cryptoError.code] ??
+      extractedMsg ??
+      err.message;
 
     PluginConfig.notifyError(cryptoError);
 
@@ -150,7 +158,7 @@ export class CryptoError extends Error implements ICryptoError {
       (err.message?.match(/\(?0x.{2,8}\)?/) ||
         err.message?.match(CryptoError._RULE_MATCHING_CODE) ||
         [])[0] || '';
-    return result.replace(/[()]/g, '');
+    return result.replace(/[()]/g, '').trim();
   }
 
   /**
@@ -161,8 +169,9 @@ export class CryptoError extends Error implements ICryptoError {
    */
   private _extractMessage(err: IErrorObject): string | any {
     const fullErrorData = getLastError(err);
-    const msg = typeof err === 'string' ? err : err.message;
 
-    return (fullErrorData?.message || msg || '').replace(` (${this.code})`, '');
+    return (fullErrorData?.message || err.message || '')
+      .replace(`(${this.code})`, '')
+      .trim();
   }
 }

@@ -24,12 +24,23 @@ const certificatesCache = {};
  * @returns {Promise<Certificate[]>} .Список сертификатов.
  */
 async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
+  if (!store) {
+    const errorMessage = 'Не задано хранилище сертификатов.';
+    throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
+  }
   const result: Certificate[] = [];
   let certificates: ICertificates;
   let certificatesCount = 0;
   try {
-    certificates = await store.Certificates;
-    certificatesCount = await certificates.Count;
+    const certificatesObj = store.Certificates;
+
+    certificates =
+      certificatesObj instanceof Promise
+        ? await certificatesObj
+        : certificatesObj;
+
+    const count = certificates.Count;
+    certificatesCount = count instanceof Promise ? await count : count;
   } catch (err) {
     throw CryptoError.createCadesError(
       err,
@@ -60,7 +71,6 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из USB токенов.
- * @param {STORE_TYPE} storeType Тип хранилища ключей.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из USB токенов.
  */
@@ -76,7 +86,6 @@ async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из реестра.
- * @param {STORE_TYPE} storeType Тип хранилища ключей.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из реестра.
  */

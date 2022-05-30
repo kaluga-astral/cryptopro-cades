@@ -48,24 +48,35 @@ const CryptoApp = () => {
         const systemInfo = await getSystemInfo();
         setVersionInfo(systemInfo);
       } catch (error) {
-        window.alert(error);
+        outputError(error);
+        window.alert(error?.toString());
       }
     }
     async function fetchCertificates() {
-      const fetchedCertificates = await getCertificates(STORE_TYPE.ALL);
+      try {
+        const fetchedCertificates = await getCertificates(STORE_TYPE.ALL);
 
-      setCertificates(fetchedCertificates);
+        setCertificates(fetchedCertificates);
 
-      // автоматически берем первый валидный серт если еще выбран
-      if (!selectedCertificate) {
-        setSelectedCertificate(
-          fetchedCertificates.find((c) => c.isGost && c.hasPrivateKey)
-        );
+        // автоматически берем первый валидный серт если еще выбран
+        if (!selectedCertificate) {
+          setSelectedCertificate(
+            fetchedCertificates.find((c) => c.isGost && c.hasPrivateKey)
+          );
+        }
+      } catch (error) {
+        outputError(error);
+        window.alert(error?.toString());
       }
     }
     async function fetchCryptoProviders() {
-      const cryptoProviders = await getCryptoProviders();
-      setCryptoProviders(cryptoProviders);
+      try {
+        const cryptoProviders = await getCryptoProviders();
+        setCryptoProviders(cryptoProviders);
+      } catch (error) {
+        outputError(error);
+        window.alert(error?.toString());
+      }
     }
 
     if (showCryptoProviders) {

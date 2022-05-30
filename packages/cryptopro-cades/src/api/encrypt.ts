@@ -53,12 +53,12 @@ export function encrypt(
       try {
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
-        setCryptoProperty(
+        await setCryptoProperty(
           envelopedData,
           'ContentEncoding',
           CADESCOM_BASE64_TO_BINARY
         );
-        setCryptoProperty(envelopedData, 'Content', base64String);
+        await setCryptoProperty(envelopedData, 'Content', base64String);
       } catch (err) {
         throw CryptoError.createCadesError(
           err,
