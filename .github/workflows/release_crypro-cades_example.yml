@@ -1,0 +1,31 @@
+name: 'Release example cryptopro-cades'
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'examples/cryptopro-cades/**'
+      - 'packages/cryptopro-cades/**'
+      - '.github/workflows/release_crypro-cades_example.yml'
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Build cryptopro-cades-example
+        run: npm run build:prod --workspace=cryptopro-cades-example
+
+      - name: Deploy on gh-pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./examples/cryptopro-cades/dist
+          allow_empty_commit: true
