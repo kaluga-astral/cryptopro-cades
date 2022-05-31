@@ -15,6 +15,7 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
 import { setCryptoProperty } from './internal/setCryptoProperty';
 import { validateCertificate } from './validateCertificate';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Получить алгоритм вычисления подписи для Xml.
@@ -124,24 +125,24 @@ export const signXml = (
 
       // заполнение параметров для подписи
       try {
-        setCryptoProperty(signer, 'Certificate', cert.certificateBin);
+        await setCryptoProperty(signer, 'Certificate', cert.certificateBin);
 
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
-        setCryptoProperty(signedData, 'Content', base64String);
+        await setCryptoProperty(signedData, 'Content', base64String);
 
         // указываем тип подписи
-        setCryptoProperty(signedData, 'SignatureType', xmlSignatureType);
+        await setCryptoProperty(signedData, 'SignatureType', xmlSignatureType);
 
         // указываем алгоритм подписи
-        setCryptoProperty(
+        await setCryptoProperty(
           signedData,
           'SignatureMethod',
           getXmlSignAlgorithmType(cert)
         );
 
         // указываем алгоритм хэширования
-        setCryptoProperty(
+        await setCryptoProperty(
           signedData,
           'DigestMethod',
           getXmlHashAlgorithmType(cert)
@@ -154,14 +155,11 @@ export const signXml = (
       }
 
       try {
-        const signResult = signedData.Sign(signer);
+        const signResult = await unwrap(signedData.Sign(signer));
 
-        const sig =
-          signResult instanceof Promise ? await signResult : signResult;
+        logData.push({ signResult });
 
-        logData.push({ sig });
-
-        return sig;
+        return signResult;
       } catch (error) {
         throw CryptoError.createCadesError(
           error,

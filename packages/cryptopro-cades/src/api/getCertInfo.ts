@@ -1,7 +1,7 @@
 import { ICertificate } from '../types';
 import { CAPICOM_CERT_INFO_TYPE } from '../constants';
 
-import { canAsync } from './internal/canAsync';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Получение информации из Сертификата.
@@ -14,14 +14,9 @@ import { canAsync } from './internal/canAsync';
  * @throws {CryptoError} в случае ошибки.
  * @returns {string} запрошенная информация из сертификата.
  */
-export async function getCertInfo(
+export function getCertInfo(
   cert: ICertificate,
   what: CAPICOM_CERT_INFO_TYPE
 ): Promise<string> {
-  const result = cert.GetInfo(what);
-
-  if (canAsync() && result instanceof Promise) {
-    return result;
-  }
-  return result;
+  return unwrap(cert.GetInfo(what));
 }

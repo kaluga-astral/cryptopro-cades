@@ -11,6 +11,7 @@ import { CryptoError } from '../errors';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { openStore } from './openStore';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Кэш из запрошенных сертификатов.
@@ -24,12 +25,16 @@ const certificatesCache = {};
  * @returns {Promise<Certificate[]>} .Список сертификатов.
  */
 async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
+  if (!store) {
+    const errorMessage = 'Не задано хранилище сертификатов.';
+    throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
+  }
   const result: Certificate[] = [];
   let certificates: ICertificates;
   let certificatesCount = 0;
   try {
-    certificates = await store.Certificates;
-    certificatesCount = await certificates.Count;
+    certificates = await unwrap(store.Certificates);
+    certificatesCount = await unwrap(certificates.Count);
   } catch (err) {
     throw CryptoError.createCadesError(
       err,
@@ -40,8 +45,8 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
   // проверяем пригодность и превращаем сертификаты в наш внутренний тип
   while (certificatesCount) {
     try {
-      const certBin: ICertificate = await certificates.Item(
-        certificatesCount--
+      const certBin: ICertificate = await unwrap(
+        certificates.Item(certificatesCount--)
       );
       const cert: Certificate = await Certificate.CreateFrom(certBin);
 
@@ -60,7 +65,6 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из USB токенов.
- * @param {STORE_TYPE} storeType Тип хранилища ключей.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из USB токенов.
  */
@@ -76,7 +80,6 @@ async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из реестра.
- * @param {STORE_TYPE} storeType Тип хранилища ключей.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из реестра.
  */

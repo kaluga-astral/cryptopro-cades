@@ -15,6 +15,7 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';
 import { setCryptoProperty } from './internal/setCryptoProperty';
 import { validateCertificate } from './validateCertificate';
+import { unwrap } from './internal/unwrap';
 
 /**
  * Подписать входные данные указанным сертификатом в формате CMS.
@@ -87,23 +88,23 @@ export function sign(
 
       // заполнение параметров для подписи
       try {
-        setCryptoProperty(signer, 'Certificate', cert);
+        await setCryptoProperty(signer, 'Certificate', cert);
         if (includeCertChain) {
-          setCryptoProperty(
+          await setCryptoProperty(
             signer,
             'Options',
             CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
           );
         }
 
-        setCryptoProperty(
+        await setCryptoProperty(
           signedData,
           'ContentEncoding',
           CADESCOM_BASE64_TO_BINARY
         );
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
-        setCryptoProperty(signedData, 'Content', base64String);
+        await setCryptoProperty(signedData, 'Content', base64String);
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
@@ -112,18 +113,17 @@ export function sign(
       }
 
       try {
-        const signResult = signedData.SignCades(
-          signer,
-          CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
-          detach
+        const signResult = await unwrap(
+          signedData.SignCades(
+            signer,
+            CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
+            detach
+          )
         );
 
-        const sig =
-          signResult instanceof Promise ? await signResult : signResult;
+        logData.push({ signResult });
 
-        logData.push({ sig });
-
-        return sig;
+        return signResult;
       } catch (error) {
         throw CryptoError.createCadesError(
           error,

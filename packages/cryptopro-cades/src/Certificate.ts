@@ -1,3 +1,4 @@
+import { unwrap } from './api/internal/unwrap';
 import { CAPICOM_ENCODING_TYPE } from './constants';
 import { CryptoError } from './errors';
 import { ICertificate } from './types';
@@ -157,49 +158,25 @@ export class Certificate {
     }
     const certificate = new Certificate(cert);
 
-    if (cert.SubjectName instanceof Promise) {
-      certificate.subjectName = await cert.SubjectName;
-      certificate.thumbprint = await cert.Thumbprint;
-      certificate.notAfter = await cert.ValidToDate;
-      certificate.notBefore = await cert.ValidFromDate;
-      certificate.certificateBase64Data = await cert.Export(
-        CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
+    certificate.subjectName = await unwrap(cert.SubjectName);
+    certificate.thumbprint = await unwrap(cert.Thumbprint);
+    certificate.notAfter = await unwrap(cert.ValidToDate);
+    certificate.notBefore = await unwrap(cert.ValidFromDate);
+    certificate.certificateBase64Data = await unwrap(
+      cert.Export(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64)
+    );
+    try {
+      certificate.hasPrivateKey = await unwrap(cert.HasPrivateKey());
+      const oPrivateKey = await unwrap(cert.PrivateKey);
+      certificate.providerName = await unwrap(oPrivateKey.ProviderName);
+      certificate.providerType = await unwrap(oPrivateKey.ProviderType);
+    } catch (error) {
+      // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
+      CryptoError.createCadesError(
+        error,
+        `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
       );
-      try {
-        certificate.hasPrivateKey = await cert.HasPrivateKey();
-        const oPrivateKey = await cert.PrivateKey;
-        certificate.providerName = await oPrivateKey.ProviderName;
-        certificate.providerType = await oPrivateKey.ProviderType;
-      } catch (error) {
-        // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
-        CryptoError.createCadesError(
-          error,
-          `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
-        );
-        certificate.hasPrivateKey = false;
-      }
-    } else {
-      certificate.subjectName = cert.SubjectName;
-      certificate.thumbprint = cert.Thumbprint as string;
-      certificate.notAfter = cert.ValidToDate as Date;
-      certificate.notBefore = cert.ValidFromDate as Date;
-      certificate.certificateBase64Data = cert.Export(
-        CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64
-      );
-
-      try {
-        certificate.hasPrivateKey = cert.HasPrivateKey();
-        const oPrivateKey = cert.PrivateKey;
-        certificate.providerName = oPrivateKey.ProviderName;
-        certificate.providerType = oPrivateKey.ProviderType;
-      } catch (error) {
-        // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
-        CryptoError.createCadesError(
-          error,
-          `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
-        );
-        certificate.hasPrivateKey = false;
-      }
+      certificate.hasPrivateKey = false;
     }
 
     parseCertificate(certificate);
