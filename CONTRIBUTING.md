@@ -16,6 +16,7 @@ ENUM:
 - doc
 - build
 - chore
+- test
 
 PACKAGE_NAME:
 - cryptopro-cades
