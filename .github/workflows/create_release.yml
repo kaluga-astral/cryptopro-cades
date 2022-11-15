@@ -1,0 +1,75 @@
+name: 'Create release'
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  # Устанавливает should_skip в true, если одновременно запускается два релиза
+  checkConcurrentRelease:
+    runs-on: ubuntu-latest
+    outputs:
+      should_skip: ${{ steps.skip_check.outputs.should_skip }}
+    steps:
+      - id: skip_check
+        uses: fkirc/skip-duplicate-actions@v5
+        with:
+          concurrent_skipping: 'always'
+          skip_after_successful_duplicate: 'true'
+
+  releasePackages:
+    needs: checkConcurrentRelease
+    if: needs.pre_job.outputs.should_skip != 'true'
+    name: Release packages
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 18.x
+          cache: 'npm'
+          cache-dependency-path: '**/package-lock.json'
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: npm i
+
+      - name: Generate release
+        # Устанавливает в env NEXT_VERSION и CURRENT_VERSION
+        run: npx semantic-release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      # Build всех пакетов
+      - name: Build @astral/cryptopro-cades
+        if: env.CURRENT_VERSION != env.NEXT_VERSION
+        run: npm run build --workspace=@astral/cryptopro-cades
+        env:
+          # NEXT_VERSION устанавливается в semantic-release.config.js
+          RELEASE_TAG: ${{ env.NEXT_VERSION }}
+
+      # Паблишинг всех пакетов
+      - name: Publish @astral/cryptopro-cades
+        if: env.CURRENT_VERSION != env.NEXT_VERSION
+        run: npm publish ./packages/cryptopro-cades/lib
+        env:
+          NPM_PUBLISH_TOKEN: ${{ secrets.NPM_PUBLISH_TOKEN }}
+
+      # Нотификация в telegram
+      - name: send telegram message on release
+        if: env.CURRENT_VERSION != env.NEXT_VERSION
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_RELEASE_CHAT_ID }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          format: html
+          message: |
+            🚀 <b>Были опубликованы новые версии пакетов services !</b>
+
+            Опубликованные пакеты:
+
+            📦  @astral/cryptopro-cades: ${{ env.NEXT_VERSION }}
+
+            ⚡️ <a href="https://github.com/kaluga-astral/services/releases/tag/v${{ env.NEXT_VERSION }}">Changelog</a>
+
+            ⚡️ Проявив инициативу и взяв доступную задачу с доски <a href="https://astraltrack.atlassian.net/jira/software/c/projects/UIKIT/boards/276">Frontend.Shared</a> вы развиваете frontend в компании.
