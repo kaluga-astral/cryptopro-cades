@@ -45,6 +45,7 @@ export interface ICertificate {
   /**
    * Закрытый ключ.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   readonly PrivateKey: WithOptionalPromise<any>;
 
   /**
@@ -52,12 +53,14 @@ export interface ICertificate {
    * @param InfoType Enumeration type defines what information is to be queried from a certificate.
    * @returns {WithOptionalPromise<string>} Запрошенная информация в виде строки.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   GetInfo(InfoType: CAPICOM_CERT_INFO_TYPE): WithOptionalPromise<any>;
 
   /**
    * Экспортирует открытую часть сертификата в виде Base64 строки.
    * @remarks возвращает без BEGIN и END CERTIFICATE. А перенос строки каждые 64 символа и зависит от ОС: \r\n или \n
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   Export(EncodingType: CAPICOM_ENCODING_TYPE): WithOptionalPromise<any>;
 
   /**
@@ -68,10 +71,12 @@ export interface ICertificate {
   /**
    * Имеется ли закрытый ключ для сертификата.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   HasPrivateKey(): WithOptionalPromise<any>;
 
   /**
    * Является ли сертификат валидным.
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   IsValid(): WithOptionalPromise<any>;
 }

@@ -17,7 +17,7 @@ export interface IRawSignature {
    */
   SignHash(
     hashedData: CPHashedData,
-    certificate: ICertificate
+    certificate: ICertificate,
   ): WithOptionalPromise<string>;
 
   /**
@@ -29,6 +29,6 @@ export interface IRawSignature {
   VerifyHash(
     hashedData: CPHashedData,
     certificate: ICertificate,
-    rawSignature: string
+    rawSignature: string,
   ): WithOptionalPromise<void>;
 }

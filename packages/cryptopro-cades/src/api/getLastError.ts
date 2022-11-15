@@ -7,7 +7,7 @@ import { IAnyError, ICryptoError } from '../types';
  * @returns {Error | undefined} объект ошибки, если имеется.
  */
 export function getLastError(
-  error: ICryptoError | Error | IAnyError
+  error: ICryptoError | Error | IAnyError,
 ): Error | undefined {
   return window.cadesplugin?.getLastError(error);
 }

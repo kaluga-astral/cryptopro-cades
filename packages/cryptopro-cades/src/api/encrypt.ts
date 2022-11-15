@@ -23,20 +23,24 @@ import { unwrap } from './internal/unwrap';
  */
 export function encrypt(
   data: ArrayBuffer | string,
-  recipientCertificates: ICertificate[]
+  recipientCertificates: ICertificate[],
 ): Promise<string> {
   return afterPluginLoaded(async () => {
     const logData = [];
+
     logData.push({ data, recipientCertificates });
+
     try {
       if (!data) {
         const errorMessage = 'Не указаны данные для шифрования.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
 
       if (!recipientCertificates || recipientCertificates?.length === 0) {
         const errorMessage =
           'Не указаны сертификаты получателей шифрованного сообщения.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
 
@@ -48,7 +52,7 @@ export function encrypt(
       logData.push({ base64String });
 
       const envelopedData: CPEnvelopedData = await createObject(
-        CRYPTO_OBJECTS.envelopedData
+        CRYPTO_OBJECTS.envelopedData,
       );
 
       try {
@@ -57,13 +61,14 @@ export function encrypt(
         await setCryptoProperty(
           envelopedData,
           'ContentEncoding',
-          CADESCOM_BASE64_TO_BINARY
+          CADESCOM_BASE64_TO_BINARY,
         );
+
         await setCryptoProperty(envelopedData, 'Content', base64String);
       } catch (err) {
         throw CryptoError.createCadesError(
           err,
-          'Ошибка при заполнении параметров шифрования.'
+          'Ошибка при заполнении параметров шифрования.',
         );
       }
 
@@ -76,7 +81,7 @@ export function encrypt(
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
-          'Ошибка при установке сертификатов получателей шифрованного сообщения.'
+          'Ошибка при установке сертификатов получателей шифрованного сообщения.',
         );
       }
 
@@ -85,7 +90,7 @@ export function encrypt(
         // поэтому расшифровываем предварительно конвертированный в Base64
 
         const encryptResult = await unwrap(
-          envelopedData.Encrypt(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64)
+          envelopedData.Encrypt(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64),
         );
 
         logData.push({ encryptResult });
@@ -94,7 +99,7 @@ export function encrypt(
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
-          'Ошибка при шифровании данных.'
+          'Ошибка при шифровании данных.',
         );
       }
     } catch (error) {

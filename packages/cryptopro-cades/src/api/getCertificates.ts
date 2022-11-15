@@ -27,18 +27,21 @@ const certificatesCache = {};
 async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
   if (!store) {
     const errorMessage = 'Не задано хранилище сертификатов.';
+
     throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
   }
+
   const result: Certificate[] = [];
   let certificates: ICertificates;
   let certificatesCount = 0;
+
   try {
     certificates = await unwrap(store.Certificates);
     certificatesCount = await unwrap(certificates.Count);
   } catch (err) {
     throw CryptoError.createCadesError(
       err,
-      'Ошибка получения списка сертификатов.'
+      'Ошибка получения списка сертификатов.',
     );
   }
 
@@ -46,7 +49,7 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
   while (certificatesCount) {
     try {
       const certBin: ICertificate = await unwrap(
-        certificates.Item(certificatesCount--)
+        certificates.Item(certificatesCount--),
       );
       const cert: Certificate = await Certificate.CreateFrom(certBin);
 
@@ -70,8 +73,10 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
  */
 async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
   let store: IStore | null = null;
+
   try {
     store = await openStore(STORE_LOCATION.CADESCOM_CONTAINER_STORE);
+
     return await getCertificatesFromStore(store);
   } finally {
     await store?.Close();
@@ -85,12 +90,14 @@ async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
  */
 async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
   let store: IStore | null = null;
+
   try {
     store = await openStore(
       STORE_LOCATION.CAPICOM_CURRENT_USER_STORE,
       CAPICOM_MY_STORE,
-      CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED
+      CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED,
     );
+
     return await getCertificatesFromStore(store);
   } finally {
     await store?.Close();
@@ -107,15 +114,17 @@ async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
  */
 export function getCertificates(
   storeType: STORE_TYPE = STORE_TYPE.ALL,
-  resetCache: boolean = false
+  resetCache: boolean = false,
 ): Promise<Certificate[]> {
   if (certificatesCache[storeType] && !resetCache) {
     return Promise.resolve(certificatesCache[storeType]);
   }
+
   return afterPluginLoaded(async () => {
     if (certificatesCache[storeType] && !resetCache) {
       return certificatesCache[storeType];
     }
+
     const logData = [];
     let result: Certificate[] = [];
 
@@ -124,38 +133,44 @@ export function getCertificates(
         case STORE_TYPE.USB_TOKEN:
           result = await ReadCertificatesFromUsbToken();
           logData.push({ storeType, result });
+
           break;
 
         case STORE_TYPE.REGISTRY:
           result = await ReadCertificatesFromRegistry();
           logData.push({ storeType, result });
+
           break;
 
         case STORE_TYPE.ALL:
           const usbTokenCertificates = await ReadCertificatesFromUsbToken();
-          logData.push({ storeType: 'usb', usbTokenCertificates });
-          const certificatesFromRegistry = await ReadCertificatesFromRegistry();
-          logData.push({ storeType: 'registry', certificatesFromRegistry });
 
+          logData.push({ storeType: 'usb', usbTokenCertificates });
+
+          const certificatesFromRegistry = await ReadCertificatesFromRegistry();
+
+          logData.push({ storeType: 'registry', certificatesFromRegistry });
           result = usbTokenCertificates.concat(certificatesFromRegistry);
 
           result = result.filter(
             (cert, index) =>
               result.findIndex((c) => c.thumbprint === cert.thumbprint) ===
-              index
+              index,
           );
+
           break;
 
         default:
           let store: IStore | null = null;
+
           try {
             store = await openStore();
-
             result = await getCertificatesFromStore(store);
             logData.push({ storeType: 'default', result });
           } finally {
             await store?.Close();
           }
+
           break;
       }
     } catch (error) {

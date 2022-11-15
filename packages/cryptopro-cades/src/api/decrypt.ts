@@ -19,11 +19,13 @@ import { unwrap } from './internal/unwrap';
 export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {
   return afterPluginLoaded(async () => {
     const logData = [];
+
     logData.push({ encryptedData });
 
     try {
       if (!encryptedData) {
         const errorMessage = 'Не указаны данные для расшифровки.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
 
@@ -35,20 +37,21 @@ export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {
       logData.push({ base64String });
 
       const envelopedData: CPEnvelopedData = await createObject(
-        CRYPTO_OBJECTS.envelopedData
+        CRYPTO_OBJECTS.envelopedData,
       );
+
       try {
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
         await setCryptoProperty(
           envelopedData,
           'ContentEncoding',
-          CADESCOM_BASE64_TO_BINARY
+          CADESCOM_BASE64_TO_BINARY,
         );
       } catch (err) {
         throw CryptoError.createCadesError(
           err,
-          'Ошибка при заполнении параметров расшифровки.'
+          'Ошибка при заполнении параметров расшифровки.',
         );
       }
 
@@ -65,7 +68,7 @@ export function decrypt(encryptedData: ArrayBuffer | string): Promise<string> {
       } catch (err) {
         throw CryptoError.createCadesError(
           err,
-          'Ошибка при расшифровке данных.'
+          'Ошибка при расшифровке данных.',
         );
       }
     } catch (error) {

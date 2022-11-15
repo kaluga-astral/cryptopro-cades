@@ -10,7 +10,8 @@
     "publish": "npm publish ./lib",
     "test": "jest",
     "lint:types": "tsc --noEmit",
-    "lint": "eslint ./src --fix --quiet"
+    "lint": "eslint --fix --quiet",
+    "lint:all": "eslint \"**/*{.ts,.tsx}\" --fix --quiet"
   },
   "dependencies": {
     "buffer": "6.0.3",

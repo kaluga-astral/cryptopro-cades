@@ -17,8 +17,9 @@ export interface ICertificates {
    */
   Find(
     findType: CAPICOM_CERTIFICATE_FIND_TYPE,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     searchCriteria?: any,
-    findValidOnly?: boolean
+    findValidOnly?: boolean,
   ): WithOptionalPromise<ICertificates>;
 
   /**

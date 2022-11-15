@@ -32,10 +32,11 @@ export function sign(
   data: ArrayBuffer | string,
   detach: boolean = true,
   includeCertChain: boolean = true,
-  doNotValidate: boolean = false
+  doNotValidate: boolean = false,
 ): Promise<string> {
   return afterPluginLoaded(async () => {
     const logData = [];
+
     logData.push({
       certificate,
       data,
@@ -43,14 +44,18 @@ export function sign(
       includeCertChain,
       doNotValidate,
     });
+
     try {
       if (!data) {
         const errorMessage = 'Не указаны данные для подписания.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
+
       if (!certificate) {
         const errorMessage =
           'Не указан сертификат для вычисления электронной подписи.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
 
@@ -62,6 +67,7 @@ export function sign(
       logData.push({ base64String });
 
       let cert: ICertificate | null = null;
+
       if (certificate instanceof Certificate) {
         cert = certificate?.certificateBin;
       } else {
@@ -76,39 +82,41 @@ export function sign(
             'CBP-6',
             'Сертификат не прошел проверку при подписи.',
             null,
-            errorMessage
+            errorMessage,
           );
         }
       }
 
       const signer: CPSigner = await createObject(CRYPTO_OBJECTS.signer);
       const signedData: CadesSignedData = await createObject(
-        CRYPTO_OBJECTS.signedData
+        CRYPTO_OBJECTS.signedData,
       );
 
       // заполнение параметров для подписи
       try {
         await setCryptoProperty(signer, 'Certificate', cert);
+
         if (includeCertChain) {
           await setCryptoProperty(
             signer,
             'Options',
-            CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+            CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN,
           );
         }
 
         await setCryptoProperty(
           signedData,
           'ContentEncoding',
-          CADESCOM_BASE64_TO_BINARY
+          CADESCOM_BASE64_TO_BINARY,
         );
+
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
         await setCryptoProperty(signedData, 'Content', base64String);
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
-          'Ошибка при заполнении параметров подписания.'
+          'Ошибка при заполнении параметров подписания.',
         );
       }
 
@@ -117,8 +125,8 @@ export function sign(
           signedData.SignCades(
             signer,
             CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
-            detach
-          )
+            detach,
+          ),
         );
 
         logData.push({ signResult });
@@ -127,7 +135,7 @@ export function sign(
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
-          'Ошибка при вычислении электронной подписи.'
+          'Ошибка при вычислении электронной подписи.',
         );
       }
     } catch (error) {

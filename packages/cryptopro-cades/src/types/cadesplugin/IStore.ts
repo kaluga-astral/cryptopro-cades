@@ -17,7 +17,7 @@ export interface IStore {
   Open(
     storeLocation: STORE_LOCATION,
     storeName: string,
-    openMode: CAPICOM_STORE_OPEN_MODE
+    openMode: CAPICOM_STORE_OPEN_MODE,
   ): WithOptionalPromise<void>;
 
   /**

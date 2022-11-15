@@ -20,15 +20,17 @@ import { bufferToHex } from './bufferToHex';
  * @throws {CryptoError} в случае ошибки.
  * @returns Извлеченные данные.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function parseValue(target: any, attributeName: string): string {
   if (!target) {
     const errorMessage = `Не задан объект для извлечения атрибута ${attributeName}`;
+
     throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
   }
 
   return target?.typesAndValues?.find(
     ({ type }: { type: string }): boolean =>
-      type == attributeOids[attributeName]
+      type == attributeOids[attributeName],
   )?.value?.valueBlock?.value;
 }
 
@@ -54,28 +56,31 @@ function normalizeInn(inn: string | null): string | null {
 export function parseCertificate(certificate: Certificate) {
   if (!certificate.certificateBase64Data) {
     const errorMessage = 'Не загружена открытая часть сертификата.';
+
     throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
   }
 
   try {
     const asn1 = fromBER(
       new Uint8Array(Buffer.from(certificate.certificateBase64Data, 'base64'))
-        .buffer
+        .buffer,
     );
 
     const parsedCert = new x509Certificate({ schema: asn1.result });
 
     const publishKeyAlgorithm =
       parsedCert.subjectPublicKeyInfo.algorithm.algorithmId;
+
     certificate.algorithm = publishKeyAlgorithm;
     certificate.isGost = GOST_KEY_ALGORITHM_OIDS.includes(publishKeyAlgorithm);
 
     const subjectKeyIdentifierExtension = parsedCert.extensions?.find(
       ({ extnID }: { extnID: string }): boolean =>
-        extnID === subjectKeyIdExtensionOid
+        extnID === subjectKeyIdExtensionOid,
     );
+
     certificate.subjectKeyId = bufferToHex(
-      subjectKeyIdentifierExtension?.parsedValue?.valueBlock?.valueHex
+      subjectKeyIdentifierExtension?.parsedValue?.valueBlock?.valueHex,
     );
 
     Object.keys(certificate.issuer).forEach((key) => {
@@ -95,7 +100,7 @@ export function parseCertificate(certificate: Certificate) {
     throw CryptoError.create(
       'CBP-10',
       'Не удалось распарсить данные сертификата.',
-      error
+      error,
     );
   }
 }

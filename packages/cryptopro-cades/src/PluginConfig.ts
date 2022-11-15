@@ -67,9 +67,12 @@ const pluginConfig = new PluginConfig();
 const logErrorWhenInDebug = (error: CryptoError): void => {
   if (pluginConfig.Debug && error) {
     const errors = [];
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let err: any = error;
+
     while (err != null) {
       errors.push(err);
+
       if (err instanceof CryptoError) {
         err = err.InnerError;
       } else {
@@ -86,4 +89,5 @@ const logErrorWhenInDebug = (error: CryptoError): void => {
 pluginConfig.addErrorListener(logErrorWhenInDebug);
 
 export { pluginConfig };
+
 export default pluginConfig;

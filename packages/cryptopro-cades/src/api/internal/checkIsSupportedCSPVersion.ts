@@ -28,7 +28,7 @@ export const checkIsSupportedCSPVersion = async (): Promise<void> => {
         pluginConfig.CheckCryptoProviders.find(
           (cp) =>
             cp.ProviderType === cryptoProvider.ProviderType &&
-            cp.ProviderName === cryptoProvider.ProviderName
+            cp.ProviderName === cryptoProvider.ProviderName,
         )
       ) {
         const errorMessage = pluginConfig.checkCspVersionFunc(cryptoProvider);
@@ -38,7 +38,7 @@ export const checkIsSupportedCSPVersion = async (): Promise<void> => {
             'CBP-4',
             'Не поддерживаемая версия CSP',
             null,
-            errorMessage
+            errorMessage,
           );
         }
       }
@@ -46,7 +46,7 @@ export const checkIsSupportedCSPVersion = async (): Promise<void> => {
   } else {
     if (systemInfo.cryptoProInstalled) {
       const cryptoProCSP = cryptoProviders.find((cp) =>
-        CRYPTO_PRO_CRYPTO_PROVIDER_TYPES.includes(cp.ProviderType)
+        CRYPTO_PRO_CRYPTO_PROVIDER_TYPES.includes(cp.ProviderType),
       );
 
       if (
@@ -59,12 +59,12 @@ export const checkIsSupportedCSPVersion = async (): Promise<void> => {
 
     if (systemInfo.vipNetInstalled) {
       const vipNetCSP = cryptoProviders.find((cp) =>
-        VIP_NET_CRYPTO_PROVIDER_TYPES.includes(cp.ProviderType)
+        VIP_NET_CRYPTO_PROVIDER_TYPES.includes(cp.ProviderType),
       );
 
       if (vipNetCSP?.MajorVersion) {
         const version = parseFloat(
-          vipNetCSP?.MajorVersion + '.' + vipNetCSP?.MinorVersion
+          vipNetCSP?.MajorVersion + '.' + vipNetCSP?.MinorVersion,
         );
 
         haveValidVipNetCSPVersion = version >= oldestSupportedVipnetCSPVersion;

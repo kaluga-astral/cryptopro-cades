@@ -11,6 +11,7 @@ export function isSupportedCadesVersion(version: string): boolean {
   }
 
   let [, major, minor, patch] = match;
+
   // @ts-ignore
   major = parseInt(major);
   // @ts-ignore

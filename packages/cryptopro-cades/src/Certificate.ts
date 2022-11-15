@@ -151,31 +151,39 @@ export class Certificate {
   public static async CreateFrom(cert: ICertificate): Promise<Certificate> {
     if (!cert) {
       const errorMessage = 'Не указаны данные исходного сертификата.';
+
       throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
     }
+
     if (cert instanceof Certificate) {
       return cert;
     }
+
     const certificate = new Certificate(cert);
 
     certificate.subjectName = await unwrap(cert.SubjectName);
     certificate.thumbprint = await unwrap(cert.Thumbprint);
     certificate.notAfter = await unwrap(cert.ValidToDate);
     certificate.notBefore = await unwrap(cert.ValidFromDate);
+
     certificate.certificateBase64Data = await unwrap(
-      cert.Export(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64)
+      cert.Export(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64),
     );
+
     try {
       certificate.hasPrivateKey = await unwrap(cert.HasPrivateKey());
+
       const oPrivateKey = await unwrap(cert.PrivateKey);
+
       certificate.providerName = await unwrap(oPrivateKey.ProviderName);
       certificate.providerType = await unwrap(oPrivateKey.ProviderType);
     } catch (error) {
       // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
       CryptoError.createCadesError(
         error,
-        `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`
+        `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`,
       );
+
       certificate.hasPrivateKey = false;
     }
 
