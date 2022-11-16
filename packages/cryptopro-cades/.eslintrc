@@ -1,7 +1,4 @@
 {
   "extends": "../../.eslintrc",
-  "parserOptions": {
-    "project": ["tsconfig.lint.json"]
-  },
   "ignorePatterns": ["cadesplugin_api.js"]
 }

@@ -5,6 +5,7 @@ import PluginConfig from '../PluginConfig';
  * @param args данные.
  * @returns Объект готовый для логирования.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const prepareArgs = (args: (string | any)[]): any[] => {
   const context = '[cryptopro-cades]: ';
 
@@ -21,6 +22,7 @@ const prepareArgs = (args: (string | any)[]): any[] => {
  * Логировать информацию (если включен Debug)
  * @param args
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const outputDebug = (...args: (string | any)[]): void => {
   if (PluginConfig.Debug) {
     console.log(...prepareArgs(args));
@@ -31,6 +33,7 @@ export const outputDebug = (...args: (string | any)[]): void => {
  * Логировать ошибку.
  * @param args параметры.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const outputError = (...args: (string | any)[]): void => {
   const data = prepareArgs(args);
 

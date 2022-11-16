@@ -11,15 +11,17 @@ import { unwrap } from './internal/unwrap';
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<object|null|undefined>} Созданный объект.
  */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function createObject(objectIdentifier: string): Promise<any | never> {
   return afterPluginLoaded(async () => {
     if (!objectIdentifier) {
       throw CryptoError.create(
         'CBP-7',
         'Не указан идентификатор объекта',
-        null
+        null,
       );
     }
+
     try {
       const object = canAsync()
         ? window.cadesplugin.CreateObjectAsync(objectIdentifier)
@@ -29,7 +31,7 @@ export function createObject(objectIdentifier: string): Promise<any | never> {
     } catch (error) {
       throw CryptoError.createCadesError(
         error,
-        `Ошибка при создании объекта ${objectIdentifier}`
+        `Ошибка при создании объекта ${objectIdentifier}`,
       );
     }
   })();

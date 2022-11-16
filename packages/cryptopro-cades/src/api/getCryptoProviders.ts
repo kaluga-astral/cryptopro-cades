@@ -18,7 +18,7 @@ let cryptoProvidersCache: ICryptoProvider[] | null;
  * @returns {Promise<ICryptoProvider[]>} Bнформация о типе, наименовании и версии криптопровайдеров.
  */
 export function getCryptoProviders(
-  resetCache: boolean = false
+  resetCache: boolean = false,
 ): Promise<ICryptoProvider[]> {
   if (cryptoProvidersCache && !resetCache) {
     return Promise.resolve(cryptoProvidersCache);
@@ -28,8 +28,10 @@ export function getCryptoProviders(
     if (cryptoProvidersCache && !resetCache) {
       return Promise.resolve(cryptoProvidersCache);
     }
+
     const availableCryptoProviders: ICryptoProvider[] = [];
     const logData = [];
+
     try {
       for (const {
         ProviderType,
@@ -38,8 +40,9 @@ export function getCryptoProviders(
         try {
           const cadesAbout: IAbout = await createObject(CRYPTO_OBJECTS.about);
           const cspVersion: IVersion = await unwrap(
-            cadesAbout.CSPVersion(ProviderName, ProviderType)
+            cadesAbout.CSPVersion(ProviderName, ProviderType),
           );
+
           availableCryptoProviders.push({
             ProviderName: ProviderName,
             ProviderType: ProviderType,
@@ -54,6 +57,7 @@ export function getCryptoProviders(
           });
         }
       }
+
       return (cryptoProvidersCache = availableCryptoProviders);
     } catch (error) {
       logData.push({ error });

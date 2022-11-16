@@ -35,7 +35,7 @@ export const getXmlSignAlgorithmType = (certificate: Certificate): string => {
       throw CryptoError.create(
         'CBP-9',
         `Неизвестный алгоритм (${certificate.algorithm}) при выборе типа алгоритма подписи XmlDSig.`,
-        null
+        null,
       );
   }
 };
@@ -58,7 +58,7 @@ export const getXmlHashAlgorithmType = (certificate: Certificate): string => {
       throw CryptoError.create(
         'CBP-9',
         `Неизвестный алгоритм (${certificate.algorithm}) при выборе типа алгоритма хэширования xml.`,
-        null
+        null,
       );
   }
 };
@@ -76,19 +76,24 @@ export const signXml = (
   certificate: ICertificate | Certificate,
   data: ArrayBuffer | string,
   xmlSignatureType: CADESCOM_XML_SIGNATURE_TYPE = CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
-  doNotValidate: boolean = false
+  doNotValidate: boolean = false,
 ): Promise<string> => {
   return afterPluginLoaded(async () => {
     const logData = [];
+
     logData.push({ certificate, data, xmlSignatureType, doNotValidate });
+
     try {
       if (!data) {
         const errorMessage = 'Не указаны данные для подписания.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
+
       if (!certificate) {
         const errorMessage =
           'Не указан сертификат для вычисления электронной подписи.';
+
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
 
@@ -113,24 +118,22 @@ export const signXml = (
             'CBP-6',
             'Сертификат не прошел проверку при подписи.',
             null,
-            errorMessage
+            errorMessage,
           );
         }
       }
 
       const signer: CPSigner = await createObject(CRYPTO_OBJECTS.signer);
       const signedData: ISignedXml = await createObject(
-        CRYPTO_OBJECTS.signedXml
+        CRYPTO_OBJECTS.signedXml,
       );
 
       // заполнение параметров для подписи
       try {
         await setCryptoProperty(signer, 'Certificate', cert.certificateBin);
-
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
         await setCryptoProperty(signedData, 'Content', base64String);
-
         // указываем тип подписи
         await setCryptoProperty(signedData, 'SignatureType', xmlSignatureType);
 
@@ -138,19 +141,19 @@ export const signXml = (
         await setCryptoProperty(
           signedData,
           'SignatureMethod',
-          getXmlSignAlgorithmType(cert)
+          getXmlSignAlgorithmType(cert),
         );
 
         // указываем алгоритм хэширования
         await setCryptoProperty(
           signedData,
           'DigestMethod',
-          getXmlHashAlgorithmType(cert)
+          getXmlHashAlgorithmType(cert),
         );
       } catch (err) {
         throw CryptoError.createCadesError(
           err,
-          'Ошибка при заполнении параметров подписания.'
+          'Ошибка при заполнении параметров подписания.',
         );
       }
 
@@ -163,7 +166,7 @@ export const signXml = (
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
-          'Ошибка при вычислении электронной подписи.'
+          'Ошибка при вычислении электронной подписи.',
         );
       }
     } catch (error) {

@@ -42,6 +42,7 @@ export interface IAbout {
    *       Может принимать значение
    *       @see http://cpdn.cryptopro.ru/content/cades/plugin-methods.html Список методов и свойств обьекта cadesplugin
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   MediaFilter(MediaType: CADESCOM_MEDIA_TYPE): WithOptionalPromise<any>;
 
   /**
@@ -62,7 +63,7 @@ export interface IAbout {
   ReaderFilter(
     EnabledTypes: number,
     EnabledOperations: number,
-    strFilterRegexp: string
+    strFilterRegexp: string,
   ): WithOptionalPromise<void>;
 
   /**
@@ -70,7 +71,7 @@ export interface IAbout {
    */
   CSPVersion(
     providerName?: string,
-    providerType?: number
+    providerType?: number,
   ): WithOptionalPromise<IVersion>;
 
   /**

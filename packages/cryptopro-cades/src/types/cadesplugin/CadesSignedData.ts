@@ -30,7 +30,7 @@ export type CadesSignedData = {
   SignCades(
     signer: CPSigner,
     cadesType: CADESCOM_CADES_TYPE,
-    bDetached?: boolean
+    bDetached?: boolean,
   ): WithOptionalPromise<string>;
 
   /**
@@ -45,7 +45,7 @@ export type CadesSignedData = {
   SignHash(
     hashData: CPHashedData,
     signer: CPSigner,
-    cadesType: CADESCOM_CADES_TYPE
+    cadesType: CADESCOM_CADES_TYPE,
   ): WithOptionalPromise<string>;
 
   // тут есть еще методы CoSign, Sign, Verify, CoSignCades, VerifyHash и т.п.

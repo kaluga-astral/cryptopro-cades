@@ -13,13 +13,14 @@ import { isSupportedCadesVersion } from './internal/isSupportedCadesVersion';
 export const checkIsValidSystemSetup = async (): Promise<void> => {
   let systemInfo: ISystemInfo | null = null;
   const logData = [];
+
   try {
     try {
       systemInfo = await getSystemInfo();
     } catch (error) {
       throw CryptoError.createCadesError(
         error,
-        'Настройки ЭП на данной машине не верны'
+        'Настройки ЭП на данной машине не верны',
       );
     }
 
@@ -27,7 +28,7 @@ export const checkIsValidSystemSetup = async (): Promise<void> => {
       throw CryptoError.create(
         'CBP-3',
         'Не поддерживаемая версия плагина.',
-        null
+        null,
       );
     }
 
@@ -35,7 +36,7 @@ export const checkIsValidSystemSetup = async (): Promise<void> => {
       throw CryptoError.create(
         'CBP-8',
         'Не установлен ни один криптопровайдер.',
-        null
+        null,
       );
     }
 
@@ -46,7 +47,7 @@ export const checkIsValidSystemSetup = async (): Promise<void> => {
   } finally {
     outputDebug(
       'checkIsValidSystemSetup >>',
-      logData.length === 0 ? 'ok' : logData
+      logData.length === 0 ? 'ok' : logData,
     );
   }
 };

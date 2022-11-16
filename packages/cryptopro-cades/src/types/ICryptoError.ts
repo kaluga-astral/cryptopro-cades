@@ -8,6 +8,7 @@ export type IErrorObject = ICryptoError | Error | IAnyError;
  * Используется в @see CryptoError.
  */
 export declare interface IAnyError {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 

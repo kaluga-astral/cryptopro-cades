@@ -23,7 +23,7 @@ import { unwrap } from './internal/unwrap';
 export function openStore(
   storeLocation: STORE_LOCATION = STORE_LOCATION.CAPICOM_CURRENT_USER_STORE,
   storeName: string = CAPICOM_MY_STORE,
-  openMode: CAPICOM_STORE_OPEN_MODE = CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_EXISTING_ONLY
+  openMode: CAPICOM_STORE_OPEN_MODE = CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_EXISTING_ONLY,
 ): Promise<IStore> {
   return afterPluginLoaded(async () => {
     let store: IStore = await createObject(CRYPTO_OBJECTS.store);
@@ -36,7 +36,7 @@ export function openStore(
       await unwrap(store?.Close());
       throw CryptoError.createCadesError(
         err,
-        'Ошибка открытия хранилища сертификатов.'
+        'Ошибка открытия хранилища сертификатов.',
       );
     }
   })();

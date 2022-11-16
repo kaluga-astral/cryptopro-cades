@@ -7,6 +7,7 @@ import { canAsync } from './canAsync';
  * интерфейс ради интерфейса >_<
  */
 interface ICryptoObject {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   [key: string]: any;
 }
 
@@ -20,7 +21,8 @@ interface ICryptoObject {
 export async function setCryptoProperty(
   obj: ICryptoObject,
   key: string,
-  value: any
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any,
 ): Promise<void> {
   try {
     if (canAsync()) {
@@ -36,7 +38,7 @@ export async function setCryptoProperty(
   } catch (err) {
     throw CryptoError.createCadesError(
       err,
-      `Не удалось установить значение в поле ${key}`
+      `Не удалось установить значение в поле ${key}`,
     );
   }
 }

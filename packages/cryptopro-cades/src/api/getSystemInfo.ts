@@ -32,6 +32,7 @@ export const getSystemInfo = (): Promise<ISystemInfo> => {
     if (systemInfoCache) {
       return Promise.resolve(systemInfoCache);
     }
+
     const sysInfo: ISystemInfo = {
       cadesVersion: '',
       cspVersion: null,
@@ -40,6 +41,7 @@ export const getSystemInfo = (): Promise<ISystemInfo> => {
       cryptoProviderName: null,
     };
     const logData = [];
+
     try {
       const cadesAbout: IAbout = await createObject(CRYPTO_OBJECTS.about);
 
@@ -48,17 +50,22 @@ export const getSystemInfo = (): Promise<ISystemInfo> => {
           VIP_NET_CRYPTO_PROVIDER_TYPES.includes(cryptoProvider.ProviderType)
         ) {
           sysInfo.vipNetInstalled = true;
+
           sysInfo.cryptoProviderName =
             DEFAULT_CRYPTO_PROVIDER.Fallback.ProviderName;
+
           sysInfo.cspVersion =
             cryptoProvider.MajorVersion + '.' + cryptoProvider.MinorVersion;
         }
+
         if (
           CRYPTO_PRO_CRYPTO_PROVIDER_TYPES.includes(cryptoProvider.ProviderType)
         ) {
           sysInfo.cryptoProInstalled = true;
+
           sysInfo.cryptoProviderName =
             DEFAULT_CRYPTO_PROVIDER.Default.ProviderName;
+
           sysInfo.cspVersion =
             cryptoProvider.MajorVersion +
             '.' +
@@ -74,13 +81,14 @@ export const getSystemInfo = (): Promise<ISystemInfo> => {
         if (pluginVersion) {
           sysInfo.cadesVersion = await unwrap(pluginVersion.toString());
         }
+
         if (!sysInfo.cadesVersion) {
           sysInfo.cadesVersion = await unwrap(cadesAbout.Version);
         }
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
-          'Ошибка при получении информации о системе'
+          'Ошибка при получении информации о системе',
         );
       }
 

@@ -87,11 +87,12 @@ export class CryptoError extends Error implements ICryptoError {
    */
   public static createCadesError(
     err: IErrorObject,
-    title: string
+    title: string,
   ): CryptoError {
     const cryptoError = new CryptoError(err);
 
     err = err as IAnyError;
+
     const errCode = ERRORS_WITHOUT_CODE[err.message];
 
     if (errCode) {
@@ -99,17 +100,21 @@ export class CryptoError extends Error implements ICryptoError {
     }
 
     cryptoError.code = err.code ?? CryptoError._extractCode(err);
+
     if (typeof cryptoError.code === 'string' && cryptoError.code.length > 16) {
       cryptoError.code = '';
     }
 
     let extractedMsg = '';
+
     if (err.message) {
       extractedMsg = cryptoError._extractMessage(err);
     }
+
     cryptoError.title = title ?? err.message ?? extractedMsg;
     cryptoError.type = err.type ?? 'CAdES';
     cryptoError.type += ' < @astral/cades-plugin';
+
     cryptoError.message =
       CRYPTO_PRO_ERRORS.find((res) => res.code == cryptoError.code)?.message ??
       PLUGIN_ERRORS[cryptoError.code] ??
@@ -133,15 +138,15 @@ export class CryptoError extends Error implements ICryptoError {
     errorCode: keyof typeof PLUGIN_ERRORS,
     title: string,
     err: IErrorObject | null,
-    overrideMessage?: string
+    overrideMessage?: string,
   ): CryptoError {
     const cryptoError = new CryptoError(err);
+
     cryptoError.InnerError = err;
     cryptoError.type = 'Error';
     cryptoError.code = errorCode;
     cryptoError.title = title; // не показываем пользователю
     cryptoError.message = overrideMessage ?? PLUGIN_ERRORS[cryptoError.code];
-
     PluginConfig.notifyError(cryptoError);
 
     return cryptoError;
@@ -158,6 +163,7 @@ export class CryptoError extends Error implements ICryptoError {
       (err.message?.match(/\(?0x.{2,8}\)?/) ||
         err.message?.match(CryptoError._RULE_MATCHING_CODE) ||
         [])[0] || '';
+
     return result.replace(/[()]/g, '').trim();
   }
 
@@ -167,6 +173,7 @@ export class CryptoError extends Error implements ICryptoError {
    * @returns {*|string} .
    * @private
    */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   private _extractMessage(err: IErrorObject): string | any {
     const fullErrorData = getLastError(err);
 

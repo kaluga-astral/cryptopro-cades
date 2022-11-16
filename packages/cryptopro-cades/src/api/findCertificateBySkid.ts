@@ -10,16 +10,18 @@ import { getCertificates } from './../api';
  * @returns {@Promise<Certificate | undefined>} сертификат.
  */
 export async function findCertificateBySkid(
-  subjectKeyId: string
+  subjectKeyId: string,
 ): Promise<Certificate | undefined> {
   if (!subjectKeyId) {
     const errorMessage =
       'Не указан идентификатор ключа субъекта искомого сертификата.';
+
     throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
   }
+
   try {
     return (await getCertificates()).find(
-      (c) => c.subjectKeyId == subjectKeyId
+      (c) => c.subjectKeyId == subjectKeyId,
     );
   } catch (err) {
     throw CryptoError.createCadesError(err, 'Ошибка получения сертификата.');

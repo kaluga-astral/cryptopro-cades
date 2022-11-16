@@ -16,7 +16,7 @@ import { unwrap } from './internal/unwrap';
  */
 export function getCertInfo(
   cert: ICertificate,
-  what: CAPICOM_CERT_INFO_TYPE
+  what: CAPICOM_CERT_INFO_TYPE,
 ): Promise<string> {
   return unwrap(cert.GetInfo(what));
 }

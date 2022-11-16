@@ -1,12 +1,14 @@
 {
   "root": true,
-  "parser": "@typescript-eslint/parser",
-  "extends": ["@astral-frontend/eslint-config-ts-ui"],
+  "extends": ["@astral/eslint-config-react-ts"],
   "env": {
     "node": true
   },
-  "parserOptions": {
-    "project": ["tsconfig.json"]
-  },
-  "ignorePatterns": ["lib", "build", "node_modules"]
+  "ignorePatterns": ["lib", "build", "node_modules"],
+  "rules": {
+    "import/no-extraneous-dependencies": [
+      "error",
+      { "devDependencies": true, "packageDir": ["./", "../../"] }
+    ]
+  }
 }

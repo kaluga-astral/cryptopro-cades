@@ -14,10 +14,12 @@ let isPluginReady: boolean = false;
  * @returns {Promise} .функция ожидания.
  */
 export function afterPluginLoaded(
-  cb: Function
+  cb: Function,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): (...args: any) => Promise<any> {
   return async (...args) => {
     const isAlreadyLoaded = isPluginReady;
+
     if (!isPluginReady) {
       try {
         // eslint-disable-next-line import/extensions
@@ -26,7 +28,7 @@ export function afterPluginLoaded(
         throw CryptoError.create(
           'CBP-2',
           'Ошибка загрузки библиотеки cadesplugin.js',
-          err
+          err,
         );
       }
 
@@ -37,7 +39,7 @@ export function afterPluginLoaded(
       throw CryptoError.create(
         'CBP-1',
         'Не инициализирован модуль для работы с cadesplugin',
-        null
+        null,
       );
     }
 
@@ -49,7 +51,7 @@ export function afterPluginLoaded(
       throw CryptoError.create(
         'CBP-1',
         'Ошибка при инициализации модуля для работы с cadesplugin',
-        err
+        err,
       );
     }
 
