@@ -2,8 +2,15 @@ import { Buffer } from 'buffer';
 
 import { useEffect, useState } from 'react';
 import {
+  CADESCOM_XML_SIGNATURE_TYPE,
+  CRYPTO_OBJECTS,
   Certificate,
+  ICertificate,
+  ICryptoProvider,
+  ISystemInfo,
   STORE_TYPE,
+  checkIsValidSystemSetup,
+  createObject,
   decrypt,
   encrypt,
   findCertificateBySkid,
@@ -14,13 +21,7 @@ import {
   pluginConfig,
   sign,
   signXml,
-  CADESCOM_XML_SIGNATURE_TYPE,
-  createObject,
-  CRYPTO_OBJECTS,
-  ICertificate,
-  ICryptoProvider,
-  ISystemInfo,
-  checkIsValidSystemSetup,
+  checkPlugin,
 } from '@astral/cryptopro-cades';
 
 import { CertificateInfo } from './components/CertificateInfo';
@@ -71,8 +72,8 @@ const CryptoApp = () => {
     }
     async function fetchCryptoProviders() {
       try {
-        const cryptoProviders = await getCryptoProviders();
-        setCryptoProviders(cryptoProviders);
+        const fetchedCryptoProviders = await getCryptoProviders();
+        setCryptoProviders(fetchedCryptoProviders);
       } catch (error) {
         outputError(error);
         window.alert(error?.toString());
@@ -117,6 +118,20 @@ const CryptoApp = () => {
     window.URL.revokeObjectURL(url);
     a.remove();
   };
+
+  /**
+   *
+   * @param base64 строка в формате Base64.
+   * @param type Тип данных.
+   * @returns {Promise<Blob>} Блоб.
+   */
+  const convertBase64toBlob = (
+    base64: string,
+    type: string = 'application/octet-stream'
+  ): Promise<Blob> =>
+    window
+      .fetch(`data:${type};base64,${base64}`)
+      .then((res: Response) => res.blob());
 
   /**
    * Подписать файл в формате CMS.
@@ -259,20 +274,6 @@ const CryptoApp = () => {
   };
 
   /**
-   *
-   * @param base64 строка в формате Base64.
-   * @param type Тип данных.
-   * @returns {Promise<Blob>} Блоб.
-   */
-  const convertBase64toBlob = (
-    base64: string,
-    type: string = 'application/octet-stream'
-  ): Promise<Blob> =>
-    window
-      .fetch(`data:${type};base64,${base64}`)
-      .then((res: Response) => res.blob());
-
-  /**
    * Выполняет импорт сертификата.
    * @param data
    */
@@ -344,10 +345,23 @@ const CryptoApp = () => {
     }
   }
 
+  /**
+   * Проверить криптопро браузер плагин.
+   */
+  async function checkPluginClick() {
+    try {
+      await checkPlugin();
+    } catch (error) {
+      outputError(error);
+      window.alert(error.toString());
+    }
+  }
+
   return (
     <>
       <p>Версия плагина {versionInfo?.cadesVersion}</p>
       <p>Версия криптопровайдера {versionInfo?.cspVersion}</p>
+      <button onClick={() => checkPluginClick()}>Проверить плагин</button>
       <button onClick={() => checkSystem()}>Проверить систему</button>
       <button onClick={() => setShowCryptoProviders(!showCryptoProviders)}>
         {!showCryptoProviders

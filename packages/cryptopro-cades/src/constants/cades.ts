@@ -653,17 +653,41 @@ export const CADESCOM_DISPLAY_DATA_CONTENT = 1;
 
 export const CADESCOM_DISPLAY_DATA_ATTRIBUTE = 2;
 
-export const CADESCOM_ENCRYPTION_ALGORITHM_RC2 = 0;
+/**
+ * Тип алгоритма шифрования.
+ * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_enum/cadescom_encryption_algorithm
+ */
+export enum CADESCOM_ENCRYPTION_ALGORITHM {
+  /**
+   * Алгоритм RSA RC2.
+   */
+  CADESCOM_ENCRYPTION_ALGORITHM_RC2 = 0,
 
-export const CADESCOM_ENCRYPTION_ALGORITHM_RC4 = 1;
+  /**
+   * Алгоритм RSA RC4.
+   */
+  CADESCOM_ENCRYPTION_ALGORITHM_RC4 = 1,
 
-export const CADESCOM_ENCRYPTION_ALGORITHM_DES = 2;
+  /**
+   * Алгоритм DES.
+   */
+  CADESCOM_ENCRYPTION_ALGORITHM_DES = 2,
 
-export const CADESCOM_ENCRYPTION_ALGORITHM_3DES = 3;
+  /**
+   * Алгоритм 3DES.
+   */
+  CADESCOM_ENCRYPTION_ALGORITHM_3DES = 3,
 
-export const CADESCOM_ENCRYPTION_ALGORITHM_AES = 4;
+  /**
+   * Алгоритм AES.
+   */
+  CADESCOM_ENCRYPTION_ALGORITHM_AES = 4,
 
-export const CADESCOM_ENCRYPTION_ALGORITHM_GOST_28147_89 = 25;
+  /**
+   * Алгоритм ГОСТ 28147-89.
+   */
+  CADESCOM_ENCRYPTION_ALGORITHM_GOST_28147_89 = 25,
+}
 
 export const CADESCOM_HASH_ALGORITHM_SHA1 = 0;
 
@@ -879,4 +903,10 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cpcertificate
    */
   certificate = 'CAdESCOM.Certificate',
+
+  /**
+   * Объект позволяет получить информацию о доступных криптопровайдерах.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/ccspinformations?id=ccspinformations
+   */
+  cspInformations = 'X509Enrollment.CCspInformations',
 }
