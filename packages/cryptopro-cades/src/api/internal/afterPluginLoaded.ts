@@ -1,6 +1,7 @@
 import { checkIsValidSystemSetup } from '../checkIsValidSystemSetup';
+import { checkPlugin } from '../checkPlugin';
 
-import { CryptoError } from './../../errors';
+import { unwrap } from './unwrap';
 import PluginConfig from './../../PluginConfig';
 
 /**
@@ -15,44 +16,13 @@ let isPluginReady: boolean = false;
  */
 export function afterPluginLoaded(
   cb: Function,
+  checkSystem: boolean = false,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
 ): (...args: any) => Promise<any> {
   return async (...args) => {
-    const isAlreadyLoaded = isPluginReady;
-
     if (!isPluginReady) {
-      try {
-        // eslint-disable-next-line import/extensions
-        require('./../../vendor/cadesplugin_api.js');
-      } catch (err) {
-        throw CryptoError.create(
-          'CBP-2',
-          'Ошибка загрузки библиотеки cadesplugin.js',
-          err,
-        );
-      }
-
+      await checkPlugin();
       isPluginReady = true;
-    }
-
-    if (!window.cadesplugin) {
-      throw CryptoError.create(
-        'CBP-1',
-        'Не инициализирован модуль для работы с cadesplugin',
-        null,
-      );
-    }
-
-    try {
-      if (window.cadesplugin instanceof Promise) {
-        await window.cadesplugin;
-      }
-    } catch (err) {
-      throw CryptoError.create(
-        'CBP-1',
-        'Ошибка при инициализации модуля для работы с cadesplugin',
-        err,
-      );
     }
 
     if (PluginConfig.DebugCryptoProBrowserPlugin) {
@@ -60,15 +30,11 @@ export function afterPluginLoaded(
     }
 
     // для исключения зацикливания, проверку валидности системы делаем единожды.
-    if (PluginConfig.CheckSystemSetup && !isAlreadyLoaded) {
+    if (checkSystem && PluginConfig.CheckSystemSetup && !isPluginReady) {
       await checkIsValidSystemSetup();
     }
 
-    const callbackResult = cb.apply(null, args);
-
-    if (callbackResult instanceof Promise) {
-      await callbackResult;
-    }
+    const callbackResult = await unwrap(cb.apply(null, args));
 
     return callbackResult;
   };

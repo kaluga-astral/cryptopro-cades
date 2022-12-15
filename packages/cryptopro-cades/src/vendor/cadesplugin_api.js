@@ -1,20 +1,18 @@
-// 2.0.14530 от 16.02.2022
-// ГОСТ: 8FE58D912E985DBFA1BB573D102DA68192B442278C586D1BE183A7CEA49C6C19
-// MD5: d0282c948e2b5f6a02f3944a16ebc7e3
+// КриптоПро ЭЦП Browser plug-in 2.0.14660 от 2.09.2022
+// ГОСТ: 20FA0454B0D40F9F19248F8617999EC51C1367911E14E75BAF12554F252DFC9A
+// MD5: 4e81144b91bc4ef9e4dff854ed316b31
 // https://www.cryptopro.ru/sites/default/files/products/cades/current_release_2_0/cadesplugin_api.js.zip
+// https://cryptopro.ru/products/cades/downloads
 
-/**
- * @class window.cadesplugin
- */
-;(function () {
+export default function () {
     //already loaded
-    if(window.cadesplugin)
-        return;
+    if(window.cadesplugin) 
+        return window.cadesplugin;
 
-    var pluginObject;
-    var plugin_resolved = 0;
     var plugin_reject;
     var plugin_resolve;
+    var pluginObject;
+    var plugin_resolved = 0;
     var isOpera = 0;
     var isFireFox = 0;
     var isSafari = 0;
@@ -375,7 +373,7 @@
             }
             catch (e) {
                 // Для версий плагина ниже 2.0.12538
-        return new ActiveXObject(name); // eslint-disable-line
+                return new ActiveXObject(name);
             }
         }
         // создаются объекты NPAPI
@@ -414,7 +412,7 @@
 
     // Функция для удаления созданных объектов
     function ReleasePluginObjects() {
-    return cpcsp_chrome_nmcades.ReleasePluginObjects(); // eslint-disable-line
+        return cpcsp_chrome_nmcades.ReleasePluginObjects();
     }
 
     // Функция активации асинхронных объектов КриптоПро ЭЦП Browser plug-in
@@ -482,7 +480,7 @@
             var ovr = document.createElement('div');
             ovr.id = "cadesplugin_ovr";
             ovr.style = "visibility: hidden; position: fixed; left: 0px; top: 0px; width:100%; height:100%; background-color: rgba(0,0,0,0.7)";
-            ovr.innerHTML = "<div id='cadesplugin_ovr_item' style='position:relative; width:400px; margin:100px auto; background-color:#fff; border:2px solid #000; padding:10px; text-align:center; opacity: 1; z-index: 1500'>" +
+            ovr.innerHTML = "<div id='cadesplugin_ovr_item' style='position:relative; max-width:400px; margin:100px auto; background-color:#fff; border:2px solid #000; padding:10px; text-align:center; opacity: 1; z-index: 1500'>" +
                 "<button id='cadesplugin_close_install' style='float: right; font-size: 10px; background: transparent; border: 1; margin: -5px'>X</button>" +
                 "<p>Для работы КриптоПро ЭЦП Browser plugin на данном сайте необходимо расширение для браузера. Убедитесь, что оно у Вас включено или установите его." +
                 "<p><a href='https://www.cryptopro.ru/sites/default/files/products/cades/extensions/firefox_cryptopro_extension_latest.xpi'>Скачать расширение</a></p>" +
@@ -506,7 +504,7 @@
         if (window.cadesplugin_extension_loaded_callback)
             window.cadesplugin_extension_loaded_callback();
         isFireFoxExtensionLoaded = true;
-        cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error); // eslint-disable-line
+        cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error);
     }
 
     function nmcades_api_onload() {
@@ -524,8 +522,7 @@
             {
                 // Для Firefox, Сафари вместе с сообщением cadesplugin_loaded прилетает url для загрузки nmcades_plugin_api.js
                 var url = event.data.substring(event.data.indexOf("url:") + 4);
-                if (!url.match("^moz-extension://[a-zA-Z0-9-]+/nmcades_plugin_api.js$")
-                    && !url.match("^safari-extension://[a-zA-Z0-9-]+/[a-zA-Z0-9]+/nmcades_plugin_api.js$"))
+                if (!url.match("^(moz|safari)-extension://[a-zA-Z0-9/_-]+/nmcades_plugin_api.js$"))
                 {
                     cpcsp_console_log(cadesplugin.LOG_LEVEL_ERROR, "Bad url \"" + url + "\" for load CryptoPro Extension for CAdES Browser plug-in");
                     plugin_loaded_error();
@@ -538,7 +535,7 @@
                 fileref.onload = firefox_or_safari_nmcades_onload;
                 document.getElementsByTagName("head")[0].appendChild(fileref);
             }else {
-                cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error); // eslint-disable-line
+                cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error);
             }
             cadesplugin_loaded_event_recieved = true;
         }, false);
@@ -721,7 +718,7 @@
     };
 
     //Export
-    cadesplugin.JSModuleVersion = "2.3.2";
+    cadesplugin.JSModuleVersion = "2.3.3";
     cadesplugin.async_spawn = async_spawn;
     cadesplugin.set = set_pluginObject;
     cadesplugin.set_log_level = set_log_level;
@@ -753,6 +750,6 @@
     cadesplugin.current_log_level = cadesplugin.LOG_LEVEL_ERROR;
     window.cadesplugin = cadesplugin;
     check_plugin_working();
-}());
 
-export default window.cadesplugin;
+    return cadesplugin;
+};
