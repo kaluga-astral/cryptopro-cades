@@ -4,7 +4,7 @@ import init from './../vendor/cadesplugin_api';
 
 /**
  * Выполнить инициализацию и проверку работопособности КриптоПРО Браузер плагин.
- * @returns {Promise} функция ожидания.
+ * @returns функция ожидания.
  */
 export async function checkPlugin(): Promise<void> {
   try {

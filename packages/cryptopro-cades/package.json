@@ -19,7 +19,6 @@
     "asn1js": "3.0.5"
   },
   "devDependencies": {
-    "@types/node": "18.11.15",
     "copyfiles": "2.4.1"
   },
   "version": "1.4.0"
