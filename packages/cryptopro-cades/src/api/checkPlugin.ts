@@ -8,7 +8,7 @@ import init from './../vendor/cadesplugin_api';
  */
 export async function checkPlugin(): Promise<void> {
   try {
-    init();
+    await init();
   } catch (err) {
     throw CryptoError.create(
       'CBP-2',

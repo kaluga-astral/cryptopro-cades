@@ -1,4 +1,4 @@
 {
   "extends": "../../.eslintrc",
-  "ignorePatterns": ["cadesplugin_api.js"]
+  "ignorePatterns": ["cadesplugin_api.ts"]
 }

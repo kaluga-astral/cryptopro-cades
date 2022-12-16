@@ -3,10 +3,11 @@
 // MD5: 4e81144b91bc4ef9e4dff854ed316b31
 // https://www.cryptopro.ru/sites/default/files/products/cades/current_release_2_0/cadesplugin_api.js.zip
 // https://cryptopro.ru/products/cades/downloads
-
-export default function () {
+// eslint-disable
+// @ts-nocheck
+export default function init() {
     //already loaded
-    if(window.cadesplugin) 
+    if(window.cadesplugin)
         return window.cadesplugin;
 
     var plugin_reject;
@@ -373,7 +374,7 @@ export default function () {
             }
             catch (e) {
                 // Для версий плагина ниже 2.0.12538
-                return new ActiveXObject(name);
+                return new ActiveXObject(name); // eslint-disable-line
             }
         }
         // создаются объекты NPAPI
@@ -412,7 +413,7 @@ export default function () {
 
     // Функция для удаления созданных объектов
     function ReleasePluginObjects() {
-        return cpcsp_chrome_nmcades.ReleasePluginObjects();
+        return cpcsp_chrome_nmcades.ReleasePluginObjects(); // eslint-disable-line
     }
 
     // Функция активации асинхронных объектов КриптоПро ЭЦП Browser plug-in
@@ -504,7 +505,7 @@ export default function () {
         if (window.cadesplugin_extension_loaded_callback)
             window.cadesplugin_extension_loaded_callback();
         isFireFoxExtensionLoaded = true;
-        cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error);
+        cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error); // eslint-disable-line
     }
 
     function nmcades_api_onload() {
@@ -535,7 +536,7 @@ export default function () {
                 fileref.onload = firefox_or_safari_nmcades_onload;
                 document.getElementsByTagName("head")[0].appendChild(fileref);
             }else {
-                cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error);
+                cpcsp_chrome_nmcades.check_chrome_plugin(plugin_loaded, plugin_loaded_error); // eslint-disable-line
             }
             cadesplugin_loaded_event_recieved = true;
         }, false);
@@ -751,5 +752,5 @@ export default function () {
     window.cadesplugin = cadesplugin;
     check_plugin_working();
 
-    return cadesplugin;
-};
+    return window.cadesplugin;
+}
