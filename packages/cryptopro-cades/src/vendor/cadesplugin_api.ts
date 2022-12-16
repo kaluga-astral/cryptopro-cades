@@ -3,14 +3,12 @@
 // MD5: 4e81144b91bc4ef9e4dff854ed316b31
 // https://www.cryptopro.ru/sites/default/files/products/cades/current_release_2_0/cadesplugin_api.js.zip
 // https://cryptopro.ru/products/cades/downloads
-
-/**
- * @class window.cadesplugin
- */
- ;(function () {
+// eslint-disable
+// @ts-nocheck
+export default function init() {
     //already loaded
     if(window.cadesplugin)
-        return;
+        return window.cadesplugin;
 
     var plugin_reject;
     var plugin_resolve;
@@ -753,6 +751,6 @@
     cadesplugin.current_log_level = cadesplugin.LOG_LEVEL_ERROR;
     window.cadesplugin = cadesplugin;
     check_plugin_working();
-}());
 
-export default window.cadesplugin;
+    return window.cadesplugin;
+}

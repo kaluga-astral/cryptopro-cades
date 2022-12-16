@@ -6,7 +6,6 @@
     "dev": "tsc --watch",
     "prebuild": "npx rimraf ./lib",
     "build": "commander build",
-    "postbuild": "copyfiles -u 1 src/vendor/*.js lib && copyfiles -u 1 src/vendor/*.js lib/esm",
     "publish": "npm publish ./lib",
     "test": "jest",
     "lint:types": "tsc --noEmit",
