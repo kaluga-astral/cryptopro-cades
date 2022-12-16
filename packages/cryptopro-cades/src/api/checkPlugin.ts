@@ -1,6 +1,5 @@
 import { unwrap } from './internal/unwrap';
 import { CryptoError } from './../errors';
-import init from './../vendor/cadesplugin_api';
 
 /**
  * Выполнить инициализацию и проверку работопособности КриптоПРО Браузер плагин.
@@ -8,7 +7,8 @@ import init from './../vendor/cadesplugin_api';
  */
 export async function checkPlugin(): Promise<void> {
   try {
-    init();
+    // eslint-disable-next-line import/extensions
+    require('./../vendor/cadesplugin_api.js');
   } catch (err) {
     throw CryptoError.create(
       'CBP-2',
