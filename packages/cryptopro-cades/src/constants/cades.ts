@@ -689,31 +689,72 @@ export enum CADESCOM_ENCRYPTION_ALGORITHM {
   CADESCOM_ENCRYPTION_ALGORITHM_GOST_28147_89 = 25,
 }
 
-export const CADESCOM_HASH_ALGORITHM_SHA1 = 0;
+export enum CADESCOM_HASH_ALGORITHM {
+  /**
+   * Алгоритм SHA1.
+   */
+  CADESCOM_HASH_ALGORITHM_SHA1 = 0,
 
-export const CADESCOM_HASH_ALGORITHM_MD2 = 1;
+  /**
+   * Алгоритм MD2.
+   */
+  CADESCOM_HASH_ALGORITHM_MD2 = 1,
 
-export const CADESCOM_HASH_ALGORITHM_MD4 = 2;
+  /**
+   * Алгоритм MD4.
+   */
+  CADESCOM_HASH_ALGORITHM_MD4 = 2,
 
-export const CADESCOM_HASH_ALGORITHM_MD5 = 3;
+  /**
+   * Алгоритм MD5.
+   */
+  CADESCOM_HASH_ALGORITHM_MD5 = 3,
 
-export const CADESCOM_HASH_ALGORITHM_SHA_256 = 4;
+  /**
+   * Алгоритм SHA1 с длиной ключа 256 бит.
+   */
+  CADESCOM_HASH_ALGORITHM_SHA_256 = 4,
 
-export const CADESCOM_HASH_ALGORITHM_SHA_384 = 5;
+  /**
+   * Алгоритм SHA1 с длиной ключа 384 бита.
+   */
+  CADESCOM_HASH_ALGORITHM_SHA_384 = 5,
 
-export const CADESCOM_HASH_ALGORITHM_SHA_512 = 6;
+  /**
+   * Алгоритм SHA1 с длиной ключа 512 бит.
+   */
+  CADESCOM_HASH_ALGORITHM_SHA_512 = 6,
 
-export const CADESCOM_HASH_ALGORITHM_CP_GOST_3411 = 100;
+  /**
+   * Алгоритм ГОСТ Р 34.11-94.
+   */
+  CADESCOM_HASH_ALGORITHM_CP_GOST_3411 = 100,
 
-export const CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256 = 101;
+  /**
+   * Алгоритм ГОСТ Р 34.11-2012 с длиной ключа 256 бит.
+   */
+  CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256 = 101,
 
-export const CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512 = 102;
+  /**
+   * 	Алгоритм ГОСТ Р 34.11-2012 с длиной ключа 512 бит.
+   */
+  CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512 = 102,
 
-export const CADESCOM_HASH_ALGORITHM_CP_GOST_3411_HMAC = 110;
+  /**
+   * Алгоритм ГОСТ Р 34.11-94 HMAC.
+   */
+  CADESCOM_HASH_ALGORITHM_CP_GOST_3411_HMAC = 110,
 
-export const CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256_HMAC = 111;
+  /**
+   * Алгоритм ГОСТ Р 34.11-2012 HMAC.
+   */
+  CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256_HMAC = 111,
 
-export const CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512_HMAC = 112;
+  /**
+   * Алгоритм ГОСТ Р 34.11-2012 HMAC.
+   */
+  CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512_HMAC = 112,
+}
 
 export const CADESCOM_AllowNone = 0;
 
@@ -891,6 +932,12 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cadessigneddata
    */
   signedData = 'CAdESCOM.CadesSignedData',
+
+  /**
+   * Объект предоставляет функционал для вычисления хэша.
+   * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cphasheddata
+   */
+  hashedData = 'CAdESCOM.HashedData',
 
   /**
    * Объект предоставляет функционал по шифрованию/расшифровке сообщения.

@@ -12,7 +12,7 @@ import { unwrap } from './internal/unwrap';
 
 /**
  * Расшифровать данные.
- * @param {string} encryptedData -входные данные для расшифровки в формате Base64 или ArrayBuffer.
+ * @param {string} encryptedData - данные для расшифрования. Массив байт либо массив байт в формате Base64 строки.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<string>} .Расшифрованная строка в кодировке Base64.
  */
