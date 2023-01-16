@@ -25,7 +25,13 @@ const prepareArgs = (args: (string | any)[]): any[] => {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const outputDebug = (...args: (string | any)[]): void => {
   if (PluginConfig.Debug) {
-    console.log(...prepareArgs(args));
+    const data = prepareArgs(args);
+
+    if (typeof data[0] == 'string') {
+      console.log(data[0], data.slice(1, data.length));
+    } else {
+      console.log(data);
+    }
   }
 };
 
@@ -37,8 +43,9 @@ export const outputDebug = (...args: (string | any)[]): void => {
 export const outputError = (...args: (string | any)[]): void => {
   const data = prepareArgs(args);
 
-  // первый элемент- контекст, второй и далее - объекты ошибки
-  const err = data.length === 2 ? data[1] : data.slice(1, data.length);
-
-  console.error({ err }, ...data); // логируем текст ошибки и прикрепляем саму ошибку.
+  if (typeof data[0] == 'string') {
+    console.error(data[0], data.slice(1, data.length));
+  } else {
+    console.error(data);
+  }
 };

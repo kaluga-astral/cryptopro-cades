@@ -92,6 +92,7 @@ export function parseCertificate(certificate: Certificate) {
     });
 
     certificate.issuer.inn = normalizeInn(certificate.issuer.inn);
+    certificate.issuer.innLe = normalizeInn(certificate.issuer.innLe);
     certificate.subject.innLe = normalizeInn(certificate.subject.innLe);
     certificate.subject.inn = normalizeInn(certificate.subject.inn);
 

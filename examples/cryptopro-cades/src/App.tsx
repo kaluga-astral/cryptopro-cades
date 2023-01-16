@@ -20,6 +20,7 @@ import {
   outputError,
   pluginConfig,
   sign,
+  signHash,
   signXml,
   checkPlugin,
 } from '@astral/cryptopro-cades';
@@ -149,7 +150,7 @@ const CryptoApp = () => {
     try {
       const sig = await sign(
         selectedCertificate,
-        await selectedFile.arrayBuffer() // либо Base64 строку
+        await selectedFile.arrayBuffer() // массив байт либо массив байт в формате Base64 строки
       );
 
       dowloadFile(await convertBase64toBlob(sig), selectedFile.name + '.sig');
@@ -158,6 +159,34 @@ const CryptoApp = () => {
       window.alert(error?.toString());
     }
   };
+
+   /**
+   * Подписать файл с хэшом.
+   */
+     const signFileHash = async (): Promise<void> => {
+      if (!selectedCertificate) {
+        window.alert('Сертификат не выбран');
+        return;
+      }
+      if (!selectedFile) {
+        window.alert('Файл для подписи не выбран');
+        return;
+      }
+  
+      try {
+        const sig = await signHash(
+          selectedCertificate,
+          await selectedFile.arrayBuffer(), // массив байт хэша либо хэш в формате hex строки
+          true,
+          true
+        );
+  
+        dowloadFile(await convertBase64toBlob(sig), selectedFile.name + '.sig');
+      } catch (error) {
+        outputError(error);
+        window.alert(error?.toString());
+      }
+    };
 
   /**
    * Подписать файл в формате XmlDSig.
@@ -177,7 +206,7 @@ const CryptoApp = () => {
     try {
       const sig = await signXml(
         selectedCertificate,
-        await selectedFile.arrayBuffer(), // либо Base64 строку
+        await selectedFile.arrayBuffer(), // массив байт либо массив байт в формате Base64 строки
         xmlSignatureType
       );
 
@@ -206,7 +235,7 @@ const CryptoApp = () => {
 
     try {
       const encryptedData = await encrypt(
-        await selectedFile.arrayBuffer(), // либо Base64 строку
+        await selectedFile.arrayBuffer(), // массив байт либо массив байт в формате Base64 строки
         [selectedEncryptCert]
       );
 
@@ -231,7 +260,7 @@ const CryptoApp = () => {
 
     try {
       const decryptedData = await decrypt(
-        await selectedFile.arrayBuffer() // либо Base64 строку
+        await selectedFile.arrayBuffer() // массив байт либо массив байт в формате Base64 строки
       );
 
       dowloadFile(
@@ -385,12 +414,12 @@ const CryptoApp = () => {
         Сертификаты:
         {certificates?.map((certInfo, index) => {
           return (
-            <p key={index}>
+            <div key={index}>
               <CertificateInfo
                 certificate={certInfo}
                 onSelect={(skid) => trySelectCertificate(skid)}
               />
-            </p>
+            </div>
           );
         }) ?? 'Ничего нет :('}
       </div>
@@ -439,6 +468,12 @@ const CryptoApp = () => {
           <>
             <br />
             <button onClick={(_) => signFile()}>Подписать CMS</button>
+          </>
+        ) : null}
+        {selectedCertificate && selectedFile ? (
+          <>
+            <br />
+            <button onClick={(_) => signFileHash()}>Подписать CMS (хэш)</button>
           </>
         ) : null}
         {selectedCertificate && selectedFile ? (

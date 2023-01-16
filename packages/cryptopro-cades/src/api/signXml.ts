@@ -66,11 +66,11 @@ export const getXmlHashAlgorithmType = (certificate: Certificate): string => {
 /**
  * Подписать входные данные указанным сертификатом в формате XmlDSig.
  * @param {ICertificate | Certificate} certificate -сертификат пользователя.
- * @param {ArrayBuffer | string} data -входные данные для подписи в формате Base64 или ArrayBuffer.
+ * @param {ArrayBuffer | string} data - данные для подписания. Массив байт либо массив байт в формате Base64 строки.
  * @param {CADESCOM_XML_SIGNATURE_TYPE} xmlSignatureType - тип xml подписи.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификата.
  * @throws {CryptoError} в случае ошибки.
- * @returns {Promise<string>} файл подписи в кодировке Base64.
+ * @returns файл подписи в кодировке Base64.
  */
 export const signXml = (
   certificate: ICertificate | Certificate,

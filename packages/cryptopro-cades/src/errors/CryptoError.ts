@@ -22,11 +22,6 @@ import PluginConfig from './../PluginConfig';
  */
 export class CryptoError extends Error implements ICryptoError {
   /**
-   * Исходный объект ошибки.
-   */
-  public InnerError: IErrorObject | null;
-
-  /**
    * Правило для выяснения типа ошибки (источника ошибки).
    */
   private static _RULE_MATCHING_CODE: RegExp =
@@ -66,7 +61,7 @@ export class CryptoError extends Error implements ICryptoError {
    */
   private constructor(err: IErrorObject | null) {
     super(err?.message);
-    this.InnerError = err;
+    this.cause = err;
     this.message = err?.message;
     Object.setPrototypeOf(this, CryptoError.prototype);
   }
@@ -142,7 +137,6 @@ export class CryptoError extends Error implements ICryptoError {
   ): CryptoError {
     const cryptoError = new CryptoError(err);
 
-    cryptoError.InnerError = err;
     cryptoError.type = 'Error';
     cryptoError.code = errorCode;
     cryptoError.title = title; // не показываем пользователю

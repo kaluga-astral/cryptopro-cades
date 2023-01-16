@@ -2,12 +2,17 @@ import { Buffer } from 'buffer';
 
 import { CryptoError } from '../errors';
 import {
-  CADESCOM_BASE64_TO_BINARY,
   CADESCOM_CADES_TYPE,
+  CADESCOM_HASH_ALGORITHM,
   CAPICOM_CERTIFICATE_INCLUDE_OPTION,
   CRYPTO_OBJECTS,
 } from '../constants';
-import { CPSigner, CadesSignedData, ICertificate } from '../types';
+import {
+  CPHashedData,
+  CPSigner,
+  CadesSignedData,
+  ICertificate,
+} from '../types';
 import { Certificate } from '../Certificate';
 import { outputDebug } from '../utils';
 
@@ -17,20 +22,34 @@ import { setCryptoProperty } from './internal/setCryptoProperty';
 import { validateCertificate } from './validateCertificate';
 import { unwrap } from './internal/unwrap';
 
+function selectAlgoritm(cert: Certificate): CADESCOM_HASH_ALGORITHM {
+  switch (cert.algorithm) {
+    case '1.2.643.7.1.1.1.1':
+      return CADESCOM_HASH_ALGORITHM.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
+    case '1.2.643.7.1.1.1.2':
+      return CADESCOM_HASH_ALGORITHM.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512;
+
+    default:
+      const errorMessage = 'Неизвестный алгоритм ключа электронной подписи';
+
+      throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
+  }
+}
+
 /**
- * Подписать входные данные указанным сертификатом в формате CMS.
+ * Подписать хэш указанным сертификатом в формате CMS.
  * @param {ICertificate | Certificate} certificate -сертификат пользователя.
- * @param {ArrayBuffer | string} data - данные для подписания. Массив байт либо массив байт в формате Base64 строки.
- * @param {boolean} [detach=true] присоединять подпись к данным или отдельно?
+ * @param {ArrayBuffer | string} data - данные для подписания. Массив байт хэша либо сам хэш в формате hex строки (в любом регистре)
+ * @example
+ *  4A5F6E54CA44064A5544943DDC244DDC84DC3952AC5924A475838E7BB8320878
  * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
  * @throws {CryptoError} в случае ошибки.
  * @returns файл подписи в кодировке Base64.
  */
-export function sign(
+export function signHash(
   certificate: ICertificate | Certificate,
   data: ArrayBuffer | string,
-  detach: boolean = true,
   includeCertChain: boolean = true,
   doNotValidate: boolean = false,
 ): Promise<string> {
@@ -40,14 +59,13 @@ export function sign(
     logData.push({
       certificate,
       data,
-      detach,
       includeCertChain,
       doNotValidate,
     });
 
     try {
       if (!data) {
-        const errorMessage = 'Не указаны данные для подписания.';
+        const errorMessage = 'Не указаны хэш для подписания.';
 
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
@@ -59,23 +77,24 @@ export function sign(
         throw CryptoError.create('CBP-7', errorMessage, null, errorMessage);
       }
 
-      const base64String =
-        data instanceof ArrayBuffer
-          ? Buffer.from(data).toString('base64')
-          : data;
+      const hexString =
+        data instanceof ArrayBuffer ? Buffer.from(data).toString('hex') : data;
 
-      logData.push({ base64String });
+      logData.push({ hexString });
 
-      let cert: ICertificate | null = null;
+      let cadesCert: ICertificate | null = null;
+      let cert: Certificate | null = null;
 
       if (certificate instanceof Certificate) {
-        cert = certificate?.certificateBin;
-      } else {
+        cadesCert = certificate?.certificateBin;
         cert = certificate;
+      } else {
+        cadesCert = certificate;
+        cert = await Certificate.CreateFrom(cadesCert);
       }
 
-      if (!doNotValidate && !!cert) {
-        const errorMessage = await validateCertificate(cert);
+      if (!doNotValidate && !!cadesCert) {
+        const errorMessage = await validateCertificate(cadesCert);
 
         if (errorMessage) {
           throw CryptoError.create(
@@ -87,6 +106,9 @@ export function sign(
         }
       }
 
+      const hashedData: CPHashedData = await createObject(
+        CRYPTO_OBJECTS.hashedData,
+      );
       const signer: CPSigner = await createObject(CRYPTO_OBJECTS.signer);
       const signedData: CadesSignedData = await createObject(
         CRYPTO_OBJECTS.signedData,
@@ -94,7 +116,7 @@ export function sign(
 
       // заполнение параметров для подписи
       try {
-        await setCryptoProperty(signer, 'Certificate', cert);
+        await setCryptoProperty(signer, 'Certificate', cadesCert);
 
         if (includeCertChain) {
           await setCryptoProperty(
@@ -104,15 +126,8 @@ export function sign(
           );
         }
 
-        await setCryptoProperty(
-          signedData,
-          'ContentEncoding',
-          CADESCOM_BASE64_TO_BINARY,
-        );
-
-        // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
-        // поэтому подписываем предварительно конвертированный в Base64
-        await setCryptoProperty(signedData, 'Content', base64String);
+        await setCryptoProperty(hashedData, 'Algorithm', selectAlgoritm(cert));
+        await unwrap(hashedData.SetHashValue(hexString));
       } catch (error) {
         throw CryptoError.createCadesError(
           error,
@@ -122,10 +137,10 @@ export function sign(
 
       try {
         const signResult = await unwrap(
-          signedData.SignCades(
+          signedData.SignHash(
+            hashedData,
             signer,
             CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
-            detach,
           ),
         );
 
@@ -142,7 +157,7 @@ export function sign(
       logData.push({ error });
       throw error;
     } finally {
-      outputDebug('sign >>', logData);
+      outputDebug('signHash >>', logData);
     }
   })();
 }

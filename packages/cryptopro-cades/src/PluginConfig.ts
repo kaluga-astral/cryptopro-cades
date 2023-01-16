@@ -73,8 +73,8 @@ const logErrorWhenInDebug = (error: CryptoError): void => {
     while (err != null) {
       errors.push(err);
 
-      if (err instanceof CryptoError) {
-        err = err.InnerError;
+      if (err instanceof CryptoError || err instanceof Error) {
+        err = err.cause;
       } else {
         err = null;
       }
