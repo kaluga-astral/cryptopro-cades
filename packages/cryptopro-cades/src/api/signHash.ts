@@ -6,6 +6,7 @@ import {
   CADESCOM_HASH_ALGORITHM,
   CAPICOM_CERTIFICATE_INCLUDE_OPTION,
   CRYPTO_OBJECTS,
+  GOST_KEY_ALGORITHM_TYPES,
 } from '../constants';
 import {
   CPHashedData,
@@ -22,11 +23,17 @@ import { setCryptoProperty } from './internal/setCryptoProperty';
 import { validateCertificate } from './validateCertificate';
 import { unwrap } from './internal/unwrap';
 
+/**
+ * Выбрать алгоритм хэширования на основе алгоритма сертификата.
+ * @param cert сертификат.
+ * @throws {CryptoError} в случае неизвестного алгоритма сертификата.
+ * @returns алгоритм хэширования.
+ */
 function selectAlgoritm(cert: Certificate): CADESCOM_HASH_ALGORITHM {
   switch (cert.algorithm) {
-    case '1.2.643.7.1.1.1.1':
+    case GOST_KEY_ALGORITHM_TYPES.GOST_R3410_12_256:
       return CADESCOM_HASH_ALGORITHM.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_256;
-    case '1.2.643.7.1.1.1.2':
+    case GOST_KEY_ALGORITHM_TYPES.GOST_R3410_12_512:
       return CADESCOM_HASH_ALGORITHM.CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512;
 
     default:
