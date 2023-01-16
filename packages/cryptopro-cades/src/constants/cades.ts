@@ -689,6 +689,10 @@ export enum CADESCOM_ENCRYPTION_ALGORITHM {
   CADESCOM_ENCRYPTION_ALGORITHM_GOST_28147_89 = 25,
 }
 
+/**
+ * Тип алгоритма хэширования.
+ * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_enum/cadescom_hash_algorithm
+ */
 export enum CADESCOM_HASH_ALGORITHM {
   /**
    * Алгоритм SHA1.
