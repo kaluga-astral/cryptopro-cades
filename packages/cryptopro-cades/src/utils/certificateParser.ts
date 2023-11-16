@@ -3,7 +3,7 @@ import { Buffer } from 'buffer';
 import { Certificate as x509Certificate } from 'pkijs';
 import { fromBER } from 'asn1js';
 
-import { Certificate } from '../Certificate';
+import type { Certificate } from '../Certificate';
 import {
   GOST_KEY_ALGORITHM_OIDS,
   attributeOids,

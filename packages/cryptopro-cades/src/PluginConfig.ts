@@ -1,7 +1,7 @@
 import { CryptoError } from './errors';
 import { outputError } from './utils';
 import { CRYPTO_PROVIDERS } from './constants';
-import { ICryptoProvider } from './types';
+import type { ICryptoProvider } from './types';
 
 /**
  * Настройки плагина.

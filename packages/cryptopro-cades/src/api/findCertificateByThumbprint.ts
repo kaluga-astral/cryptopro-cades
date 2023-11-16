@@ -1,7 +1,7 @@
 import { CAPICOM_CERTIFICATE_FIND_TYPE } from '../constants';
 import { Certificate } from '../Certificate';
 import { CryptoError } from '../errors';
-import { IStore } from '../types';
+import type { IStore } from '../types';
 
 import { openStore } from './openStore';
 import { unwrap } from './internal/unwrap';

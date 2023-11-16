@@ -1,7 +1,7 @@
-import { CAPICOM_ENCODING_TYPE } from '../../constants';
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { CAPICOM_ENCODING_TYPE } from '../../constants';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { IRecipients } from './IRecipients';
+import type { IRecipients } from './IRecipients';
 
 /**
  * EnvelopedData - зашифрованное сообщение.

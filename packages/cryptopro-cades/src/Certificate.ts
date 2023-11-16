@@ -1,7 +1,7 @@
 import { unwrap } from './api/internal/unwrap';
 import { CAPICOM_ENCODING_TYPE } from './constants';
 import { CryptoError } from './errors';
-import { ICertificate } from './types';
+import type { ICertificate } from './types';
 import { parseCertificate } from './utils/certificateParser';
 
 /**

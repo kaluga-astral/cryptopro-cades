@@ -6,7 +6,7 @@ import {
   VIP_NET_CRYPTO_PROVIDER_TYPES,
 } from '../constants';
 import { outputDebug } from '../utils';
-import { IAbout, ISystemInfo } from '../types';
+import type { IAbout, ISystemInfo } from '../types';
 
 import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { createObject } from './createObject';

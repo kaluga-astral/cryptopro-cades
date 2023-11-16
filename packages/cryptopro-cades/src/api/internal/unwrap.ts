@@ -1,4 +1,4 @@
-import { WithOptionalPromise } from '../../types';
+import type { WithOptionalPromise } from '../../types';
 
 import { canAsync } from './canAsync';
 

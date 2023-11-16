@@ -6,7 +6,7 @@ import {
   CAPICOM_ENCODING_TYPE,
   CRYPTO_OBJECTS,
 } from '../constants';
-import { CPEnvelopedData, ICertificate, IRecipients } from '../types';
+import type { CPEnvelopedData, ICertificate, IRecipients } from '../types';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';

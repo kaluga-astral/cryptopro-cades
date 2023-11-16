@@ -1,5 +1,5 @@
 import { Certificate } from '../Certificate';
-import { ICertificate } from '../types';
+import type { ICertificate } from '../types';
 
 /**
  * Валидация сертификата.

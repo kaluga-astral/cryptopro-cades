@@ -7,7 +7,7 @@ import {
   CAPICOM_CERTIFICATE_INCLUDE_OPTION,
   CRYPTO_OBJECTS,
 } from '../constants';
-import { CPSigner, CadesSignedData, ICertificate } from '../types';
+import type { CPSigner, CadesSignedData, ICertificate } from '../types';
 import { Certificate } from '../Certificate';
 import { outputDebug } from '../utils';
 

@@ -1,8 +1,11 @@
-import { CADESCOM_CADES_TYPE, CADESCOM_ENCODING_TYPE } from '../../constants';
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type {
+  CADESCOM_CADES_TYPE,
+  CADESCOM_ENCODING_TYPE,
+} from '../../constants';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { CPHashedData } from './CPHashedData';
-import { CPSigner } from './CPSigner';
+import type { CPHashedData } from './CPHashedData';
+import type { CPSigner } from './CPSigner';
 
 /**
  * Усовершенствованная подпись.

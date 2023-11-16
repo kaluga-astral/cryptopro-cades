@@ -8,7 +8,7 @@ import {
   CRYPTO_OBJECTS,
   GOST_KEY_ALGORITHM_TYPES,
 } from '../constants';
-import {
+import type {
   CPHashedData,
   CPSigner,
   CadesSignedData,

@@ -1,4 +1,4 @@
-import { Certificate } from '../Certificate';
+import type { Certificate } from '../Certificate';
 import { CryptoError } from '../errors';
 
 import { getCertificates } from './../api';

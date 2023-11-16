@@ -1,5 +1,8 @@
-import { CAPICOM_CERT_INFO_TYPE, CAPICOM_ENCODING_TYPE } from '../../constants';
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type {
+  CAPICOM_CERT_INFO_TYPE,
+  CAPICOM_ENCODING_TYPE,
+} from '../../constants';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
 /**
  * Описывает сертификат открытого ключа.

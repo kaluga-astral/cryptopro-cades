@@ -1,6 +1,6 @@
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { CPSigner } from './CPSigner';
+import type { CPSigner } from './CPSigner';
 
 /**
  * Предоставляет свойства и методы для работы с подписанным документом XML.

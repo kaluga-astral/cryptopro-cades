@@ -1,5 +1,5 @@
 import { getLastError } from '../api/getLastError';
-import { IAnyError, ICryptoError, IErrorObject } from '../types';
+import type { IAnyError, ICryptoError, IErrorObject } from '../types';
 
 import {
   CRYPTO_PRO_ERRORS,

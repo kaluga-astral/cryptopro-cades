@@ -1,4 +1,4 @@
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
 /**
  * Описывает версию.
