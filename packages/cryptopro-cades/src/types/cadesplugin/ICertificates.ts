@@ -1,7 +1,7 @@
-import { CAPICOM_CERTIFICATE_FIND_TYPE } from '../../constants';
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { CAPICOM_CERTIFICATE_FIND_TYPE } from '../../constants';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { ICertificate } from './ICertificate';
+import type { ICertificate } from './ICertificate';
 
 /**
  * Коллекция сертификатов.

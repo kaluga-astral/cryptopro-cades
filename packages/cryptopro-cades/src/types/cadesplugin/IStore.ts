@@ -1,7 +1,7 @@
-import { CAPICOM_STORE_OPEN_MODE, STORE_LOCATION } from '../../constants';
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { CAPICOM_STORE_OPEN_MODE, STORE_LOCATION } from '../../constants';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { ICertificates } from './ICertificates';
+import type { ICertificates } from './ICertificates';
 
 /**
  * Описывает хранилище сертификатов.

@@ -1,7 +1,7 @@
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { CPHashedData } from './CPHashedData';
-import { ICertificate } from './ICertificate';
+import type { CPHashedData } from './CPHashedData';
+import type { ICertificate } from './ICertificate';
 
 /**
  * Значение электронной подписи.

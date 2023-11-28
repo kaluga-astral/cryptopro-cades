@@ -5,7 +5,7 @@ import {
   STORE_TYPE,
 } from '../constants';
 import { Certificate } from '../Certificate';
-import { ICertificate, ICertificates, IStore } from '../types';
+import type { ICertificate, ICertificates, IStore } from '../types';
 import { outputDebug } from '../utils';
 import { CryptoError } from '../errors';
 

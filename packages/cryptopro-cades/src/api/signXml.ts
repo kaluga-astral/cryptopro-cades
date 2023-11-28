@@ -7,7 +7,7 @@ import {
   GOST_KEY_ALGORITHM_TYPES,
   XML_SIGNATURE_GOST_ALGORITHM_TYPE,
 } from '../constants';
-import { CPSigner, ICertificate, ISignedXml } from '../types';
+import type { CPSigner, ICertificate, ISignedXml } from '../types';
 import { Certificate } from '../Certificate';
 import { outputDebug } from '../utils';
 

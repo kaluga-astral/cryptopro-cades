@@ -1,4 +1,4 @@
-import { IAnyError, ICryptoError } from '../types';
+import type { IAnyError, ICryptoError } from '../types';
 
 /**
  * Возвращает строку с описанием ошибки из исключения, порождённого плагином.

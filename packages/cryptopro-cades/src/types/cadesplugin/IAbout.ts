@@ -1,7 +1,7 @@
-import { CADESCOM_MEDIA_TYPE } from '../../constants';
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { CADESCOM_MEDIA_TYPE } from '../../constants';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { IVersion } from './IVersion';
+import type { IVersion } from './IVersion';
 
 /**
  * Описывает текущую версию библиотеки CAdESCOM Plugin.

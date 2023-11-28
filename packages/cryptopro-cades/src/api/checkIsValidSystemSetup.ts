@@ -1,5 +1,5 @@
 import { CryptoError } from '../errors';
-import { ISystemInfo } from '../types';
+import type { ISystemInfo } from '../types';
 import { outputDebug } from '../utils';
 
 import { getSystemInfo } from './getSystemInfo';

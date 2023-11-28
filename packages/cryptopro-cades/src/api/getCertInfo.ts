@@ -1,5 +1,5 @@
-import { ICertificate } from '../types';
-import { CAPICOM_CERT_INFO_TYPE } from '../constants';
+import type { ICertificate } from '../types';
+import type { CAPICOM_CERT_INFO_TYPE } from '../constants';
 
 import { unwrap } from './internal/unwrap';
 

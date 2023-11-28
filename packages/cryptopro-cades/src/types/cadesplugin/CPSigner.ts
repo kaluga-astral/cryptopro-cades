@@ -1,6 +1,6 @@
-import { WithOptionalPromise } from '../WithOptionalPromise';
+import type { WithOptionalPromise } from '../WithOptionalPromise';
 
-import { ICertificate } from './ICertificate';
+import type { ICertificate } from './ICertificate';
 
 /**
  * Объект, задающий параметры создания и содержащий информацию об усовершенствованной подписи.

@@ -1,5 +1,5 @@
 import { CRYPTO_OBJECTS } from '../constants';
-import { IAbout, ICryptoProvider, IVersion } from '../types';
+import type { IAbout, ICryptoProvider, IVersion } from '../types';
 import { outputDebug } from '../utils';
 import pluginConfig from '../PluginConfig';
 

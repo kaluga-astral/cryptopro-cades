@@ -1,4 +1,4 @@
-import { ICryptoProvider } from '../types';
+import type { ICryptoProvider } from '../types';
 
 /**
  * Справочник типок криптопровайдеров, с которыми работает плагин (для проверки поддержки).
