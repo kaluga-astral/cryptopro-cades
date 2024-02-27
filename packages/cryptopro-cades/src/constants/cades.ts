@@ -960,4 +960,10 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/plugin/certenroll/ccspinformations?id=ccspinformations
    */
   cspInformations = 'X509Enrollment.CCspInformations',
+
+  /**
+   * Объект CCspInformation позволяет получить информацию о криптопровайдере.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/ccspinformation
+   */
+  cspInformation = 'X509Enrollment.CCspInformation',
 }
