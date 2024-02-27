@@ -21,3 +21,9 @@ export type { ISignedXml } from './ISignedXml';
 export type { IStore } from './IStore';
 
 export type { IVersion } from './IVersion';
+
+export type { CCspInformation } from './CCspInformation';
+
+export type { CReaderMode } from './CReaderMode';
+
+export type { CReaderModes } from './CReaderModes';
