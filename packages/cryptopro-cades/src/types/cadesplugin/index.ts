@@ -24,6 +24,4 @@ export type { IVersion } from './IVersion';
 
 export type { CCspInformation } from './CCspInformation';
 
-export type { CReaderMode } from './CReaderMode';
-
 export type { CReaderModes } from './CReaderModes';
