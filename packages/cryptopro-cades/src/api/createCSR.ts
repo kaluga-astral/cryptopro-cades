@@ -8,7 +8,7 @@ import {
   XCN_CRYPT_STRING_BASE64,
   XCN_CRYPT_STRING_BASE64REQUESTHEADER,
 } from '../constants';
-import { CreateCSRInputDTO } from '../types/СreateCSRInput';
+import { CreateCSRInputDTO } from '../types/СreateCSRInputDTO';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';
