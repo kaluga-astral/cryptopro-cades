@@ -5,3 +5,5 @@ export * from './storeType';
 export * from './cryptoProviders';
 
 export * from './oids-dictionary';
+
+export * from './crypto';

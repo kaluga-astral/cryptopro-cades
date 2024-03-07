@@ -2,8 +2,8 @@ import { CRYPTO_OBJECTS, DEFAULT_CRYPTO_PROVIDER } from '../constants';
 import { CryptoError } from '../errors';
 import {
   type CCspInformation,
-  type CReaderMode,
   type CReaderModes,
+  type IReaderMode,
 } from '../types';
 import { outputDebug } from '../utils';
 
@@ -15,16 +15,16 @@ import { unwrap } from './internal/unwrap';
 /**
  * Кэш из доступных считывателей.
  */
-let readersCache: CReaderMode[] | null;
+let readersCache: IReaderMode[] | null;
 
 /**
  * Получить список доступных считывателей (в т.ч. вставленных токенов) с помощью CryptoPro CSP.
  * @throws {CryptoError} в случае ошибки.
- * @returns {Promise<CReaderMode[]>} Информация о доступных считывателях.
+ * @returns {Promise<IReaderMode[]>} Информация о доступных считывателях.
  */
 export function getReaders(
   resetCache: boolean = false,
-): Promise<CReaderMode[]> {
+): Promise<IReaderMode[]> {
   if (readersCache && !resetCache) {
     return Promise.resolve(readersCache);
   }
@@ -46,7 +46,7 @@ export function getReaders(
     }
 
     const logData = [];
-    const readers: CReaderMode[] = [];
+    const readers: IReaderMode[] = [];
 
     try {
       const cspInformation: CCspInformation = await createObject(
@@ -65,7 +65,12 @@ export function getReaders(
       for (let i = 0; i < readersCount; i++) {
         const reader = await unwrap(readerModes.ItemByIndex(i));
 
-        readers.push(reader);
+        readers.push({
+          Name: await unwrap(reader.Name),
+          NickName: await unwrap(reader.NickName),
+          CarrierFlags: await unwrap(reader.CarrierFlags),
+          Media: await unwrap(reader.Media),
+        });
       }
 
       return (readersCache = readers);
