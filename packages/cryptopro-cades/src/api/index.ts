@@ -31,3 +31,5 @@ export { findCertificateBySkid } from './findCertificateBySkid';
 export { checkPlugin } from './checkPlugin';
 
 export { getReaders } from './getReaders';
+
+export { createCSR } from './createCSR';
