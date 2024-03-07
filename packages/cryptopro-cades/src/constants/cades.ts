@@ -824,6 +824,10 @@ export const enum CADESCOM_MEDIA_TYPE {
 
 export const XCN_CRYPT_STRING_BASE64HEADER = 0;
 
+export const XCN_CRYPT_STRING_BASE64 = 1;
+
+export const XCN_CRYPT_STRING_BASE64REQUESTHEADER = 3;
+
 export const AT_KEYEXCHANGE = 1;
 
 export const AT_SIGNATURE = 2;
@@ -841,6 +845,31 @@ export const CARRIER_FLAG_SECURE_MESSAGING = 16;
 export const CARRIER_FLAG_ABLE_VISUALISE_SIGNATURE = 64;
 
 export const CARRIER_FLAG_VIRTUAL = 128;
+
+export const ALLOW_EXPORT_FLAG = 0x1;
+
+/**
+ * Тип квалификатора, применяемого к политике сертификата.
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-policyqualifiertype
+ */
+export const enum CERT_POLICY_QUALIFIER_TYPE {
+  /**
+   * Тип квалификатора не указан.
+   */
+  UNKNOWN = 0,
+  /**
+   * Квалификатор — это URL-адрес, указывающий на заявление о сертификации (CPS)
+   */
+  URL = 1,
+  /**
+   * Квалификатор — это текстовая инструкция, отображаемая приложением для любого пользователя, который использует сертификат.
+   */
+  USER_NOTICE = 2,
+  /**
+   * ?
+   */
+  FLAGS = 3,
+}
 
 /**
  * OID (атрибут) сертификата.
@@ -966,4 +995,88 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/plugin/certenroll/ccspinformation
    */
   cspInformation = 'X509Enrollment.CCspInformation',
+
+  /**
+   * Объект описывает закрытый ключ.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509privatekey
+   */
+  privateKey = 'X509Enrollment.CX509PrivateKey',
+
+  /**
+   * Объект описывает запрос на сертификат формата PKCS#10.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509certificaterequestpkcs10
+   */
+  certificateRequest = 'X509Enrollment.CX509CertificateRequestPkcs10',
+
+  /**
+   * Объект описывает поле Subject в соответствии с X500 DistinguishedName.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx500distinguishedname
+   */
+  distinguishedName = 'X509Enrollment.CX500DistinguishedName',
+
+  /**
+   * Объект описывает расширение KeyUsage (варианты использования ключа) в запросе на сертификат.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensionkeyusage
+   */
+  extensionKeyUsage = 'X509Enrollment.CX509ExtensionKeyUsage',
+
+  /**
+   * Объект описывает расширение EnhancedKeyUsage (расширенные варианты использования ключа) в запросе на сертификат.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensionenhancedkeyusage
+   */
+  extensionEnhancedKeyUsage = 'X509Enrollment.CX509ExtensionEnhancedKeyUsage',
+
+  /**
+   * Объект описывает коллекцию объектных идентификаторов (oid'ов).
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cobjectids
+   */
+  objectIds = 'X509Enrollment.CObjectIds',
+
+  /**
+   * Объект описывает объектный идентификатор (oid).
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cobjectid
+   */
+  objectId = 'X509Enrollment.CObjectId',
+
+  /**
+   * Объект описывает коллекцию политик сертификата.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/ccertificatepolicies
+   */
+  certificatePolicies = 'X509Enrollment.CCertificatePolicies',
+
+  /**
+   * Объект указывает политику сертификата, которая определяет цели использования сертификата.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/ccertificatepolicy
+   */
+  certificatePolicy = 'X509Enrollment.CCertificatePolicy',
+
+  /**
+   * Объект используется для уточнения политики сертификата, если объектный идентификатор не позволяет полностью определить ее.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cpolicyqualifier
+   */
+  policyQualifier = 'X509Enrollment.CPolicyQualifier',
+
+  /**
+   * Объект описывает коллекцию политик сертификата.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensioncertificatepolicies
+   */
+  extensionCertificatePolicies = 'X509Enrollment.CX509ExtensionCertificatePolicies',
+
+  /**
+   * Объект описывает расширение в запросе на сертификат.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensioncertificatepolicies
+   */
+  extension = 'X509Enrollment.CX509Extension',
+
+  /**
+   * Объект описывает расширение 1.2.643.100.114 с информацией об идентификации заявителя при выдаче сертификата ключа проверки ЭП.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensionidentificationkind?id=cx509extensionidentificationkind
+   */
+  extensionIdentificationKind = 'X509Enrollment.CX509ExtensionIdentificationKind',
+
+  /**
+   * Объект предназначен для создания запросов на сертификат и установки полученных сертификатов.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509enrollment?id=cx509enrollment
+   */
+  enrollment = 'X509Enrollment.CX509Enrollment',
 }

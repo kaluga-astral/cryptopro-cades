@@ -47,3 +47,8 @@ export const attributeOids = {
   innLe: '1.2.643.100.4',
   email: '1.2.840.113549.1.9.1',
 };
+
+/**
+ * Oid способа типа подписания (названия СКЗИ) в запросе на сертификат
+ */
+export const SUBJECT_SIGN_TOOL_OID = '1.2.643.100.111';
