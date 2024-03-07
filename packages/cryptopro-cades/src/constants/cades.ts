@@ -822,10 +822,22 @@ export const enum CADESCOM_MEDIA_TYPE {
   MEDIA_TYPE_SCARD = 0x00000008,
 }
 
+/**
+ * Тип кодировки, при котором строка имеет кодировку base64 с начальным и конечным заголовками сертификатов.
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-encodingtype
+ */
 export const XCN_CRYPT_STRING_BASE64HEADER = 0;
 
+/**
+ * Тип кодировки, при котором строка закодирована в кодировке Base64 без начальных и конечных заголовков сертификата.
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-encodingtype
+ */
 export const XCN_CRYPT_STRING_BASE64 = 1;
 
+/**
+ * Тип кодировки, при котором строка в кодировке Base64 содержит начальные и конечные заголовки запроса на сертификат.
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-encodingtype
+ */
 export const XCN_CRYPT_STRING_BASE64REQUESTHEADER = 3;
 
 export const AT_KEYEXCHANGE = 1;
@@ -846,6 +858,9 @@ export const CARRIER_FLAG_ABLE_VISUALISE_SIGNATURE = 64;
 
 export const CARRIER_FLAG_VIRTUAL = 128;
 
+/**
+ * Флаг, разрешающий экспорт закрытого ключа. Описывает свойство ExportPolicy объекта PrivateKey
+ */
 export const ALLOW_EXPORT_FLAG = 0x1;
 
 /**
