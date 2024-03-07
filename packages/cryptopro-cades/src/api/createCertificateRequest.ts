@@ -8,6 +8,7 @@ import {
   XCN_CRYPT_STRING_BASE64,
   XCN_CRYPT_STRING_BASE64REQUESTHEADER,
 } from '../constants';
+import { CreateCSRInputDTO } from '../types/СreateCSRInput';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';
@@ -15,36 +16,16 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { convertStringToUTF8ByteArray } from './internal/convertStringToUTF8ByteArray';
 import { setCryptoProperty } from './internal/setCryptoProperty';
 
-type Props = {
-  providerName: string;
-  providerCode: number;
-  containerName: string;
-  isExportable: boolean;
-  attributes: { oid: string; value: string }[];
-  /**
-   * Сумма флагов назначения ключа
-   * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-x509keyusageflags
-   */
-  keyUsage: number;
-  /**
-   * Массив oid'ов
-   */
-  enhKeyUsage: string[];
-  certPolicies: { oid: string; value: string }[];
-  signTool: string;
-  identificationKind: number;
-};
-
 /**
- *
- * @param {Props} data
+ * Функция, формирующая контейнер и запрос на сертификат за один криптосеанс
+ * @param {CreateCSRInputDTO} data данные для формирования контейнера и запроса на сертификат
  * @returns {Promise<string>} Строка, содержащая CSR в DER формате
  */
-export const createCertificateSigningRequest = (
-  data: Props,
-): Promise<string> => {
+export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
   return afterPluginLoaded(async () => {
     const logData = [];
+
+    logData.push({ data });
 
     try {
       // Формируем приватный ключ
@@ -97,10 +78,10 @@ export const createCertificateSigningRequest = (
       );
 
       for (const enhKeyOid of data.enhKeyUsage) {
-        const enhKeyUsageObjectId = await createObject(CRYPTO_OBJECTS.objectId);
+        const enhKeyUsageOid = await createObject(CRYPTO_OBJECTS.objectId);
 
-        await enhKeyUsageObjectId.InitializeFromValue(enhKeyOid);
-        await enhKeyUsageCollection.Add(enhKeyUsageObjectId);
+        await enhKeyUsageOid.InitializeFromValue(enhKeyOid);
+        await enhKeyUsageCollection.Add(enhKeyUsageOid);
       }
 
       const enhancedKeyUsageExt = await createObject(
@@ -117,13 +98,13 @@ export const createCertificateSigningRequest = (
       );
 
       for (const policy of data.certPolicies) {
-        const policyObject = await createObject(CRYPTO_OBJECTS.objectId);
+        const policyOid = await createObject(CRYPTO_OBJECTS.objectId);
 
-        await policyObject.InitializeFromValue(policy.oid);
+        await policyOid.InitializeFromValue(policy.oid);
 
-        const Policy = await createObject(CRYPTO_OBJECTS.certificatePolicy);
+        const certPolicy = await createObject(CRYPTO_OBJECTS.certificatePolicy);
 
-        await Policy.Initialize(policyObject);
+        await certPolicy.Initialize(policyOid);
 
         // если oid не полностью определяет политику, то необходимо определить и добавить квалификатор
         if (Boolean(policy.value.length)) {
@@ -136,12 +117,12 @@ export const createCertificateSigningRequest = (
             CERT_POLICY_QUALIFIER_TYPE.UNKNOWN,
           );
 
-          const policyQualifierCollection = await Policy.PolicyQualifiers;
+          const policyQualifierCollection = await certPolicy.PolicyQualifiers;
 
           await policyQualifierCollection.Add(policyQualifier);
         }
 
-        await certPolicyCollection.Add(Policy);
+        await certPolicyCollection.Add(certPolicy);
       }
 
       const certPoliciesExt = await createObject(
@@ -156,9 +137,9 @@ export const createCertificateSigningRequest = (
       // Необходимо добавлять руками, т.к. плагин может вписать только CryptoPRO CSP 5.0
       // @see https://aleksandr.ru/blog/dobavlenie_subjectsigntool_v_kriptopro_ecp_browser_plug_in
       // TODO: 09.2024 это поле станет необязательным, можно удалить код после доработок на УЦ
-      const subjectSignToolObject = await createObject(CRYPTO_OBJECTS.objectId);
+      const subjectSignToolOid = await createObject(CRYPTO_OBJECTS.objectId);
 
-      await subjectSignToolObject.InitializeFromValue(SUBJECT_SIGN_TOOL_OID);
+      await subjectSignToolOid.InitializeFromValue(SUBJECT_SIGN_TOOL_OID);
 
       // необходимо обрезать название (на деле оно всегда < 128 символов)
       const shortName = data.signTool.slice(0, CSP_NAME_MAX_LENGTH);
@@ -177,7 +158,7 @@ export const createCertificateSigningRequest = (
       const subjectSignToolExt = await createObject(CRYPTO_OBJECTS.extension);
 
       await subjectSignToolExt.Initialize(
-        subjectSignToolObject,
+        subjectSignToolOid,
         XCN_CRYPT_STRING_BASE64,
         base64String,
       );
@@ -198,16 +179,18 @@ export const createCertificateSigningRequest = (
 
       await enroll.InitializeFromRequest(certRequestPkcs10);
 
-      const certReq = await enroll.CreateRequest(
+      const csr = await enroll.CreateRequest(
         XCN_CRYPT_STRING_BASE64REQUESTHEADER,
       );
 
-      return certReq;
+      logData.push({ csr });
+
+      return csr;
     } catch (error) {
       logData.push({ error });
       throw error.message;
     } finally {
-      outputDebug('createCertificateSigningRequest >>', logData);
+      outputDebug('createCSR >>', logData);
     }
   })();
 };
