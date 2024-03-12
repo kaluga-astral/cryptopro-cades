@@ -12,7 +12,7 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
 /**
  * Устанавливает цепочку сертификатов в хранилище
  * @param {string} certificate ответ УЦ в DER кодировке
- * @param {string | undefined} pin ПИН-код от контейнера
+ * @param {string | undefined} pin ПИН-код от контейнера. Если не указан, отобразится нативное окно ввода криптопровайдера.
  * @returns {Promise<void>}
  */
 export const installCertificate = (
@@ -28,10 +28,11 @@ export const installCertificate = (
       await enroll.Initialize(X509CertificateEnrollmentContext.ContextUser);
 
       await enroll.InstallResponse(
-        CADESCOM_InstallResponseRestrictionFlags.CADESCOM_AllowUntrustedRoot,
+        CADESCOM_InstallResponseRestrictionFlags.CADESCOM_AllowUntrustedRoot |
+          CADESCOM_InstallResponseRestrictionFlags.CADESCOM_UseContainerStore,
         certificate,
         XCN_CRYPT_STRING_BASE64_ANY,
-        pin,
+        pin ?? '',
       );
 
       logData.push('Сертификат установлен');
