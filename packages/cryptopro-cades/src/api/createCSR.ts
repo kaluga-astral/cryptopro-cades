@@ -8,6 +8,7 @@ import {
   XCN_CRYPT_STRING_BASE64,
   XCN_CRYPT_STRING_BASE64REQUESTHEADER,
 } from '../constants';
+import { CryptoError } from '../errors';
 import { CreateCSRInputDTO } from '../types/СreateCSRInputDTO';
 import { outputDebug } from '../utils';
 
@@ -189,7 +190,10 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
     } catch (error) {
       logData.push({ error });
 
-      throw error;
+      throw CryptoError.createCadesError(
+        error,
+        'Ошибка при формировании контейнера.',
+      );
     } finally {
       outputDebug('createCSR >>', logData);
     }

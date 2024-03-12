@@ -4,6 +4,7 @@ import {
   X509CertificateEnrollmentContext,
   XCN_CRYPT_STRING_BASE64_ANY,
 } from '../constants';
+import { CryptoError } from '../errors';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';
@@ -41,7 +42,10 @@ export const installCertificate = (
     } catch (error) {
       logData.push({ error });
 
-      throw error;
+      throw CryptoError.createCadesError(
+        error,
+        'Ошибка при установке сертификата.',
+      );
     } finally {
       outputDebug('installCertificate >>', logData);
     }
