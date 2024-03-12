@@ -9,3 +9,5 @@ export * from './ISystemInfo';
 export * from './WithOptionalPromise';
 
 export * from './IReaderMode';
+
+export * from './СreateCSRInputDTO';
