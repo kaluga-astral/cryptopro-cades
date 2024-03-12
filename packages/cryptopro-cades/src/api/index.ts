@@ -33,3 +33,5 @@ export { checkPlugin } from './checkPlugin';
 export { getReaders } from './getReaders';
 
 export { createCSR } from './createCSR';
+
+export { installCertificate } from './installCertificate';
