@@ -760,13 +760,54 @@ export enum CADESCOM_HASH_ALGORITHM {
   CADESCOM_HASH_ALGORITHM_CP_GOST_3411_2012_512_HMAC = 112,
 }
 
-export const CADESCOM_AllowNone = 0;
+/**
+ * Флаги ограничений на установку цепочки сертификатов.
+ * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_enum/cadescom_installresponserestrictionflags
+ */
+export enum CADESCOM_InstallResponseRestrictionFlags {
+  /**
+   * Запрет установки недоверенных сертификатов или сертификатов, для которых нет соответствующего запроса.
+   */
+  CADESCOM_AllowNone = 0,
 
-export const CADESCOM_AllowNoOutstandingRequest = 0x1;
+  /**
+   * Создание закрытого ключа из ответа на запрос.
+   */
+  CADESCOM_AllowNoOutstandingRequest = 0x1,
 
-export const CADESCOM_AllowUntrustedCertificate = 0x2;
+  /**
+   * Установка недоверенных сертификатов конечного пользователя и центров сертификации.
+   */
+  CADESCOM_AllowUntrustedCertificate = 0x2,
 
-export const CADESCOM_AllowUntrustedRoot = 0x4;
+  /**
+   * Установка сертификата, даже если корневой центр сертификации для него не является доверенным.
+   */
+  CADESCOM_AllowUntrustedRoot = 0x4,
+}
+
+/**
+ * Указывает характер конечной сущности, для которой предназначен сертификат
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-x509certificateenrollmentcontext
+ */
+export enum X509CertificateEnrollmentContext {
+  ContextNone = 0,
+
+  /**
+   * Сертификат предназначен для конечного пользователя.
+   */
+  ContextUser = 0x1,
+
+  /**
+   * Сертификат предназначен для компьютера.
+   */
+  ContextMachine = 0x2,
+
+  /**
+   * Сертификат запрашивается администратором, действующим от имени компьютера.
+   */
+  ContextAdministratorForceMachine = 0x3,
+}
 
 export const CADESCOM_SkipInstallToStore = 0x10000000;
 
@@ -839,6 +880,14 @@ export const XCN_CRYPT_STRING_BASE64 = 1;
  * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-encodingtype
  */
 export const XCN_CRYPT_STRING_BASE64REQUESTHEADER = 3;
+
+/**
+ * Строка закодирована в кодировке base64. Значения перечисления используются в следующем порядке:
+ * XCN_CRYPT_STRING_BASE64HEADER
+ * XCN_CRYPT_STRING_BASE64
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/ne-certenroll-encodingtype
+ */
+export const XCN_CRYPT_STRING_BASE64_ANY = 6;
 
 export const AT_KEYEXCHANGE = 1;
 

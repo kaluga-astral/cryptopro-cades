@@ -188,7 +188,8 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       return csr;
     } catch (error) {
       logData.push({ error });
-      throw error.message;
+
+      throw error;
     } finally {
       outputDebug('createCSR >>', logData);
     }
