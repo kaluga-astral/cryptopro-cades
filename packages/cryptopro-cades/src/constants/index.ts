@@ -6,4 +6,4 @@ export * from './cryptoProviders';
 
 export * from './oids-dictionary';
 
-export * from './crypto';
+export * from './enrollment';

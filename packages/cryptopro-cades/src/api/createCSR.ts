@@ -1,6 +1,8 @@
 import {
   ALLOW_EXPORT_FLAG,
   AT_KEYEXCHANGE,
+  CERTIFICATE_TEMPLATE_MAJOR_VERSION,
+  CERTIFICATE_TEMPLATE_MINOR_VERSION,
   CERT_POLICY_QUALIFIER_TYPE,
   CRYPTO_OBJECTS,
   CSP_NAME_MAX_LENGTH,
@@ -8,6 +10,7 @@ import {
   XCN_CRYPT_STRING_BASE64,
   XCN_CRYPT_STRING_BASE64REQUESTHEADER,
 } from '../constants';
+import { CryptoError } from '../errors';
 import { CreateCSRInputDTO } from '../types/СreateCSRInputDTO';
 import { outputDebug } from '../utils';
 
@@ -35,6 +38,12 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       await setCryptoProperty(pKey, 'ProviderType', data.providerCode);
       await setCryptoProperty(pKey, 'ContainerName', data.containerName);
 
+      // containerPin === undefined –> КриптоПро и Випнет показывают свои окна для ввода пина
+      // containerPin === ''        –> КриптоПро не защищает контейнер паролем, Випнет показывает свое окно
+      if (data.containerPin !== undefined) {
+        await setCryptoProperty(pKey, 'Pin', data.containerPin);
+      }
+
       await setCryptoProperty(
         pKey,
         'ExportPolicy',
@@ -56,7 +65,7 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       const distinguishedName = await createObject(
         CRYPTO_OBJECTS.distinguishedName,
       );
-      const dnValue = data.attributes
+      const dnValue = data.certAttributes
         .map((attr) => `${attr.oid}="${attr.value}"`)
         .join(', ');
 
@@ -166,7 +175,7 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       // добавляем способ подписания в расширения сертификата
       await extensions.Add(subjectSignToolExt);
 
-      // identification kind
+      // описываем и добавляем identification kind
       const identificationKindExt = await createObject(
         CRYPTO_OBJECTS.extensionIdentificationKind,
       );
@@ -174,7 +183,26 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       await identificationKindExt.InitializeEncode(data.identificationKind);
       await extensions.Add(identificationKindExt);
 
-      // запрос
+      // описываем и добавляем шаблон сертификата (если есть)
+      if (data.templateOid) {
+        const templateOid = await createObject(CRYPTO_OBJECTS.objectId);
+
+        await templateOid.InitializeFromValue(data.templateOid);
+
+        const templateExt = await createObject(
+          CRYPTO_OBJECTS.extensionTemplate,
+        );
+
+        await templateExt.InitializeEncode(
+          templateOid,
+          CERTIFICATE_TEMPLATE_MAJOR_VERSION,
+          CERTIFICATE_TEMPLATE_MINOR_VERSION,
+        );
+
+        extensions.Add(templateExt);
+      }
+
+      // запрос на сертификат
       const enroll = await createObject(CRYPTO_OBJECTS.enrollment);
 
       await enroll.InitializeFromRequest(certRequestPkcs10);
@@ -189,7 +217,10 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
     } catch (error) {
       logData.push({ error });
 
-      throw error;
+      throw CryptoError.createCadesError(
+        error,
+        'Ошибка при формировании контейнера.',
+      );
     } finally {
       outputDebug('createCSR >>', logData);
     }

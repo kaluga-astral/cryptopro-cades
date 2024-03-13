@@ -16,6 +16,11 @@ export type CreateCSRInputDTO = {
   containerName: string;
 
   /**
+   * PIN-код для контейнера закрытого ключа.
+   */
+  containerPin?: string;
+
+  /**
    * Флаг возможности экспорта закрытого ключа
    */
   isExportable: boolean;
@@ -23,7 +28,7 @@ export type CreateCSRInputDTO = {
   /**
    * Массив аттрибутов поля Subject
    */
-  attributes: { oid: string; value: string }[];
+  certAttributes: { oid: string; value: string }[];
 
   /**
    * Сумма флагов назначения ключа
@@ -50,4 +55,9 @@ export type CreateCSRInputDTO = {
    * Тип идентификации в соответствии с 795 приказом ФСБ. Принимает значения {0, 1, 2, 3}
    */
   identificationKind: number;
+
+  /**
+   * Oid, сообщающий УЦ, какой шаблон следует использовать при выдаче или продлении сертификата
+   */
+  templateOid?: string;
 };

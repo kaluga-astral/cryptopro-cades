@@ -784,6 +784,12 @@ export enum CADESCOM_InstallResponseRestrictionFlags {
    * Установка сертификата, даже если корневой центр сертификации для него не является доверенным.
    */
   CADESCOM_AllowUntrustedRoot = 0x4,
+
+  /**
+   * Флаг для поиска закрытого ключа не в хранилище Request, а по всем контейнерам.
+   * @see https://www.cryptopro.ru/forum2/default.aspx?g=posts&t=21989
+   */
+  CADESCOM_UseContainerStore = 0x40000000,
 }
 
 /**
@@ -1137,6 +1143,12 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensionidentificationkind?id=cx509extensionidentificationkind
    */
   extensionIdentificationKind = 'X509Enrollment.CX509ExtensionIdentificationKind',
+
+  /**
+   * Объект описывает расширение CertificateTemplate, сообщающее УЦ, какой шаблон следует использовать при выдаче сертификата
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensiontemplate
+   */
+  extensionTemplate = 'X509Enrollment.CX509ExtensionTemplate',
 
   /**
    * Объект предназначен для создания запросов на сертификат и установки полученных сертификатов.

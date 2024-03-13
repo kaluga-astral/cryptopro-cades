@@ -40,7 +40,7 @@ export function getReaders(
     if (!systemInfo.cryptoProInstalled) {
       throw CryptoError.create(
         'CBP-12',
-        'Ошибка получения списка доступных считывателей',
+        'Ошибка при получении списка доступных считывателей.',
         null,
       );
     }
@@ -76,7 +76,10 @@ export function getReaders(
       return (readersCache = readers);
     } catch (error) {
       logData.push({ error });
-      throw error;
+      throw CryptoError.createCadesError(
+        error,
+        'Ошибка при получении списка доступных считывателей.',
+      );
     } finally {
       logData.push({ readers });
       outputDebug('getReaders >>', logData);
