@@ -50,4 +50,9 @@ export type CreateCSRInputDTO = {
    * Тип идентификации в соответствии с 795 приказом ФСБ. Принимает значения {0, 1, 2, 3}
    */
   identificationKind: number;
+
+  /**
+   * PIN-код для контейнера закрытого ключа.
+   */
+  containerPin?: string;
 };

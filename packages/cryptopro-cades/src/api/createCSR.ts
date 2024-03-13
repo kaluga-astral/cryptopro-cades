@@ -36,6 +36,12 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       await setCryptoProperty(pKey, 'ProviderType', data.providerCode);
       await setCryptoProperty(pKey, 'ContainerName', data.containerName);
 
+      // containerPin === undefined –> КриптоПро и Випнет показывают свои окна для ввода пина
+      // containerPin === ''        –> КриптоПро не защищает контейнер паролем, Випнет показывает свое окно
+      if (data.containerPin !== undefined) {
+        await setCryptoProperty(pKey, 'Pin', data.containerPin);
+      }
+
       await setCryptoProperty(
         pKey,
         'ExportPolicy',
