@@ -65,7 +65,7 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       const distinguishedName = await createObject(
         CRYPTO_OBJECTS.distinguishedName,
       );
-      const dnValue = data.attributes
+      const dnValue = data.certAttributes
         .map((attr) => `${attr.oid}="${attr.value}"`)
         .join(', ');
 

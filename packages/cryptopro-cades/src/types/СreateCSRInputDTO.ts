@@ -28,7 +28,7 @@ export type CreateCSRInputDTO = {
   /**
    * Массив аттрибутов поля Subject
    */
-  attributes: { oid: string; value: string }[];
+  certAttributes: { oid: string; value: string }[];
 
   /**
    * Сумма флагов назначения ключа
@@ -59,5 +59,5 @@ export type CreateCSRInputDTO = {
   /**
    * Oid, сообщающий УЦ, какой шаблон следует использовать при выдаче или продлении сертификата
    */
-  templateOid: string;
+  templateOid?: string;
 };
