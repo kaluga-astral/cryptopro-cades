@@ -16,6 +16,11 @@ export type CreateCSRInputDTO = {
   containerName: string;
 
   /**
+   * PIN-код для контейнера закрытого ключа.
+   */
+  containerPin?: string;
+
+  /**
    * Флаг возможности экспорта закрытого ключа
    */
   isExportable: boolean;
@@ -52,7 +57,7 @@ export type CreateCSRInputDTO = {
   identificationKind: number;
 
   /**
-   * PIN-код для контейнера закрытого ключа.
+   * Oid, сообщающий УЦ, какой шаблон следует использовать при выдаче или продлении сертификата
    */
-  containerPin?: string;
+  templateOid: string;
 };

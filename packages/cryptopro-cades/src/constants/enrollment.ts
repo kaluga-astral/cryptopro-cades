@@ -15,3 +15,15 @@
  * @see https://habr.com/ru/articles/722732/
  */
 export const CSP_NAME_MAX_LENGTH = 127;
+
+/**
+ * Сведения о версии расширения CertificateTemplate
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/nn-certenroll-ix509extensiontemplate
+ */
+export const CERTIFICATE_TEMPLATE_MAJOR_VERSION = 1;
+
+/**
+ * Сведения о версии расширения CertificateTemplate
+ * @see https://learn.microsoft.com/ru-ru/windows/win32/api/certenroll/nn-certenroll-ix509extensiontemplate
+ */
+export const CERTIFICATE_TEMPLATE_MINOR_VERSION = 0;

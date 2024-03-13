@@ -1145,6 +1145,12 @@ export const enum CRYPTO_OBJECTS {
   extensionIdentificationKind = 'X509Enrollment.CX509ExtensionIdentificationKind',
 
   /**
+   * Объект описывает расширение CertificateTemplate, сообщающее УЦ, какой шаблон следует использовать при выдаче сертификата
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509extensiontemplate
+   */
+  extensionTemplate = 'X509Enrollment.CX509ExtensionTemplate',
+
+  /**
    * Объект предназначен для создания запросов на сертификат и установки полученных сертификатов.
    * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509enrollment?id=cx509enrollment
    */

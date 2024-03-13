@@ -1,6 +1,8 @@
 import {
   ALLOW_EXPORT_FLAG,
   AT_KEYEXCHANGE,
+  CERTIFICATE_TEMPLATE_MAJOR_VERSION,
+  CERTIFICATE_TEMPLATE_MINOR_VERSION,
   CERT_POLICY_QUALIFIER_TYPE,
   CRYPTO_OBJECTS,
   CSP_NAME_MAX_LENGTH,
@@ -173,7 +175,7 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       // добавляем способ подписания в расширения сертификата
       await extensions.Add(subjectSignToolExt);
 
-      // identification kind
+      // описываем и добавляем identification kind
       const identificationKindExt = await createObject(
         CRYPTO_OBJECTS.extensionIdentificationKind,
       );
@@ -181,7 +183,26 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
       await identificationKindExt.InitializeEncode(data.identificationKind);
       await extensions.Add(identificationKindExt);
 
-      // запрос
+      // описываем и добавляем шаблон сертификата (если есть)
+      if (data.templateOid) {
+        const templateOid = await createObject(CRYPTO_OBJECTS.objectId);
+
+        await templateOid.InitializeFromValue(data.templateOid);
+
+        const templateExt = await createObject(
+          CRYPTO_OBJECTS.extensionTemplate,
+        );
+
+        await templateExt.InitializeEncode(
+          templateOid,
+          CERTIFICATE_TEMPLATE_MAJOR_VERSION,
+          CERTIFICATE_TEMPLATE_MINOR_VERSION,
+        );
+
+        extensions.Add(templateExt);
+      }
+
+      // запрос на сертификат
       const enroll = await createObject(CRYPTO_OBJECTS.enrollment);
 
       await enroll.InitializeFromRequest(certRequestPkcs10);
