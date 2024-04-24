@@ -145,10 +145,11 @@ export class Certificate {
   /**
    * Распарсить сертификат из исходного объекта.
    * @param {ICertificate} cert исходный сертификат.
+   * @param {boolean} [checkPrivateKey=true] проводить проверку наличия закрытого ключа.
    * @throws {CryptoError} в случае ошибки.
    * @returns {Promise<Certificate>} распрасенный сертификат.
    */
-  public static async CreateFrom(cert: ICertificate): Promise<Certificate> {
+  public static async CreateFrom(cert: ICertificate, checkPrivateKey: boolean = true): Promise<Certificate> {
     if (!cert) {
       const errorMessage = 'Не указаны данные исходного сертификата.';
 
@@ -170,21 +171,27 @@ export class Certificate {
       cert.Export(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64),
     );
 
-    try {
-      certificate.hasPrivateKey = await unwrap(cert.HasPrivateKey());
+    if (checkPrivateKey) {
+      try {
+        certificate.hasPrivateKey = await unwrap(cert.HasPrivateKey());
 
-      const oPrivateKey = await unwrap(cert.PrivateKey);
+        const oPrivateKey = await unwrap(cert.PrivateKey);
 
-      certificate.providerName = await unwrap(oPrivateKey.ProviderName);
-      certificate.providerType = await unwrap(oPrivateKey.ProviderType);
-    } catch (error) {
-      // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
-      CryptoError.createCadesError(
-        error,
-        `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`,
-      );
+        certificate.providerName = await unwrap(oPrivateKey.ProviderName);
+        certificate.providerType = await unwrap(oPrivateKey.ProviderType);
 
-      certificate.hasPrivateKey = false;
+        if (certificate.hasPrivateKey) {
+          await unwrap(cert.FindPrivateKey());
+        }
+      } catch (error) {
+        // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
+        CryptoError.createCadesError(
+          error,
+          `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`,
+        );
+
+        certificate.hasPrivateKey = false;
+      }
     }
 
     parseCertificate(certificate);

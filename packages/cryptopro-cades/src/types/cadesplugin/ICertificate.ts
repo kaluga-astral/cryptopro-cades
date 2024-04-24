@@ -8,6 +8,7 @@ import type { WithOptionalPromise } from '../WithOptionalPromise';
  * Описывает сертификат открытого ключа.
  * @see https://docs.microsoft.com/en-us/windows/win32/seccrypto/certificate
  * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cpcertificate
+ * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_interface/icpcertificate
  */
 export interface ICertificate {
   /**
@@ -82,4 +83,9 @@ export interface ICertificate {
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   IsValid(): WithOptionalPromise<any>;
+
+  /**
+   * Производит поиск закрытого ключа соответствующего сертификату и устанавливает ссылку на него.
+   */
+  FindPrivateKey(): WithOptionalPromise<void>;
 }
