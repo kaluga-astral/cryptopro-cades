@@ -24,6 +24,7 @@ import { unwrap } from './internal/unwrap';
  * @param {boolean} [detach=true] присоединять подпись к данным или отдельно?
  * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
+ * @param {CADESCOM_CADES_TYPE} [cadesType=CADESCOM_CADES_TYPE.CADESCOM_CADES_BES] - тип усовершенствованной подписи (см. CADESCOM_CADES_TYPE).
  * @throws {CryptoError} в случае ошибки.
  * @returns файл подписи в кодировке Base64.
  */
@@ -33,6 +34,7 @@ export function sign(
   detach: boolean = true,
   includeCertChain: boolean = true,
   doNotValidate: boolean = false,
+  cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
 ): Promise<string> {
   return afterPluginLoaded(async () => {
     const logData = [];
@@ -124,7 +126,7 @@ export function sign(
         const signResult = await unwrap(
           signedData.SignCades(
             signer,
-            CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
+            cadesType,
             detach,
           ),
         );

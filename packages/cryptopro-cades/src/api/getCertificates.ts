@@ -21,10 +21,11 @@ const certificatesCache = {};
 /**
  * Возвращает список сертификатов из указанного хранилища.
  * @param {IStore} store Хранилище
+ * @param {boolean} [checkPrivateKey=true] проводить проверку наличия закрытого ключа.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов.
  */
-async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
+async function getCertificatesFromStore(store: IStore, checkPrivateKey: boolean = true): Promise<Certificate[]> {
   if (!store) {
     const errorMessage = 'Не задано хранилище сертификатов.';
 
@@ -51,7 +52,7 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
       const certBin: ICertificate = await unwrap(
         certificates.Item(certificatesCount--),
       );
-      const cert: Certificate = await Certificate.CreateFrom(certBin);
+      const cert: Certificate = await Certificate.CreateFrom(certBin, checkPrivateKey);
 
       // работаем только с гостовскими сертами
       if (cert.isGost) {
@@ -68,16 +69,17 @@ async function getCertificatesFromStore(store: IStore): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из USB токенов.
+ * @param {boolean} [checkPrivateKey=true] проводить проверку наличия закрытого ключа.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из USB токенов.
  */
-async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
+async function ReadCertificatesFromUsbToken(checkPrivateKey: boolean = true): Promise<Certificate[]> {
   let store: IStore | null = null;
 
   try {
     store = await openStore(STORE_LOCATION.CADESCOM_CONTAINER_STORE);
 
-    return await getCertificatesFromStore(store);
+    return await getCertificatesFromStore(store, checkPrivateKey);
   } finally {
     await store?.Close();
   }
@@ -85,10 +87,11 @@ async function ReadCertificatesFromUsbToken(): Promise<Certificate[]> {
 
 /**
  * Получить сертификаты из реестра.
+ * @param {boolean} [checkPrivateKey=true] проводить проверку наличия закрытого ключа.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из реестра.
  */
-async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
+async function ReadCertificatesFromRegistry(checkPrivateKey: boolean = true): Promise<Certificate[]> {
   let store: IStore | null = null;
 
   try {
@@ -98,7 +101,7 @@ async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
       CAPICOM_STORE_OPEN_MODE.CAPICOM_STORE_OPEN_MAXIMUM_ALLOWED,
     );
 
-    return await getCertificatesFromStore(store);
+    return await getCertificatesFromStore(store, checkPrivateKey);
   } finally {
     await store?.Close();
   }
@@ -109,12 +112,14 @@ async function ReadCertificatesFromRegistry(): Promise<Certificate[]> {
  *
  * @param {STORE_TYPE} storeType из какого хранилища требуется получить сертификаты (из токена, реестра, все...).
  * @param {resetCache} resetCache перезапросить данные, игнорируя закэшированные данные.
+ * @param {boolean} [checkPrivateKey=true] проводить проверку наличия закрытого ключа.
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .сертификаты.
  */
 export function getCertificates(
   storeType: STORE_TYPE = STORE_TYPE.ALL,
   resetCache: boolean = false,
+  checkPrivateKey: boolean = true,
 ): Promise<Certificate[]> {
   if (certificatesCache[storeType] && !resetCache) {
     return Promise.resolve(certificatesCache[storeType]);
@@ -131,23 +136,23 @@ export function getCertificates(
     try {
       switch (storeType) {
         case STORE_TYPE.USB_TOKEN:
-          result = await ReadCertificatesFromUsbToken();
+          result = await ReadCertificatesFromUsbToken(checkPrivateKey);
           logData.push({ storeType, result });
 
           break;
 
         case STORE_TYPE.REGISTRY:
-          result = await ReadCertificatesFromRegistry();
+          result = await ReadCertificatesFromRegistry(checkPrivateKey);
           logData.push({ storeType, result });
 
           break;
 
         case STORE_TYPE.ALL:
-          const usbTokenCertificates = await ReadCertificatesFromUsbToken();
+          const usbTokenCertificates = await ReadCertificatesFromUsbToken(checkPrivateKey);
 
           logData.push({ storeType: 'usb', usbTokenCertificates });
 
-          const certificatesFromRegistry = await ReadCertificatesFromRegistry();
+          const certificatesFromRegistry = await ReadCertificatesFromRegistry(checkPrivateKey);
 
           logData.push({ storeType: 'registry', certificatesFromRegistry });
           result = usbTokenCertificates.concat(certificatesFromRegistry);
@@ -165,7 +170,7 @@ export function getCertificates(
 
           try {
             store = await openStore();
-            result = await getCertificatesFromStore(store);
+            result = await getCertificatesFromStore(store, checkPrivateKey);
             logData.push({ storeType: 'default', result });
           } finally {
             await store?.Close();
