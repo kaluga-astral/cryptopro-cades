@@ -8,14 +8,14 @@ import { getCertificates } from './../api';
  * Поиск в хранилищах сертификата.
  * @param {string} subjectKeyId -идентификатор ключа субъекта.
  * @param {STORE_TYPE} storeType в каком хранилище требуется поискать сертификат (из токена, реестра, все...).
- * @param {boolean} [checkPrivateKey=false] проводить проверку наличия закрытого ключа.
+ * @param {boolean} [checkPrivateKey=true] проводить проверку наличия закрытого ключа.
  * @throws {CryptoError} в случае ошибки.
  * @returns {@Promise<Certificate | undefined>} сертификат.
  */
 export async function findCertificateBySkid(
   subjectKeyId: string,
   storeType: STORE_TYPE = STORE_TYPE.ALL,
-  checkPrivateKey: boolean = false,
+  checkPrivateKey: boolean = true,
 ): Promise<Certificate | undefined> {
   if (!subjectKeyId) {
     const errorMessage =
