@@ -171,27 +171,25 @@ export class Certificate {
       cert.Export(CAPICOM_ENCODING_TYPE.CAPICOM_ENCODE_BASE64),
     );
 
-    if (checkPrivateKey) {
-      try {
-        certificate.hasPrivateKey = await unwrap(cert.HasPrivateKey());
+    try {
+      certificate.hasPrivateKey = await unwrap(cert.HasPrivateKey());
 
-        const oPrivateKey = await unwrap(cert.PrivateKey);
+      const oPrivateKey = await unwrap(cert.PrivateKey);
 
-        certificate.providerName = await unwrap(oPrivateKey.ProviderName);
-        certificate.providerType = await unwrap(oPrivateKey.ProviderType);
+      certificate.providerName = await unwrap(oPrivateKey.ProviderName);
+      certificate.providerType = await unwrap(oPrivateKey.ProviderType);
 
-        if (certificate.hasPrivateKey) {
-          await unwrap(cert.FindPrivateKey());
-        }
-      } catch (error) {
-        // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
-        CryptoError.createCadesError(
-          error,
-          `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`,
-        );
-
-        certificate.hasPrivateKey = false;
+      if (checkPrivateKey && certificate.hasPrivateKey) {
+        await unwrap(cert.FindPrivateKey());
       }
+    } catch (error) {
+      // ошибка не критична, просто создаем ошибку (в дебаге оно залогируется само)
+      CryptoError.createCadesError(
+        error,
+        `Ошибка получения информации о приватном ключе сертификата ${certificate.thumbprint}.`,
+      );
+
+      certificate.hasPrivateKey = false;
     }
 
     parseCertificate(certificate);
