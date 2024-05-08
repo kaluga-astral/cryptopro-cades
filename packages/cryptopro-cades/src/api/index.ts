@@ -35,3 +35,5 @@ export { getReaders } from './getReaders';
 export { createCSR } from './createCSR';
 
 export { installCertificate } from './installCertificate';
+
+export { getLicensesState } from './getLicensesState';

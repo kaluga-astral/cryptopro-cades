@@ -2,6 +2,7 @@ import { Buffer } from 'buffer';
 
 import { CryptoError } from '../errors';
 import {
+  CADESCOM_XADES_TYPE,
   CADESCOM_XML_SIGNATURE_TYPE,
   CRYPTO_OBJECTS,
   GOST_KEY_ALGORITHM_TYPES,
@@ -67,16 +68,20 @@ export const getXmlHashAlgorithmType = (certificate: Certificate): string => {
  * Подписать входные данные указанным сертификатом в формате XmlDSig.
  * @param {ICertificate | Certificate} certificate -сертификат пользователя.
  * @param {ArrayBuffer | string} data - данные для подписания. Массив байт либо массив байт в формате Base64 строки.
- * @param {CADESCOM_XML_SIGNATURE_TYPE} xmlSignatureType - тип xml подписи.
+ * @param {CADESCOM_XML_SIGNATURE_TYPE | CADESCOM_XADES_TYPE} xmlSignatureType - тип xml подписи. CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED по умолчанию
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификата.
+ * @param {string} [tspServer=''] - адрес службы штампов времени (TSP)
  * @throws {CryptoError} в случае ошибки.
  * @returns файл подписи в кодировке Base64.
  */
 export const signXml = (
   certificate: ICertificate | Certificate,
   data: ArrayBuffer | string,
-  xmlSignatureType: CADESCOM_XML_SIGNATURE_TYPE = CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
+  xmlSignatureType:
+    | CADESCOM_XADES_TYPE
+    | CADESCOM_XML_SIGNATURE_TYPE = CADESCOM_XML_SIGNATURE_TYPE.CADESCOM_XML_SIGNATURE_TYPE_ENVELOPED,
   doNotValidate: boolean = false,
+  tspServer: string = '',
 ): Promise<string> => {
   return afterPluginLoaded(async () => {
     const logData = [];
@@ -131,6 +136,16 @@ export const signXml = (
       // заполнение параметров для подписи
       try {
         await setCryptoProperty(signer, 'Certificate', cert.certificateBin);
+
+        if (
+          tspServer &&
+          (xmlSignatureType === CADESCOM_XADES_TYPE.CADESCOM_XADES_T ||
+            xmlSignatureType ===
+              CADESCOM_XADES_TYPE.CADESCOM_XADES_X_LONG_TYPE_1)
+        ) {
+          await setCryptoProperty(signer, 'TSAAddress', tspServer);
+        }
+
         // в криптопро браузер плагине не поддерживается подпись/расшифровка бинарных данных,
         // поэтому подписываем предварительно конвертированный в Base64
         await setCryptoProperty(signedData, 'Content', base64String);
