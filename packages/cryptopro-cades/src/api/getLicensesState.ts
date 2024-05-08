@@ -13,7 +13,7 @@ import { afterPluginLoaded } from './internal/afterPluginLoaded';
 import { unwrap } from './internal/unwrap';
 
 /**
- * Кэш информации о системе.
+ * Кэш информации о состоянии лицензий.
  */
 let licensesStateCache: ILicensesState | null = null;
 
