@@ -1,29 +1,31 @@
-import { Buffer } from 'buffer';
-
-import { useEffect, useState } from 'react';
 import {
+  CADESCOM_XADES_TYPE,
   CADESCOM_XML_SIGNATURE_TYPE,
-  CRYPTO_OBJECTS,
   Certificate,
-  ICertificate,
-  ICryptoProvider,
-  ISystemInfo,
-  STORE_TYPE,
   checkIsValidSystemSetup,
+  checkPlugin,
   createObject,
+  CRYPTO_OBJECTS,
   decrypt,
   encrypt,
   findCertificateBySkid,
   getCertificates,
   getCryptoProviders,
   getSystemInfo,
+  ICertificate,
+  ICryptoProvider,
+  ISystemInfo,
   outputError,
   pluginConfig,
   sign,
   signHash,
   signXml,
-  checkPlugin,
+  STORE_TYPE,
 } from '@astral/cryptopro-cades';
+import { getLicensesState } from '@astral/cryptopro-cades/src/api/getLicensesState';
+import { Buffer } from 'buffer';
+
+import { useEffect, useState } from 'react';
 
 import { CertificateInfo } from './components/CertificateInfo';
 import { CryptoProviderInfo } from './components/CryptoProviderInfo';
@@ -160,33 +162,33 @@ const CryptoApp = () => {
     }
   };
 
-   /**
+  /**
    * Подписать файл с хэшом.
    */
-     const signFileHash = async (): Promise<void> => {
-      if (!selectedCertificate) {
-        window.alert('Сертификат не выбран');
-        return;
-      }
-      if (!selectedFile) {
-        window.alert('Файл для подписи не выбран');
-        return;
-      }
-  
-      try {
-        const sig = await signHash(
-          selectedCertificate,
-          await selectedFile.arrayBuffer(), // массив байт хэша либо хэш в формате hex строки
-          true,
-          true
-        );
-  
-        dowloadFile(await convertBase64toBlob(sig), selectedFile.name + '.sig');
-      } catch (error) {
-        outputError(error);
-        window.alert(error?.toString());
-      }
-    };
+  const signFileHash = async (): Promise<void> => {
+    if (!selectedCertificate) {
+      window.alert('Сертификат не выбран');
+      return;
+    }
+    if (!selectedFile) {
+      window.alert('Файл для подписи не выбран');
+      return;
+    }
+
+    try {
+      const sig = await signHash(
+        selectedCertificate,
+        await selectedFile.arrayBuffer(), // массив байт хэша либо хэш в формате hex строки
+        true,
+        true
+      );
+
+      dowloadFile(await convertBase64toBlob(sig), selectedFile.name + '.sig');
+    } catch (error) {
+      outputError(error);
+      window.alert(error?.toString());
+    }
+  };
 
   /**
    * Подписать файл в формате XmlDSig.
@@ -208,6 +210,47 @@ const CryptoApp = () => {
         selectedCertificate,
         await selectedFile.arrayBuffer(), // массив байт либо массив байт в формате Base64 строки
         xmlSignatureType
+      );
+
+      dowloadFile(
+        await convertBase64toBlob(sig),
+        selectedFile.name.replace('.xml', '') + '.sig.xml'
+      );
+    } catch (error) {
+      outputError(error);
+      window.alert(error?.toString());
+    }
+  };
+
+  /**
+   * Подписать файл в формате XAdES-T.
+   */
+  const signXadesT = async (withCustomTsp: boolean = false): Promise<void> => {
+    if (!selectedCertificate) {
+      window.alert('Сертификат не выбран');
+      return;
+    }
+    if (!selectedFile) {
+      window.alert('Файл для подписи не выбран');
+      return;
+    }
+
+    const tspServer = withCustomTsp
+      ? await prompt('Введите url службы штампов времени (TSP)')
+      : 'http://pki.tax.gov.ru/tsp/tsp.srf';
+
+    if (!tspServer) {
+      window.alert('Не введен url службы штампов времени (TSP)');
+      return;
+    }
+
+    try {
+      const sig = await signXml(
+        selectedCertificate,
+        await selectedFile.arrayBuffer(), // массив байт либо массив байт в формате Base64 строки
+        CADESCOM_XADES_TYPE.CADESCOM_XADES_T,
+        false,
+        tspServer
       );
 
       dowloadFile(
@@ -386,12 +429,26 @@ const CryptoApp = () => {
     }
   }
 
+  /**
+   * Проверить лицензии продуктов Крипто Про
+   */
+  async function handleCheckLicensesClick() {
+    try {
+      const result = await getLicensesState();
+      console.log(result);
+    } catch (error) {
+      outputError(error);
+      window.alert(error.toString());
+    }
+  }
+
   return (
     <>
       <p>Версия плагина {versionInfo?.cadesVersion}</p>
       <p>Версия криптопровайдера {versionInfo?.cspVersion}</p>
       <button onClick={() => checkPluginClick()}>Проверить плагин</button>
       <button onClick={() => checkSystem()}>Проверить систему</button>
+      <button onClick={handleCheckLicensesClick}>Проверить лицензии</button>
       <button onClick={() => setShowCryptoProviders(!showCryptoProviders)}>
         {!showCryptoProviders
           ? 'Показать криптопровайдеры'
@@ -504,7 +561,16 @@ const CryptoApp = () => {
             </button>
           </>
         ) : null}
-        <br />
+        {selectedCertificate && selectedFile ? (
+          <div>
+            <button onClick={(_) => signXadesT(false)}>
+              Подписать XAdES-T (TSP налоговой)
+            </button>
+            <button onClick={(_) => signXadesT(true)}>
+              Подписать XAdES-T (кастомный TSP)
+            </button>
+          </div>
+        ) : null}
         {selectedFile ? (
           <>
             <button onClick={(_) => decryptFileCms()}>Расшифровать CMS</button>

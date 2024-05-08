@@ -11,3 +11,7 @@ export * from './WithOptionalPromise';
 export * from './IReaderMode';
 
 export * from './СreateCSRInputDTO';
+
+export * from './ILicense';
+
+export * from './ILicensesState';

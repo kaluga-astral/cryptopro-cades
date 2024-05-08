@@ -1155,4 +1155,10 @@ export const enum CRYPTO_OBJECTS {
    * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509enrollment?id=cx509enrollment
    */
   enrollment = 'X509Enrollment.CX509Enrollment',
+
+  /**
+   * Объект для работы с лицензиями на продукты КриптоПро.
+   * https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cplicense?id=%d0%9e%d0%b1%d1%8a%d0%b5%d0%ba%d1%82-cplicense
+   */
+  license = 'CAdESCOM.CPLicense',
 }
