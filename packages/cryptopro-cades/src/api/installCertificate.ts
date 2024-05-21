@@ -28,13 +28,26 @@ export const installCertificate = (
 
       await enroll.Initialize(X509CertificateEnrollmentContext.ContextUser);
 
-      await enroll.InstallResponse(
-        CADESCOM_InstallResponseRestrictionFlags.CADESCOM_AllowUntrustedRoot |
-          CADESCOM_InstallResponseRestrictionFlags.CADESCOM_UseContainerStore,
-        certificate,
-        XCN_CRYPT_STRING_BASE64_ANY,
-        pin ?? '',
-      );
+      await enroll
+        .InstallResponse(
+          CADESCOM_InstallResponseRestrictionFlags.CADESCOM_AllowUntrustedRoot,
+          certificate,
+          XCN_CRYPT_STRING_BASE64_ANY,
+          pin ?? '',
+        )
+        .catch(async () => {
+          // Попробовать установить сертификат еще раз, только с флагом CADESCOM_UseContainerStore.
+          // Он необходим, чтобы плагин не выбрасывал странную ошибку при повторной установке сертификата через КриптоПро CSP.
+          // VipNet CSP не может установить сертификат, если используется этот флаг.
+
+          await enroll.InstallResponse(
+            CADESCOM_InstallResponseRestrictionFlags.CADESCOM_AllowUntrustedRoot |
+              CADESCOM_InstallResponseRestrictionFlags.CADESCOM_UseContainerStore,
+            certificate,
+            XCN_CRYPT_STRING_BASE64_ANY,
+            pin ?? '',
+          );
+        });
 
       logData.push('Сертификат установлен');
 
