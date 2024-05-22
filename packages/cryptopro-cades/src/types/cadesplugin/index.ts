@@ -1,5 +1,7 @@
 export type { CadesSignedData } from './CadesSignedData';
 
+export type { RawSignature } from './RawSignature';
+
 export type { CPEnvelopedData } from './CPEnvelopedData';
 
 export type { CPHashedData } from './CPHashedData';

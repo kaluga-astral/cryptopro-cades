@@ -2,6 +2,8 @@ export { sign } from './sign';
 
 export { signHash } from './signHash';
 
+export { signHashRaw } from './signHashRaw';
+
 export { signXml } from './signXml';
 
 export { encrypt } from './encrypt';
