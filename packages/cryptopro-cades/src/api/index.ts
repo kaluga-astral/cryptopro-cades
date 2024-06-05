@@ -18,6 +18,8 @@ export { openStore } from './openStore';
 
 export { getCertificates } from './getCertificates';
 
+export { getCertificatesFromContainers } from './getCertificatesFromContainers';
+
 export { getCryptoProviders } from './getCryptoProviders';
 
 export { getSystemInfo } from './getSystemInfo';
@@ -29,6 +31,8 @@ export { validateCertificate } from './validateCertificate';
 export { findCertificateByThumbprint } from './findCertificateByThumbprint';
 
 export { findCertificateBySkid } from './findCertificateBySkid';
+
+export { findCertificateBySkidFromContainers } from './findCertificateBySkidFromContainers';
 
 export { checkPlugin } from './checkPlugin';
 
