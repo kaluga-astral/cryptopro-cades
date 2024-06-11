@@ -8,7 +8,6 @@ import {
 } from '../constants';
 import type {
   CPHashedData,
-  CPSigner,
   RawSignature,
   ICertificate,
 } from '../types';
@@ -111,7 +110,6 @@ export function signHashRaw(
       const hashedData: CPHashedData = await createObject(
         CRYPTO_OBJECTS.hashedData,
       );
-      const signer: CPSigner = await createObject(CRYPTO_OBJECTS.signer);
       const rawSignature: RawSignature = await createObject(
         CRYPTO_OBJECTS.rawSignature,
       );

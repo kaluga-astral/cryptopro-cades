@@ -15,7 +15,7 @@ import { createObject } from './createObject';
 /**
  * Кэш из запрошенных сертификатов.
  */
-let certificates2Cache: Certificate[] | null;
+const certificates2Cache = {};
 
 /**
  * Возвращает список валидных доступных для работы сертификатов по контейнерам.
@@ -27,13 +27,13 @@ let certificates2Cache: Certificate[] | null;
 export function getCertificatesFromContainers(
   resetCache: boolean = false,
 ): Promise<Certificate[]> {
-  if (certificates2Cache && !resetCache) {
-    return Promise.resolve(certificates2Cache);
+  if (certificates2Cache[0] && !resetCache) {
+    return Promise.resolve(certificates2Cache[0]);
   }
 
   return afterPluginLoaded(async () => {
-    if (certificates2Cache && !resetCache) {
-      return Promise.resolve(certificates2Cache);
+    if (certificates2Cache[0] && !resetCache) {
+      return Promise.resolve(certificates2Cache[0]);
     }
 
     // Получить список контейнеров можно только с помощью КриптоПро CSP
@@ -87,7 +87,7 @@ export function getCertificatesFromContainers(
         }
       }
 
-      return (certificates2Cache = result);
+      return (certificates2Cache[0] = result);
     } catch (error) {
       logData.push({ error });
       throw CryptoError.createCadesError(
