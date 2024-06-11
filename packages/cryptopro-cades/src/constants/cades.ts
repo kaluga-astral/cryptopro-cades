@@ -1036,6 +1036,12 @@ export const enum CRYPTO_OBJECTS {
    */
   signedData = 'CAdESCOM.CadesSignedData',
 
+    /**
+   * Объект предоставляет функционал по "сырой" подписи.
+   * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/rawsignature
+   */
+    rawSignature = 'CAdESCOM.RawSignature',
+
   /**
    * Объект предоставляет функционал для вычисления хэша.
    * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cphasheddata

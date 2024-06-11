@@ -1,5 +1,7 @@
 export type { CadesSignedData } from './CadesSignedData';
 
+export type { RawSignature } from './RawSignature';
+
 export type { CPEnvelopedData } from './CPEnvelopedData';
 
 export type { CPHashedData } from './CPHashedData';
@@ -25,3 +27,11 @@ export type { IVersion } from './IVersion';
 export type { CCspInformation } from './CCspInformation';
 
 export type { CReaderModes } from './CReaderModes';
+
+export type { CPContainer } from './CPContainer';
+
+export type { CPContainers } from './CPContainers';
+
+export type { CPContainerKey } from './CPContainerKey';
+
+export type { CPContainerKeys } from './CPContainerKeys';
