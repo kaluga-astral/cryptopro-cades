@@ -1,6 +1,6 @@
-export { sign } from './sign';
+export { sign, signEx } from './sign';
 
-export { signHash } from './signHash';
+export { signHash, signHashEx } from './signHash';
 
 export { signHashRaw } from './signHashRaw';
 

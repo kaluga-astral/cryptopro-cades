@@ -62,14 +62,45 @@ export function signHash(
   doNotValidate: boolean = false,
   cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
 ): Promise<string> {
+  return signHashEx(
+    certificate,
+    data,
+    includeCertChain
+     ? CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+     : CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT,
+    doNotValidate,
+    cadesType,
+  )
+}
+
+/**
+ * Подписать хэш указанным сертификатом в формате CMS.
+ * @param {ICertificate | Certificate} certificate -сертификат пользователя.
+ * @param {ArrayBuffer | string} data - данные для подписания. Массив байт хэша либо сам хэш в формате hex строки (в любом регистре)
+ * @example
+ *  4A5F6E54CA44064A5544943DDC244DDC84DC3952AC5924A475838E7BB8320878
+ * @param {CAPICOM_CERTIFICATE_INCLUDE_OPTION} [includeCertOption=CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT] - опция включения цепочки сертификатов в результат.
+ * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
+ * @param {CADESCOM_CADES_TYPE} [cadesType=CADESCOM_CADES_TYPE.CADESCOM_CADES_BES] - тип усовершенствованной подписи (см. CADESCOM_CADES_TYPE).
+ * @throws {CryptoError} в случае ошибки.
+ * @returns файл подписи в кодировке Base64.
+ */
+export function signHashEx(
+  certificate: ICertificate | Certificate,
+  data: ArrayBuffer | string,
+  includeCertOption: CAPICOM_CERTIFICATE_INCLUDE_OPTION = CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT,
+  doNotValidate: boolean = false,
+  cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
+): Promise<string> {
   return afterPluginLoaded(async () => {
     const logData = [];
 
     logData.push({
       certificate,
       data,
-      includeCertChain,
+      includeCertOption,
       doNotValidate,
+      cadesType,
     });
 
     try {
@@ -127,13 +158,11 @@ export function signHash(
       try {
         await setCryptoProperty(signer, 'Certificate', cadesCert);
 
-        if (includeCertChain) {
-          await setCryptoProperty(
-            signer,
-            'Options',
-            CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN,
-          );
-        }
+        await setCryptoProperty(
+          signer,
+          'Options',
+          includeCertOption,
+        );
 
         await setCryptoProperty(hashedData, 'Algorithm', selectAlgoritm(cert));
         await unwrap(hashedData.SetHashValue(hexString));
