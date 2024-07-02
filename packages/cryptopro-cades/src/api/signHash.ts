@@ -49,16 +49,16 @@ function selectAlgoritm(cert: Certificate): CADESCOM_HASH_ALGORITHM {
  * @param {ArrayBuffer | string} data - данные для подписания. Массив байт хэша либо сам хэш в формате hex строки (в любом регистре)
  * @example
  *  4A5F6E54CA44064A5544943DDC244DDC84DC3952AC5924A475838E7BB8320878
- * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
+ * @param {CAPICOM_CERTIFICATE_INCLUDE_OPTION} [includeCertOption=CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT] - опция включения цепочки сертификатов в результат.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
  * @param {CADESCOM_CADES_TYPE} [cadesType=CADESCOM_CADES_TYPE.CADESCOM_CADES_BES] - тип усовершенствованной подписи (см. CADESCOM_CADES_TYPE).
  * @throws {CryptoError} в случае ошибки.
  * @returns файл подписи в кодировке Base64.
  */
-export function signHash(
+export function signHashEx(
   certificate: ICertificate | Certificate,
   data: ArrayBuffer | string,
-  includeCertChain: boolean = true,
+  includeCertOption: CAPICOM_CERTIFICATE_INCLUDE_OPTION = CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT,
   doNotValidate: boolean = false,
   cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
 ): Promise<string> {
@@ -68,8 +68,9 @@ export function signHash(
     logData.push({
       certificate,
       data,
-      includeCertChain,
+      includeCertOption,
       doNotValidate,
+      cadesType,
     });
 
     try {
@@ -126,15 +127,7 @@ export function signHash(
       // заполнение параметров для подписи
       try {
         await setCryptoProperty(signer, 'Certificate', cadesCert);
-
-        if (includeCertChain) {
-          await setCryptoProperty(
-            signer,
-            'Options',
-            CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN,
-          );
-        }
-
+        await setCryptoProperty(signer, 'Options', includeCertOption);
         await setCryptoProperty(hashedData, 'Algorithm', selectAlgoritm(cert));
         await unwrap(hashedData.SetHashValue(hexString));
       } catch (error) {
@@ -146,11 +139,7 @@ export function signHash(
 
       try {
         const signResult = await unwrap(
-          signedData.SignHash(
-            hashedData,
-            signer,
-            cadesType,
-          ),
+          signedData.SignHash(hashedData, signer, cadesType),
         );
 
         logData.push({ signResult });
@@ -169,4 +158,34 @@ export function signHash(
       outputDebug('signHash >>', logData);
     }
   })();
+}
+
+/**
+ * Подписать хэш указанным сертификатом в формате CMS.
+ * @param {ICertificate | Certificate} certificate -сертификат пользователя.
+ * @param {ArrayBuffer | string} data - данные для подписания. Массив байт хэша либо сам хэш в формате hex строки (в любом регистре)
+ * @example
+ *  4A5F6E54CA44064A5544943DDC244DDC84DC3952AC5924A475838E7BB8320878
+ * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
+ * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
+ * @param {CADESCOM_CADES_TYPE} [cadesType=CADESCOM_CADES_TYPE.CADESCOM_CADES_BES] - тип усовершенствованной подписи (см. CADESCOM_CADES_TYPE).
+ * @throws {CryptoError} в случае ошибки.
+ * @returns файл подписи в кодировке Base64.
+ */
+export function signHash(
+  certificate: ICertificate | Certificate,
+  data: ArrayBuffer | string,
+  includeCertChain: boolean = true,
+  doNotValidate: boolean = false,
+  cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
+): Promise<string> {
+  return signHashEx(
+    certificate,
+    data,
+    includeCertChain
+      ? CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+      : CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT,
+    doNotValidate,
+    cadesType,
+  );
 }

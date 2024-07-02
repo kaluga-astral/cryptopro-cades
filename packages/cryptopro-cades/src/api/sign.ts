@@ -22,17 +22,18 @@ import { unwrap } from './internal/unwrap';
  * @param {ICertificate | Certificate} certificate -сертификат пользователя.
  * @param {ArrayBuffer | string} data - данные для подписания. Массив байт либо массив байт в формате Base64 строки.
  * @param {boolean} [detach=true] присоединять подпись к данным или отдельно?
+ * @param {CAPICOM_CERTIFICATE_INCLUDE_OPTION} [includeCertOption=CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT] - опция включения цепочки сертификатов в результат.
  * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
  * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
  * @param {CADESCOM_CADES_TYPE} [cadesType=CADESCOM_CADES_TYPE.CADESCOM_CADES_BES] - тип усовершенствованной подписи (см. CADESCOM_CADES_TYPE).
  * @throws {CryptoError} в случае ошибки.
  * @returns файл подписи в кодировке Base64.
  */
-export function sign(
+export function signEx(
   certificate: ICertificate | Certificate,
   data: ArrayBuffer | string,
   detach: boolean = true,
-  includeCertChain: boolean = true,
+  includeCertOption: CAPICOM_CERTIFICATE_INCLUDE_OPTION = CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT,
   doNotValidate: boolean = false,
   cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
 ): Promise<string> {
@@ -43,8 +44,9 @@ export function sign(
       certificate,
       data,
       detach,
-      includeCertChain,
+      includeCertOption,
       doNotValidate,
+      cadesType,
     });
 
     try {
@@ -97,14 +99,7 @@ export function sign(
       // заполнение параметров для подписи
       try {
         await setCryptoProperty(signer, 'Certificate', cert);
-
-        if (includeCertChain) {
-          await setCryptoProperty(
-            signer,
-            'Options',
-            CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN,
-          );
-        }
+        await setCryptoProperty(signer, 'Options', includeCertOption);
 
         await setCryptoProperty(
           signedData,
@@ -124,11 +119,7 @@ export function sign(
 
       try {
         const signResult = await unwrap(
-          signedData.SignCades(
-            signer,
-            cadesType,
-            detach,
-          ),
+          signedData.SignCades(signer, cadesType, detach),
         );
 
         logData.push({ signResult });
@@ -147,4 +138,35 @@ export function sign(
       outputDebug('sign >>', logData);
     }
   })();
+}
+
+/**
+ * Подписать входные данные указанным сертификатом в формате CMS.
+ * @param {ICertificate | Certificate} certificate -сертификат пользователя.
+ * @param {ArrayBuffer | string} data - данные для подписания. Массив байт либо массив байт в формате Base64 строки.
+ * @param {boolean} [detach=true] присоединять подпись к данным или отдельно?
+ * @param {boolean} [includeCertChain=true] - включать в результат всю цепочку сертификатов.
+ * @param {boolean} [doNotValidate=false] - не проводить валидацию сертификатов.
+ * @param {CADESCOM_CADES_TYPE} [cadesType=CADESCOM_CADES_TYPE.CADESCOM_CADES_BES] - тип усовершенствованной подписи (см. CADESCOM_CADES_TYPE).
+ * @throws {CryptoError} в случае ошибки.
+ * @returns файл подписи в кодировке Base64.
+ */
+export function sign(
+  certificate: ICertificate | Certificate,
+  data: ArrayBuffer | string,
+  detach: boolean = true,
+  includeCertChain: boolean = true,
+  doNotValidate: boolean = false,
+  cadesType: CADESCOM_CADES_TYPE = CADESCOM_CADES_TYPE.CADESCOM_CADES_BES,
+): Promise<string> {
+  return signEx(
+    certificate,
+    data,
+    detach,
+    includeCertChain
+      ? CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_WHOLE_CHAIN
+      : CAPICOM_CERTIFICATE_INCLUDE_OPTION.CAPICOM_CERTIFICATE_INCLUDE_CHAIN_EXCEPT_ROOT,
+    doNotValidate,
+    cadesType,
+  );
 }
