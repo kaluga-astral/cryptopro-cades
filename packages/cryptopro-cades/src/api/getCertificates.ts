@@ -25,7 +25,10 @@ const certificatesCache = {};
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов.
  */
-async function getCertificatesFromStore(store: IStore, checkPrivateKey: boolean = true): Promise<Certificate[]> {
+async function getCertificatesFromStore(
+  store: IStore,
+  checkPrivateKey: boolean = true,
+): Promise<Certificate[]> {
   if (!store) {
     const errorMessage = 'Не задано хранилище сертификатов.';
 
@@ -52,7 +55,10 @@ async function getCertificatesFromStore(store: IStore, checkPrivateKey: boolean 
       const certBin: ICertificate = await unwrap(
         certificates.Item(certificatesCount--),
       );
-      const cert: Certificate = await Certificate.CreateFrom(certBin, checkPrivateKey);
+      const cert: Certificate = await Certificate.CreateFrom(
+        certBin,
+        checkPrivateKey,
+      );
 
       // работаем только с гостовскими сертами
       if (cert.isGost) {
@@ -73,7 +79,9 @@ async function getCertificatesFromStore(store: IStore, checkPrivateKey: boolean 
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из USB токенов.
  */
-async function ReadCertificatesFromUsbToken(checkPrivateKey: boolean = true): Promise<Certificate[]> {
+async function ReadCertificatesFromUsbToken(
+  checkPrivateKey: boolean = true,
+): Promise<Certificate[]> {
   let store: IStore | null = null;
 
   try {
@@ -91,7 +99,9 @@ async function ReadCertificatesFromUsbToken(checkPrivateKey: boolean = true): Pr
  * @throws {CryptoError} в случае ошибки.
  * @returns {Promise<Certificate[]>} .Список сертификатов из реестра.
  */
-async function ReadCertificatesFromRegistry(checkPrivateKey: boolean = true): Promise<Certificate[]> {
+async function ReadCertificatesFromRegistry(
+  checkPrivateKey: boolean = true,
+): Promise<Certificate[]> {
   let store: IStore | null = null;
 
   try {
@@ -148,11 +158,13 @@ export function getCertificates(
           break;
 
         case STORE_TYPE.ALL:
-          const usbTokenCertificates = await ReadCertificatesFromUsbToken(checkPrivateKey);
+          const usbTokenCertificates =
+            await ReadCertificatesFromUsbToken(checkPrivateKey);
 
           logData.push({ storeType: 'usb', usbTokenCertificates });
 
-          const certificatesFromRegistry = await ReadCertificatesFromRegistry(checkPrivateKey);
+          const certificatesFromRegistry =
+            await ReadCertificatesFromRegistry(checkPrivateKey);
 
           logData.push({ storeType: 'registry', certificatesFromRegistry });
           result = usbTokenCertificates.concat(certificatesFromRegistry);
