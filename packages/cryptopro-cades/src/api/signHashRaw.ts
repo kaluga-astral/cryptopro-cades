@@ -6,11 +6,7 @@ import {
   CRYPTO_OBJECTS,
   GOST_KEY_ALGORITHM_TYPES,
 } from '../constants';
-import type {
-  CPHashedData,
-  RawSignature,
-  ICertificate,
-} from '../types';
+import type { CPHashedData, ICertificate, RawSignature } from '../types';
 import { Certificate } from '../Certificate';
 import { outputDebug } from '../utils';
 
@@ -127,10 +123,7 @@ export function signHashRaw(
 
       try {
         const signResult = await unwrap(
-          rawSignature.SignHash(
-            hashedData,
-            cadesCert as ICertificate,
-          ),
+          rawSignature.SignHash(hashedData, cadesCert as ICertificate),
         );
 
         logData.push({ signResult });

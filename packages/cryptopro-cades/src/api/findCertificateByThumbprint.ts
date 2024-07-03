@@ -37,7 +37,9 @@ export async function findCertificateByThumbprint(
     );
     const cert = await unwrap(certFind.Item(1));
 
-    return cert ? await Certificate.CreateFrom(cert, checkPrivateKey) : undefined;
+    return cert
+      ? await Certificate.CreateFrom(cert, checkPrivateKey)
+      : undefined;
   } catch (err) {
     throw CryptoError.createCadesError(err, 'Ошибка получения сертификата.');
   } finally {

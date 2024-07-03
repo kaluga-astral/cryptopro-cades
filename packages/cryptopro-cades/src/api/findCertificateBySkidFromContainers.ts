@@ -27,4 +27,3 @@ export async function findCertificateBySkidFromContainers(
     throw CryptoError.createCadesError(err, 'Ошибка получения сертификата.');
   }
 }
-

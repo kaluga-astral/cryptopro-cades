@@ -11,7 +11,7 @@ import {
   XCN_CRYPT_STRING_BASE64REQUESTHEADER,
 } from '../constants';
 import { CryptoError } from '../errors';
-import { CreateCSRInputDTO } from '../types/СreateCSRInputDTO';
+import { type CreateCSRInputDTO } from '../types/СreateCSRInputDTO';
 import { outputDebug } from '../utils';
 
 import { createObject } from './createObject';

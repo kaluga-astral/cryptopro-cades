@@ -1,7 +1,4 @@
-import {
-  CRYPTO_OBJECTS,
-  DEFAULT_CRYPTO_PROVIDER,
-} from '../constants';
+import { CRYPTO_OBJECTS, DEFAULT_CRYPTO_PROVIDER } from '../constants';
 import { Certificate } from '../Certificate';
 import type { CCspInformation, CPContainers, ICertificate } from '../types';
 import { outputDebug } from '../utils';
@@ -74,10 +71,16 @@ export function getCertificatesFromContainers(
           const containerKey = await unwrap(containerKeys.ItemByIndex(k));
 
           const hasCertificate = await unwrap(containerKey.HasCertificate);
-          if (hasCertificate) {
-            const certBin: ICertificate = await unwrap(containerKey.Certificate);
 
-            const cert: Certificate = await Certificate.CreateFrom(certBin, false);
+          if (hasCertificate) {
+            const certBin: ICertificate = await unwrap(
+              containerKey.Certificate,
+            );
+
+            const cert: Certificate = await Certificate.CreateFrom(
+              certBin,
+              false,
+            );
 
             // работаем только с гостовскими сертами
             if (cert.isGost) {
