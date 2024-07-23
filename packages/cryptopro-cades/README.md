@@ -1,3 +1,7 @@
+# Данный пакет больше не поддерживается
+
+Сервис переехал в закрытый контур Астрал-Софт.
+
 # @astral/cryptopro-cades
 
 Библиотека для взаимодействия с [КриптоПро ЭЦП Browser plug-in](https://www.cryptopro.ru/products/cades/plugin)
