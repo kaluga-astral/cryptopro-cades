@@ -1,7 +1,7 @@
 // eslint-disable-next-line
 module.exports = {
   branches: ['main', { name: 'dev', prerelease: 'dev' }],
-  repositoryUrl: 'https://github.com/kaluga-astral/services',
+  repositoryUrl: 'https://github.com/kaluga-astral/cryptopro-cades',
   plugins: [
     [
       '@semantic-release/commit-analyzer',
