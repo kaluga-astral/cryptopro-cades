@@ -71,3 +71,4 @@ npm install @astral/cryptopro-cades
 - getReaders - получение списка доступных считывателей (в т.ч. вставленных токенов) с помощью CryptoPro CSP.
 - createCSR - формирование контейнера и запроса на сертификат за один криптосеанс. Работает с VipNet и CryptoPro
 - installCertificate - устанавливает цепочку сертификатов в хранилище
+
