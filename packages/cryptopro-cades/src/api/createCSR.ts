@@ -202,6 +202,32 @@ export const createCSR = (data: CreateCSRInputDTO): Promise<string> => {
         extensions.Add(templateExt);
       }
 
+      // добавляем NameValuePair со сроком действия сертификата для УЦ Основания
+      if (data.validityPeriod && data.validityPeriodUnits) {
+        const validityPeriodObj = await createObject(
+          CRYPTO_OBJECTS.nameValuePair,
+        );
+
+        await validityPeriodObj.Initialize(
+          'ValidityPeriod',
+          data.validityPeriod,
+        );
+
+        const validityPeriodUnitsObj = await createObject(
+          CRYPTO_OBJECTS.nameValuePair,
+        );
+
+        await validityPeriodUnitsObj.Initialize(
+          'ValidityPeriodUnits',
+          String(data.validityPeriodUnits),
+        );
+
+        const nameValuePairsObj = await certRequestPkcs10.NameValuePairs;
+
+        await nameValuePairsObj.Add(validityPeriodUnitsObj);
+        await nameValuePairsObj.Add(validityPeriodObj);
+      }
+
       // запрос на сертификат
       const enroll = await createObject(CRYPTO_OBJECTS.enrollment);
 

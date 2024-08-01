@@ -1036,11 +1036,11 @@ export const enum CRYPTO_OBJECTS {
    */
   signedData = 'CAdESCOM.CadesSignedData',
 
-    /**
+  /**
    * Объект предоставляет функционал по "сырой" подписи.
    * @see https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/rawsignature
    */
-    rawSignature = 'CAdESCOM.RawSignature',
+  rawSignature = 'CAdESCOM.RawSignature',
 
   /**
    * Объект предоставляет функционал для вычисления хэша.
@@ -1167,4 +1167,11 @@ export const enum CRYPTO_OBJECTS {
    * https://docs.cryptopro.ru/cades/reference/cadescom/cadescom_class/cplicense?id=%d0%9e%d0%b1%d1%8a%d0%b5%d0%ba%d1%82-cplicense
    */
   license = 'CAdESCOM.CPLicense',
+
+  /**
+   * Объект используется для задания произвольной пары имя-значение в запросе на сертификат.
+   * В данном пакете позволяет указать параметры для ограничения периода действия будущего сертификата УЦ Основания.
+   * @see https://docs.cryptopro.ru/cades/plugin/certenroll/cx509namevaluepair
+   */
+  nameValuePair = 'X509Enrollment.CX509NameValuePair',
 }
